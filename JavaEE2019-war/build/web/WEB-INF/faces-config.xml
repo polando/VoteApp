@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>de</supported-locale>
+            <supported-locale>en</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <!--
+            specifying the resource-bundle in this config file enables
+            code completion in NetBeans xhtml editor,
+            whereas f:loadbundle does not
+            -->
+            <base-name>jee19.i18n.Messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
+    </application>
+    <navigation-rule>
+        <from-view-id>/public_access/courselist.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>createcourse</from-outcome>
+            <to-view-id>/logged_in/createcourse.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/public_access/courselist.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>coursedetails</from-outcome>
+            <to-view-id>/logged_in/coursedetails.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>createcourse</from-outcome>
+            <to-view-id>/logged_in/createcourse.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>index</from-outcome>
+            <to-view-id>/public_access/index.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>myaccount</from-outcome>
+            <to-view-id>/logged_in/myaccount.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>courselist</from-outcome>
+            <to-view-id>/public_access/courselist.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>administration</from-outcome>
+            <to-view-id>/admin/administration.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/login.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+</faces-config>

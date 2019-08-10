@@ -1,0 +1,31 @@
+To add a new front-end page...
+
+- use or create a folder in Web Pages (web folder)
+- create an XHTML file
+- create a Backing Bean
+  - if page is "display only" => RequestScoped
+  - if page allows editing => ViewScoped
+- decide on integration into navigation concept
+  - possibly define view parameter(s)
+- add a nagivation rule in faces-config.xml
+  - define the logical outcome that should lead to the physical view
+- add/change security rules in web.xml
+  - possibly add new application roles
+  - provide a role mapping in glassfish-web.xml
+- create BL method in BL Facade (interface & implementation)
+  - if needed, create a specially designed transfer object
+  - add appropriate access rules (@RolesAllowed)
+  
+  
+How to check permissions?
+
+- e.g. which votings can be accessed?
+  - look at the Role entities that are associated with the Person entity
+    that corresponds to the current user
+
+- who may create/update votings?
+
+- who may create votings:
+  - check that current user is in the STAFF role
+    (this is an application role, mapped from user groups that come from the 
+    security realm)

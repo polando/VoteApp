@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:view locale="${request.locale}"/>
+    <h:head>
+        <title>JEE19 - ${pagetitle}</title>
+    </h:head>
+    <h:body style="padding-top: 60px">
+        <h:form id="navForm">
+            <b:navBar brand="${msg.applicationName}"
+                      brandHref="${request.contextPath}/"
+                      fixed="top" fluid="true">
+                <b:navbarLinks>
+                    <b:navLink outcome="index" value="${msg.homeNavItem}" icon="home" active="${view.viewId.endsWith('index.xhtml')}"/>
+                    <b:navLink outcome="courselist" value="${msg.courseListNavItem}" icon="list" active="${view.viewId.endsWith('courselist.xhtml')}"/>
+                    <b:navLink rendered="${request.isUserInRole('ADMIN')}" outcome="administration" value="${msg.adminNavItem}" icon="wrench" active="${view.viewId.endsWith('administration.xhtml')}"/>
+                </b:navbarLinks>
+                <b:navbarLinks rendered="${loginBean.loggedIn}" pull="right">
+                    <b:navLink outcome="myaccount" value="${msg.myAccountNavItem}" icon="cog"/>
+                    <b:navCommandLink  value="${msg.logoutNavItem}" icon="log-out" action="#{loginBean.logout}"/>
+                </b:navbarLinks>
+                <b:navbarLinks rendered="${not loginBean.loggedIn}" pull="right">
+                    <b:navLink outcome="login" value="${msg.loginNavItem}" icon="log-in"/>
+                </b:navbarLinks>
+            </b:navBar>
+        </h:form>
+        <b:container fluid="true">
+            <b:row>
+                <b:column span="12">
+                    <h1>${pagetitle}</h1>
+                    <ui:insert name="content"/>
+                </b:column>
+            </b:row>
+            <b:row style="margin-top: 4ex;">
+                <b:column>
+                    <b:well size="sm">
+                        <samp>
+                            <strong><u>Debug info</u></strong><br/>
+                            Current user: ${loginBean.loggedIn ?  loginBean.user.name : '(not logged in)'}<br/>
+                            AUTHENTICATED: ${request.isUserInRole('AUTHENTICATED')}<br/>
+                            STAFF: ${request.isUserInRole('STAFF')}<br/>
+                            ADMIN: ${request.isUserInRole('ADMIN')}<br/>
+                        </samp>
+                    </b:well>
+                </b:column>
+            </b:row>
+        </b:container>
+    </h:body>
+</html>
+

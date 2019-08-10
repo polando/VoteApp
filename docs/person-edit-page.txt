@@ -1,0 +1,17 @@
+Plan:
+
+Create a page to enter personal data for the current user,
+firstname, lastname, date of birth
+
+
+Tasks:
+
+- provide a xhtml page with an input form
+- somehow make the new page reachable by navigation
+- care for I18N
+- implement a backing bean to connect AL to BL
+- BL method to retrieve data already in place
+- BL method to process (store) the data via the DAO class
+- extend the transfer object with the new fields
+- extend the PersonEntity with the new fields
+
