@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+    template="/WEB-INF/templates/page-template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:b="http://bootsfaces.net/ui">
+    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:define name="content">
+        <b:row>
+            <b:column>
+                <b:button look="info" icon="plus-sign"
+                          value="GetListPersons"
+                          outcome="createcourse"/>
+            </b:column>
+        </b:row>
+        <b:row>
+            <b:column>
+                <b:dataTable id="personTable" span="6" value="${pollBean.persons}" var="person">
+                    <b:dataTableColumn label="Name">
+                       ${person.name}
+                    </b:dataTableColumn>
+                </b:dataTable>
+                <b:dataTable id="pollTypes" span="6" value="${pollBean.polltypes}" var="polltype">
+                    <b:dataTableColumn label="Name">
+                       ${polltype.name}
+                    </b:dataTableColumn>
+                </b:dataTable>
+            </b:column>
+        </b:row>
+    </ui:define>
+</ui:composition>
