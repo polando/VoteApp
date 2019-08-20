@@ -165,6 +165,11 @@ public class TeamBusinessLogicTest {
 
         public void storePersonDetails(Person person) {
         }
+
+        @Override
+        public List<Person> testLogicMethod() {
+            return null;
+        }
     }
 
 }

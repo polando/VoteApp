@@ -18,6 +18,7 @@
                     <b:navLink outcome="index" value="${msg.homeNavItem}" icon="home" active="${view.viewId.endsWith('index.xhtml')}"/>
                     <b:navLink outcome="courselist" value="${msg.courseListNavItem}" icon="list" active="${view.viewId.endsWith('courselist.xhtml')}"/>
                     <b:navLink rendered="${request.isUserInRole('ADMIN')}" outcome="administration" value="${msg.adminNavItem}" icon="wrench" active="${view.viewId.endsWith('administration.xhtml')}"/>
+                    <b:navLink outcome="testpage" value="test" icon="wrench" active="${view.viewId.endsWith('testPage.xhtml')}"/>
                 </b:navbarLinks>
                 <b:navbarLinks rendered="${loginBean.loggedIn}" pull="right">
                     <b:navLink outcome="myaccount" value="${msg.myAccountNavItem}" icon="cog"/>

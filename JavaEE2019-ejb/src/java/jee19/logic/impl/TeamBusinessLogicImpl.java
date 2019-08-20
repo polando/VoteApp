@@ -14,15 +14,18 @@ import javax.interceptor.InvocationContext;
 import javax.mail.MessagingException;
 import jee19.entities.CourseEntity;
 import jee19.entities.PersonEntity;
+import jee19.entities.PollTypeEntity;
 import jee19.entities.TeamEntity;
 import jee19.logic.TeamBusinessLogic;
 import jee19.logic.Term;
 import jee19.logic.dao.CourseAccess;
 import jee19.logic.dao.PersonAccess;
+import jee19.logic.dao.PollTypeAccess;
 import jee19.logic.dao.TeamAccess;
 import jee19.logic.dto.Course;
 import jee19.logic.dto.CourseDetails;
 import jee19.logic.dto.Person;
+import jee19.logic.dto.PollType;
 import jee19.logic.dto.Team;
 
 /**
@@ -39,6 +42,9 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
 
     @EJB
     private TeamAccess teamAccess;
+    
+    @EJB
+    private PollTypeAccess pollTypeAccess;
 
 //    @Resource(lookup = "mail/uniko-mail")
 //    private Session mailSession;
@@ -223,6 +229,8 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
             "foxtrot", "golf", "hotel", "india", "juliet", "kilo", "lima",
             "mike", "november", "oscar", "papa", "quebec", "romeo", "sierra",
             "tango", "uniform", "victor", "whiskey", "xray", "yankee", "zulu"};
+        
+        final String[] POLLTYPES = {"yes/no","1 of n" , "m of n"};
 
         Random rnd = new Random();
 
@@ -230,6 +238,10 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
 
         for (String name : PERSONS) {
             persons.add(personAccess.createEntity(name));
+        }
+        
+        for (String name : POLLTYPES){
+             createPollType(name);
         }
 
         for (String name : COURSES) {
@@ -253,6 +265,12 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
                 }
             }
         }
+    }
+    
+    public PollType createPollType(String name) {
+        PollTypeEntity p = pollTypeAccess.createEntity(name);
+        p.setPollType(name);
+        return new PollType(p.getUuid(), p.getJpaVersion(), p.getName());
     }
 
     @RolesAllowed("AUTHENTICATED")
@@ -285,5 +303,14 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
 //        msg.setFrom(InternetAddress.parse("team-system@no.where")[0]);
 //        msg.setText(text);
 //        Transport.send(msg);
+    }
+
+    @Override
+    public List<Person> testLogicMethod() {
+          List<Person> result =  new ArrayList<>((int) personAccess.getEntityCount()) ;
+          personAccess.getPersonList().forEach( (c) -> {
+                  result.add(new Person(c.getUuid(),c.getJpaVersion(),c.getName()));
+                  });
+          return result;
     }
 }

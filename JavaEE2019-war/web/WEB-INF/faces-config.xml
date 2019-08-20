@@ -52,8 +52,16 @@
             <to-view-id>/public_access/courselist.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
         <navigation-case>
+            <from-outcome>testpage</from-outcome>
+            <to-view-id>/public_access/testPage.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>administration</from-outcome>
             <to-view-id>/admin/administration.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>testpage</from-outcome>
+            <to-view-id>/public_access/testpage.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>login</from-outcome>

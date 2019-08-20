@@ -97,4 +97,7 @@ public interface TeamBusinessLogic {
     public void createTestData();
 
     void storePersonDetails(Person person);
+    
+    
+    public List<Person> testLogicMethod();
 }
