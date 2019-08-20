@@ -9,26 +9,6 @@
     xmlns:b="http://bootsfaces.net/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
-        <b:row>
-            <b:column>
-                <b:button look="info" icon="plus-sign"
-                          value="GetListPersons"
-                          outcome="createcourse"/>
-            </b:column>
-        </b:row>
-        <b:row>
-            <b:column>
-                <b:dataTable id="personTable" span="6" value="${pollBean.persons}" var="person">
-                    <b:dataTableColumn label="Name">
-                       ${person.name}
-                    </b:dataTableColumn>
-                </b:dataTable>
-                <b:dataTable id="pollTypes" span="6" value="${pollBean.polltypes}" var="polltype">
-                    <b:dataTableColumn label="Name">
-                       ${polltype.name}
-                    </b:dataTableColumn>
-                </b:dataTable>
-            </b:column>
-        </b:row>
+        <p>poll created successfully</p>
     </ui:define>
 </ui:composition>

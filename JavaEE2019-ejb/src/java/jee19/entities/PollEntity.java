@@ -7,6 +7,7 @@ package jee19.entities;
 
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Entity;
@@ -30,11 +31,11 @@ public class PollEntity extends NamedEntity{
     
     private String description;
     
-    private Timestamp startDate;
+    private Instant startDate;
     
-    private Timestamp endDate;
+    private Instant endDate;
     
-    private Timestamp createDate;
+    private Instant createDate;
     
     
     @ManyToOne
@@ -103,30 +104,31 @@ public class PollEntity extends NamedEntity{
         this.pollTypeEntity = pollTypeEntity;
     }
 
-    
-    public Timestamp getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Timestamp startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public Timestamp getEndDate() {
+    public Instant getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Timestamp endDate) {
+    public void setEndDate(Instant endDate) {
         this.endDate = endDate;
     }
 
-    public Timestamp getCreateDate() {
+    public Instant getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Timestamp createDate) {
+    public void setCreateDate(Instant createDate) {
         this.createDate = createDate;
     }
+
+    
 
     public String getDescription() {
         return description;
