@@ -8,6 +8,9 @@ package jee19.entities;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -15,7 +18,10 @@ import javax.persistence.Table;
  *
  * @author ussocom
  */
-
+@NamedQueries({
+    @NamedQuery(name = "getPollItemCount", query = "SELECT COUNT(p) FROM ItemEntity p"),
+    @NamedQuery(name = "getPollItemList", query = "SELECT p FROM ItemEntity p ORDER BY p.name, p.uuid"),
+})
 @Entity
 @Table(name="ITEM")
 public class ItemEntity extends NamedEntity {
@@ -25,6 +31,9 @@ public class ItemEntity extends NamedEntity {
     
     @OneToMany(mappedBy = "item")
     private Set<ResultEntity> resultEntities;
+    
+    @ManyToMany(mappedBy = "itemEntities")
+    private Set<PollEntity> pollEntities;
 
     public ItemEntity() {
     }
@@ -54,6 +63,15 @@ public class ItemEntity extends NamedEntity {
     public void setItem(String Item) {
         this.Item = Item;
     }
+
+    public Set<PollEntity> getPollEntities() {
+        return pollEntities;
+    }
+
+    public void setPollEntities(Set<PollEntity> pollEntities) {
+        this.pollEntities = pollEntities;
+    }
+    
     
     
 }

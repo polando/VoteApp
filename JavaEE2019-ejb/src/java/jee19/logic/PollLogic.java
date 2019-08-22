@@ -7,6 +7,7 @@ package jee19.logic;
 
 import java.util.List;
 import javax.ejb.Remote;
+import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollType;
 
@@ -21,6 +22,11 @@ public interface PollLogic {
     public List<Person> getAllUsers();
     
     public List<PollType> getAllPollTypes();
+    
+    public List<Item> getAllPollItems();
+    
+    public Item createPollItem(String name);
+    
     
     
 }

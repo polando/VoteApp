@@ -12,11 +12,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
 import jee19.entities.PollTypeEntity;
 import jee19.logic.PollLogic;
+import jee19.logic.dao.ItemAccess;
 import jee19.logic.dao.PersonAccess;
 import jee19.logic.dao.PollTypeAccess;
+import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollType;
 
@@ -33,6 +36,10 @@ public class PollLogicImpl implements PollLogic{
     
     @EJB
     private PollTypeAccess pollTypeAccess;
+   
+        
+    @EJB
+    private ItemAccess itemAccess;
     
 
     @Override
@@ -41,7 +48,6 @@ public class PollLogicImpl implements PollLogic{
              List<PersonEntity> l = personAccess.getPersonList();
         List<Person> result = new ArrayList<>(l.size());
         for (PersonEntity pe : l) {
-            System.out.println(pe.getName());
             Person p = new Person(pe.getUuid(), pe.getJpaVersion(), pe.getName());
             p.setFirstname(pe.getFirstname());
             p.setLastname(pe.getLastname());
@@ -57,11 +63,36 @@ public class PollLogicImpl implements PollLogic{
                 List<PollType> result = new ArrayList<>(l.size());
         for (PollTypeEntity pe : l) {
             PollType p = new PollType(pe.getUuid(), pe.getJpaVersion(), pe.getName());
-            p.setPollType(pe.getPollType());
+            p.setPtype(pe.getPollType());
             result.add(p);
         }
         return result;
     }
+
+    @Override
+    public List<Item> getAllPollItems() {
+        List<ItemEntity> l = itemAccess.getPollItemsList();
+        List<Item> result = new ArrayList<>(l.size());
+        
+        for (ItemEntity pe : l) {
+            Item p = new Item(pe.getUuid(), pe.getJpaVersion(), pe.getName());
+            p.setItem(pe.getItem());
+            result.add(p);
+        }
+        return result;
+        
+    }
+    
+    @Override
+    public Item createPollItem(String name) {
+        ItemEntity p = itemAccess.createEntity(name);
+        p.setItem(name);
+        return new Item(p.getUuid(), p.getJpaVersion(), p.getName());
+    }
+    
+    
+    
+    
     
     
 }

@@ -7,11 +7,14 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:b="http://bootsfaces.net/ui"
-    xmlns:p="http://primefaces.org/ui">
+    xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:pr="http://primefaces.org/ui"
+    >
+    
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
-        <b:container fluid="true">
-        <b:form  horizontal="true">
+        <b:container fluid="true" id="pollContainer">
+            <b:form  horizontal="true" id="pollForm">
             <b:row>
                 <b:column span="1">
                     <h:outputText value="Title"/>
@@ -32,7 +35,7 @@
                 <b:column span="1">
                     <h:outputText value="Start Date"/>
                 </b:column>
-                <b:column span="4">
+                <b:column span="5">
                     <b:dateTimePicker  placeholder="Select start date" value="#{createPollBean.startDate}" mode="popup-icon" />
                 </b:column> 
             </b:row>
@@ -40,20 +43,9 @@
                 <b:column span="1">
                     <h:outputText value="End Date"/>
                 </b:column>
-                <b:column span="4">
+                <b:column span="5">
                     <b:dateTimePicker  placeholder="Select end date" value="#{createPollBean.endDate}" mode="popup-icon" />
                 </b:column> 
-            </b:row>
-            <b:row>
-                <b:column span="1">
-                    <h:outputText value="Participants"/>
-                </b:column>
-                <b:column span="5">
-                    <b:dataTable id="personTable" value="${pollBean.persons}" select="true" var="person" selected-items="#{createPollBean.participants}"  >
-                        <b:dataTableColumn selectionMode="multiple" />
-                        <b:dataTableColumn label="Name"  value="${person.name}" />
-                    </b:dataTable>
-                </b:column>
             </b:row>
             <b:row>
                 <b:column span="1">
@@ -61,20 +53,108 @@
                 </b:column> 
                 <b:column span="1">
                     <b:selectOneMenu id="pollTypes" value="#{createPollBean.polltype}" >
-                        <f:selectItems value="${pollBean.polltypes}" var="ptype" itemValue="#{ptype.pollType}"  itemLabel="#{ptype.pollType}" />
+                        <f:selectItems value="${pollBean.polltypes}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.ptype}" />
+                        <f:ajax render="pollItems" />
                     </b:selectOneMenu>
                 </b:column>     
             </b:row>
+                <b:column span="1">
+                    <h:outputText value="Items"/>
+                </b:column>
+                <b:column span="2">
+                    <b:button value="Add Item" look="primary" p:data-target="#addItemModal" p:data-toggle="modal"  />
+                </b:column>
+                <b:column id="pollItems">
+                    <b:selectMultiMenu  value="#{createPollBean.items}"  rendered="${(createPollBean.polltype.ptype == 'm of n') || (createPollBean.polltype.ptype == '1 of n') }">
+                        <f:selectItems value="${pollBean.pollitems}" var="ptype" itemValue="#{ptype}"  itemLabel="#{ptype.item}" />
+                    </b:selectMultiMenu>
+                    <b:selectOneMenu value="#{createPollBean.items}"  rendered="${createPollBean.polltype.ptype == 'yes/no' }">
+                        <f:selectItems value="${pollBean.pollitems}" var="ptype" itemValue="#{ptype}"  itemLabel="#{ptype.item}" />
+                    </b:selectOneMenu>
+                </b:column>
+            <b:row>
+                <b:column span="1">
+                    <h:outputText value="Participants"/>
+                </b:column>
+                <b:column span="2">
+                    <b:button value="Edit List" look="warning" p:data-target="#amodal" p:data-toggle="modal"  />
+                </b:column>
+            </b:row>
             <b:row>
                 <b:column>
-                    <b:commandButton id="createPollButton"
+                    <b:dataTable id="personTable" value="#{createPollBean.participants}" select="true" var="person">
+                         <b:dataTableColumn   label="Name"  value="#{person.name}"  />
+                    </b:dataTable>
+                </b:column>
+            </b:row>
+            <b:row>
+                <b:column span="1">
+                    <h:outputText value="Organizers"/>
+                </b:column>
+                <b:column span="2">
+                    <b:button value="Edit List" look="warning" p:data-target="#orgModal" p:data-toggle="modal"  />
+                </b:column>
+            </b:row>
+            <b:row>
+                <b:column>
+                    <b:dataTable id="organizersTable" value="#{createPollBean.organizers}" select="true" var="person">
+                         <b:dataTableColumn   label="Name"  value="#{person.name}"  />
+                    </b:dataTable>
+                </b:column>
+            </b:row>
+            <b:row>
+         
+            </b:row>
+                   <b:commandButton id="createPollButton"
                              icon="ok"
                              value="Create Poll"
                              action="createPoll"
                              actionListener="#{createPollBean.createPoll}"/>
-                </b:column>
-            </b:row>
-        </b:form>
+            </b:form>
+            
+
+        <b:modal id="amodal" title="Modal Example" styleClass="modalPseudoClass">
+            <h:form>
+            <p>hello</p>
+             <b:row>
+                <pr:pickList id="PojoPickList" value="#{pickParticipantBean.peronsDualList}" var="person" 
+                    itemValue="#{person}" itemLabel="#{person.name}" showSourceControls="true" showTargetControls="true" 
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" converter="entityConverter" />
+             </b:row>
+             <b:row>
+               <b:button value="Close" dismiss="modal" />
+               <pr:commandButton value="Ok" actionListener="#{createPollBean.setParticipants(pickParticipantBean.peronsDualList.target)}" oncomplete="$('#amodal').modal('hide')"  update=":pollForm:personTable" />
+             </b:row>
+             </h:form>
+        </b:modal>
+            
+        <b:modal id="orgModal" title="Modal Example" styleClass="modalPseudoClass">
+            <h:form>
+            <p>hello</p>
+             <b:row>
+                <pr:pickList id="orgPickList" value="#{pickOrganizerBean.peronsDualList}" var="person" 
+                    itemValue="#{person}" itemLabel="#{person.name}" showSourceControls="true" showTargetControls="true" 
+                    showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" converter="entityConverter" />
+             </b:row>
+             <b:row>
+               <b:button value="Close" dismiss="modal" />
+               <pr:commandButton value="Ok" actionListener="#{createPollBean.setOrganizers(pickOrganizerBean.peronsDualList.target)}" oncomplete="$('#orgModal').modal('hide')"  update=":pollForm:organizersTable" />
+             </b:row>
+             </h:form>
+        </b:modal>
+            
+            
+        <b:modal id="addItemModal" title="Modal Example" styleClass="modalPseudoClass">
+            <h:form>
+                <p>hello</p>
+                <b:inputText placeholder="Type description here..." value="#{itemBean.item}"/>
+                 <b:row>
+                   <b:button value="Close" dismiss="modal" />
+                   <pr:commandButton value="Ok"  actionListener="#{itemBean.createItem}" oncomplete="$('#addItemModal').modal('hide')" update=":pollForm:pollItems"/>
+                 </b:row>
+            </h:form>
+        </b:modal>
+            
        </b:container>
     </ui:define>
 </ui:composition>

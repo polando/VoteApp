@@ -8,6 +8,7 @@ package jee19.logic.dao;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import jee19.entities.ItemEntity;
 import jee19.entities.PollTypeEntity;
 
 
@@ -39,6 +40,11 @@ public class PollTypeAccess extends AbstractAccess<PollTypeEntity> {
         return em.createNamedQuery("getPollTypeList", PollTypeEntity.class
         ).getResultList();
     }
+    
+
+    
+    
+    
 
     
 }

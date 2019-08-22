@@ -17,15 +17,20 @@ public class PollType extends Named {
         super(uuid, jpaVersion, name);
     }
     
-    private String pollType;
+    private String ptype;
 
-    public String getPollType() {
-        return pollType;
+    public String getPtype() {
+        System.out.println(ptype);
+        return ptype;
     }
 
-    public void setPollType(String pollType) {
-        this.pollType = pollType;
+    public void setPtype(String ptype) {
+        this.ptype = ptype;
     }
+
+    
+
+    
     
     
     

@@ -14,16 +14,18 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
+import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollType;
-import org.primefaces.model.DualListModel;
 
 /**
  *
@@ -41,7 +43,11 @@ public class createPollBean implements Serializable {
     
     private PollType polltype;
     
+    private List<Item> items;
+    
     private List<Person> participants;
+    
+    private List<Person> organizers;
         
     private String title;  
     
@@ -64,6 +70,9 @@ public class createPollBean implements Serializable {
 
 
     public PollType getPolltype() {
+        if(polltype != null){
+        System.out.println(polltype.getPtype());
+        }
         return polltype;
     }
 
@@ -123,13 +132,38 @@ public class createPollBean implements Serializable {
         createDateInstant = createDate.toInstant();
     }
 
+    public List<Person> getOrganizers() {
+        return organizers;
+    }
+
+    public void setOrganizers(List<Person> organizers) {
+        this.organizers = organizers;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
     
+    
+    
+
+    @PostConstruct
+    public void init(){
+         participants = new ArrayList<>();
+    }
     
     public void createPoll(){
       setNowAsCurrentDate();
-      System.out.println( startDateInstant + " ** "+ endDateInstant + " ** " + createDateInstant);
-    }
+        }
     
+     public void onSelect(Person person) {
+          System.out.println("OnSelect:" + person.getName());
+          participants.add(person);
+    }
     
     Instant DateToInstant(Date date){
         Instant t = null;
@@ -150,6 +184,7 @@ public class createPollBean implements Serializable {
     void setNowAsCurrentDate(){
         setCreateDate(new Date());
     }
+    
     
     
     

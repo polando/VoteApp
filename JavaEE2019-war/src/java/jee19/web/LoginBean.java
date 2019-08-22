@@ -25,6 +25,7 @@ public class LoginBean implements Serializable {
 
     @EJB
     private TeamBusinessLogic teamBusinessLogic;
+    
 
     private String principalName;
 

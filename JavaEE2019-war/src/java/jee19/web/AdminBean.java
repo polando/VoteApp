@@ -3,6 +3,7 @@ package jee19.web;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.TeamBusinessLogic;
 
@@ -17,6 +18,7 @@ public class AdminBean implements Serializable {
 
     @EJB
     private TeamBusinessLogic teamBusinessLogic;
+    
 
     public void createTestData() {
         teamBusinessLogic.createTestData();

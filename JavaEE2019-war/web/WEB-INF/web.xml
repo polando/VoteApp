@@ -5,13 +5,9 @@
         <param-value>Development</param-value>
     </context-param>
     <context-param>
-        <param-name>primefaces.THEME</param-name>
-        <param-value>bootstrap</param-value>
-    </context-param>
-    <context-param>
         <!-- select theme - 16 themes available, names can be obtained from https://bootswatch.com -->
         <param-name>BootsFaces_THEME</param-name>
-        <param-value>cerulean</param-value>
+        <param-value>default</param-value>
     </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>

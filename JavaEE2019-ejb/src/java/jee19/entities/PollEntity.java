@@ -41,10 +41,13 @@ public class PollEntity extends NamedEntity{
     @ManyToOne
     private PollTypeEntity pollTypeEntity;
    
-        
     
     @ManyToOne
     private PollStateEntity pollStateEntity;
+    
+    
+    @ManyToMany
+    private Set<ItemEntity> itemEntities;
     
     
     @ManyToMany
@@ -128,8 +131,6 @@ public class PollEntity extends NamedEntity{
         this.createDate = createDate;
     }
 
-    
-
     public String getDescription() {
         return description;
     }
@@ -154,12 +155,13 @@ public class PollEntity extends NamedEntity{
         this.pollStateEntity = pollStateEntity;
     }
 
-    
- 
-    
- 
-    
-    
+    public Set<ItemEntity> getItemEntities() {
+        return itemEntities;
+    }
+
+    public void setItemEntities(Set<ItemEntity> itemEntities) {
+        this.itemEntities = itemEntities;
+    }
     
 
     

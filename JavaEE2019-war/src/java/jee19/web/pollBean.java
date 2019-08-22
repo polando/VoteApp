@@ -13,8 +13,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
+import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollType;
 import jee19.logic.impl.TeamBusinessLogicImpl;
@@ -36,19 +38,22 @@ public class pollBean implements Serializable {
     private List<PollType> polltypes;
 
     private List<Person> persons;
+    
+
 
     public List<Person> getPersons() {
-     
-    //Logger.getAnonymousLogger().log(Level.INFO, "from logger 11111111111111111");
-
+    
         return polllogic.getAllUsers();
     }
     
-    
-    
-    
+
     public List<PollType> getPolltypes() {
         return polllogic.getAllPollTypes();
+    }
+    
+    
+    public List<Item> getPollitems() {
+        return polllogic.getAllPollItems();
     }
     
     

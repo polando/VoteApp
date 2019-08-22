@@ -13,17 +13,20 @@ import javax.ejb.Stateless;
 import javax.interceptor.InvocationContext;
 import javax.mail.MessagingException;
 import jee19.entities.CourseEntity;
+import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
 import jee19.entities.PollTypeEntity;
 import jee19.entities.TeamEntity;
 import jee19.logic.TeamBusinessLogic;
 import jee19.logic.Term;
 import jee19.logic.dao.CourseAccess;
+import jee19.logic.dao.ItemAccess;
 import jee19.logic.dao.PersonAccess;
 import jee19.logic.dao.PollTypeAccess;
 import jee19.logic.dao.TeamAccess;
 import jee19.logic.dto.Course;
 import jee19.logic.dto.CourseDetails;
+import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollType;
 import jee19.logic.dto.Team;
@@ -45,6 +48,9 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
     
     @EJB
     private PollTypeAccess pollTypeAccess;
+    
+    @EJB
+    private ItemAccess itemAccess;
 
 //    @Resource(lookup = "mail/uniko-mail")
 //    private Session mailSession;
@@ -231,6 +237,8 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
             "tango", "uniform", "victor", "whiskey", "xray", "yankee", "zulu"};
         
         final String[] POLLTYPES = {"yes/no","1 of n" , "m of n"};
+        
+        final String[] POLLITEMS = {"item1","item2","item3"};
 
         Random rnd = new Random();
 
@@ -243,6 +251,11 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
         for (String name : POLLTYPES){
              createPollType(name);
         }
+        
+        for (String name : POLLITEMS){
+             createPollItem(name);
+        }
+        
 
         for (String name : COURSES) {
             CourseEntity c = courseAccess.createEntity(name);
@@ -271,6 +284,12 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
         PollTypeEntity p = pollTypeAccess.createEntity(name);
         p.setPollType(name);
         return new PollType(p.getUuid(), p.getJpaVersion(), p.getName());
+    }
+    
+    public Item createPollItem(String name) {
+        ItemEntity p = itemAccess.createEntity(name);
+        p.setItem(name);
+        return new Item(p.getUuid(), p.getJpaVersion(), p.getName());
     }
 
     @RolesAllowed("AUTHENTICATED")
