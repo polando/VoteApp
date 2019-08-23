@@ -7,13 +7,18 @@ package jee19.entities;
 
 import java.util.HashSet;
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
  * @author ussocom
  */
-
+@NamedQueries({
+    @NamedQuery(name = "getPollStateCount", query = "SELECT COUNT(p) FROM PollStateEntity p"),
+    @NamedQuery(name = "getPollStateList", query = "SELECT p FROM PollStateEntity p ORDER BY p.name, p.uuid"),
+})
 @Entity
 @Table(name="POLLSTATE")
 public class PollStateEntity extends NamedEntity{

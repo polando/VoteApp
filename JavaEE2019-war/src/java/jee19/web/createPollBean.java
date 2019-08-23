@@ -6,14 +6,10 @@
 package jee19.web;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +21,7 @@ import javax.inject.Named;
 import jee19.logic.PollLogic;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
+import jee19.logic.dto.PollState;
 import jee19.logic.dto.PollType;
 
 /**
@@ -42,6 +39,8 @@ public class createPollBean implements Serializable {
     private PollLogic polllogic;
     
     private PollType polltype;
+    
+    private PollState pollstate;
     
     private List<Item> items;
     
@@ -70,9 +69,6 @@ public class createPollBean implements Serializable {
 
 
     public PollType getPolltype() {
-        if(polltype != null){
-        System.out.println(polltype.getPtype());
-        }
         return polltype;
     }
 
@@ -147,6 +143,15 @@ public class createPollBean implements Serializable {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
+  
+    public PollState getPollstate() {
+        return pollstate;
+    }
+
+    public void setPollstate(PollState pollstate) {
+        this.pollstate = pollstate;
+    }
     
     
     
@@ -157,13 +162,11 @@ public class createPollBean implements Serializable {
     }
     
     public void createPoll(){
-      setNowAsCurrentDate();
-        }
-    
-     public void onSelect(Person person) {
-          System.out.println("OnSelect:" + person.getName());
-          participants.add(person);
+        setNowAsCurrentDate();
+        polllogic.createPoll(title, description, polltype, pollstate, endDateInstant, createDateInstant, startDateInstant,participants);
     }
+    
+    
     
     Instant DateToInstant(Date date){
         Instant t = null;

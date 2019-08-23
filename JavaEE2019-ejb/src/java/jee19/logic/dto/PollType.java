@@ -20,7 +20,6 @@ public class PollType extends Named {
     private String ptype;
 
     public String getPtype() {
-        System.out.println(ptype);
         return ptype;
     }
 

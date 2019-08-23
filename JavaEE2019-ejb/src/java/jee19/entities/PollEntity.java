@@ -6,13 +6,16 @@
 package jee19.entities;
 
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -20,6 +23,10 @@ import javax.persistence.Table;
  *
  * @author ussocom
  */
+@NamedQueries({
+    @NamedQuery(name = "getPollCount", query = "SELECT COUNT(p) FROM PollEntity p"),
+    @NamedQuery(name = "getPollList", query = "SELECT p FROM PollEntity p ORDER BY p.name, p.uuid"),
+})
 @Entity
 @Table(name="POLL")
 public class PollEntity extends NamedEntity{
@@ -51,10 +58,16 @@ public class PollEntity extends NamedEntity{
     
     
     @ManyToMany
+    @JoinTable(name = "POLL_PARTICIPANTS",
+        joinColumns = @JoinColumn(name = "poll_id"), 
+        inverseJoinColumns = @JoinColumn(name = "participant_id"))
     private Set<PersonEntity> participants;
     
     
     @ManyToMany
+    @JoinTable(name = "POLL_ORGANIZERS",
+        joinColumns = @JoinColumn(name = "poll_id"), 
+        inverseJoinColumns = @JoinColumn(name = "organizer_id"))
     private Set<PersonEntity> organizers;
     
    

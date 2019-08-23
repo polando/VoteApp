@@ -54,7 +54,7 @@
                 <b:column span="1">
                     <b:selectOneMenu id="pollTypes" value="#{createPollBean.polltype}" >
                         <f:selectItems value="${pollBean.polltypes}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.ptype}" />
-                        <f:ajax render="pollItems" />
+                        <f:ajax render="pollItems"  />
                     </b:selectOneMenu>
                 </b:column>     
             </b:row>
@@ -64,14 +64,18 @@
                 <b:column span="2">
                     <b:button value="Add Item" look="primary" p:data-target="#addItemModal" p:data-toggle="modal"  />
                 </b:column>
-                <b:column id="pollItems">
+                <pr:selectCheckboxMenu id="pollItems" value="#{createPollBean.items}" label="Cars" multiple="true"
+                                   filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter">
+                    <f:selectItems value="#{pollBean.pollitems}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.item}" />
+                </pr:selectCheckboxMenu> 
+             <!--   <b:column id="pollItems">
                     <b:selectMultiMenu  value="#{createPollBean.items}"  rendered="${(createPollBean.polltype.ptype == 'm of n') || (createPollBean.polltype.ptype == '1 of n') }">
                         <f:selectItems value="${pollBean.pollitems}" var="ptype" itemValue="#{ptype}"  itemLabel="#{ptype.item}" />
                     </b:selectMultiMenu>
                     <b:selectOneMenu value="#{createPollBean.items}"  rendered="${createPollBean.polltype.ptype == 'yes/no' }">
                         <f:selectItems value="${pollBean.pollitems}" var="ptype" itemValue="#{ptype}"  itemLabel="#{ptype.item}" />
-                    </b:selectOneMenu>
-                </b:column>
+                    </b:selectOneMenu> 
+                </b:column> -->
             <b:row>
                 <b:column span="1">
                     <h:outputText value="Participants"/>
@@ -103,7 +107,6 @@
                 </b:column>
             </b:row>
             <b:row>
-         
             </b:row>
                    <b:commandButton id="createPollButton"
                              icon="ok"

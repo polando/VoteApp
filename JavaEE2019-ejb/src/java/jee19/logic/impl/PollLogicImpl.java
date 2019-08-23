@@ -5,8 +5,11 @@
  */
 package jee19.logic.impl;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,13 +17,19 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
+import jee19.entities.PollEntity;
+import jee19.entities.PollStateEntity;
 import jee19.entities.PollTypeEntity;
 import jee19.logic.PollLogic;
 import jee19.logic.dao.ItemAccess;
 import jee19.logic.dao.PersonAccess;
+import jee19.logic.dao.PollAccess;
+import jee19.logic.dao.PollStateAccess;
 import jee19.logic.dao.PollTypeAccess;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
+import jee19.logic.dto.Poll;
+import jee19.logic.dto.PollState;
 import jee19.logic.dto.PollType;
 
 /**
@@ -36,6 +45,12 @@ public class PollLogicImpl implements PollLogic{
     
     @EJB
     private PollTypeAccess pollTypeAccess;
+    
+    @EJB
+    private PollStateAccess pollStateAccess;
+    
+    @EJB
+    private PollAccess pollAccess;
    
         
     @EJB
@@ -68,6 +83,19 @@ public class PollLogicImpl implements PollLogic{
         }
         return result;
     }
+    
+    @Override
+    public List<PollState> getAllPollStates() {
+            List<PollStateEntity> l = pollStateAccess.getPollStateList();
+            List<PollState> result = new ArrayList<>(l.size());
+        for (PollStateEntity pe : l) {
+            PollState p = new PollState(pe.getUuid(), pe.getJpaVersion(), pe.getName());
+            p.setState(pe.getPollState());
+            result.add(p);
+        }
+        return result;
+    }
+    
 
     @Override
     public List<Item> getAllPollItems() {
@@ -88,6 +116,23 @@ public class PollLogicImpl implements PollLogic{
         ItemEntity p = itemAccess.createEntity(name);
         p.setItem(name);
         return new Item(p.getUuid(), p.getJpaVersion(), p.getName());
+    }
+
+    @Override
+    public Poll createPoll(String title, String description,PollType polltype,PollState pollstate, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants) {
+        PollEntity pollEntity = pollAccess.createEntity(title);
+        PollTypeEntity pollTypeEntity = pollTypeAccess.getByUuid(polltype.getUuid());
+       // PollStateEntity  pollStateEntity= pollStateAccess.getByUuid(pollstate.getUuid());
+        Set<PersonEntity> participantEntity = new HashSet<>();
+        for(Person p: participants){
+            participantEntity.add(personAccess.getByUuid(p.getUuid()));
+        }
+        pollEntity.setPollTypeEntity(pollTypeEntity);
+        pollEntity.setTitle(title);
+        pollEntity.setDescription(description);
+        pollEntity.setParticipants(participantEntity);
+    // pollEntity.setCreateDate(startDateInstant);
+    return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
     
     
