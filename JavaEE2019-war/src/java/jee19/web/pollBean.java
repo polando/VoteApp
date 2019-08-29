@@ -7,19 +7,13 @@ package jee19.web;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollType;
-import jee19.logic.impl.TeamBusinessLogicImpl;
 
 /**
  *

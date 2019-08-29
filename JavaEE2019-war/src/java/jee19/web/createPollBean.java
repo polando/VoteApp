@@ -65,9 +65,6 @@ public class createPollBean implements Serializable {
     private Instant createDateInstant;
     
 
-    
-
-
     public PollType getPolltype() {
         return polltype;
     }
@@ -154,7 +151,6 @@ public class createPollBean implements Serializable {
     }
     
     
-    
 
     @PostConstruct
     public void init(){
@@ -163,7 +159,7 @@ public class createPollBean implements Serializable {
     
     public void createPoll(){
         setNowAsCurrentDate();
-        polllogic.createPoll(title, description, polltype, pollstate, endDateInstant, createDateInstant, startDateInstant,participants);
+        polllogic.createPoll(title, description, polltype, pollstate, endDateInstant, createDateInstant, startDateInstant,participants,organizers);
     }
     
     

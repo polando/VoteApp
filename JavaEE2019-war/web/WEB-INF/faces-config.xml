@@ -70,5 +70,9 @@
             <from-outcome>login</from-outcome>
             <to-view-id>/login.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>checkTokenPage</from-outcome>
+            <to-view-id>/logged_in/checkToken.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
     </navigation-rule>
 </faces-config>

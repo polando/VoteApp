@@ -34,7 +34,9 @@ public interface PollLogic {
     
     public Item createPollItem(String name);
     
-    public Poll createPoll(String title, String description,PollType polltype,PollState pollstate, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants);
+    public Poll createPoll(String title, String description,PollType polltype,PollState pollstate, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers );
+    
+    public boolean checkToken(String useruuid, String token);
 
     
 }

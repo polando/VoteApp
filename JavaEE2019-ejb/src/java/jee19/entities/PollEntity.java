@@ -57,12 +57,15 @@ public class PollEntity extends NamedEntity{
     private Set<ItemEntity> itemEntities;
     
     
-    @ManyToMany
+  /*  @ManyToMany
     @JoinTable(name = "POLL_PARTICIPANTS",
         joinColumns = @JoinColumn(name = "poll_id"), 
         inverseJoinColumns = @JoinColumn(name = "participant_id"))
-    private Set<PersonEntity> participants;
+    private Set<PersonEntity> participants;*/
     
+    @OneToMany(mappedBy = "pollEntity")
+    private Set<TokenEntity> tokens;
+ 
     
     @ManyToMany
     @JoinTable(name = "POLL_ORGANIZERS",
@@ -86,13 +89,6 @@ public class PollEntity extends NamedEntity{
         }
     }
 
-    public Set<PersonEntity> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(Set<PersonEntity> participants) {
-        this.participants = participants;
-    }
 
     public Set<PersonEntity> getOrganizers() {
         return organizers;
@@ -175,7 +171,17 @@ public class PollEntity extends NamedEntity{
     public void setItemEntities(Set<ItemEntity> itemEntities) {
         this.itemEntities = itemEntities;
     }
+
+    public Set<TokenEntity> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(Set<TokenEntity> tokens) {
+        this.tokens = tokens;
+    }
+
     
 
+    
     
 }

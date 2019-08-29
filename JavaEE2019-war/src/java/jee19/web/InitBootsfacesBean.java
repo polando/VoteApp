@@ -5,8 +5,7 @@
  */
 package jee19.web;
 
-import java.util.logging.Level;
-import javax.ejb.Singleton;
+
 import javax.faces.FactoryFinder;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -15,7 +14,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.render.RenderKit;
 import javax.faces.render.RenderKitFactory;
 import javax.faces.render.Renderer;
-import javax.inject.Named;
 import net.bootsfaces.component.ComponentsEnum;
 
 /**

@@ -22,8 +22,8 @@ public class PersonEntity extends NamedEntity {
     private static final long serialVersionUID = 8164978510161170908L;
 
     
-    @ManyToMany(mappedBy = "participants")
-    private Set<PollEntity> pollsAsParticipant;
+    @OneToMany(mappedBy = "personEntity")
+    private Set<TokenEntity> pollsAsParticipant;
         
     @ManyToMany(mappedBy = "organizers")
     private Set<PollEntity> pollsAsOrganizer;
@@ -52,13 +52,14 @@ public class PersonEntity extends NamedEntity {
         }
     }
 
-    public Set<PollEntity> getPollsAsParticipant() {
+    public Set<TokenEntity> getPollsAsParticipant() {
         return pollsAsParticipant;
     }
 
-    public void setPollsAsParticipant(Set<PollEntity> pollsAsParticipant) {
+    public void setPollsAsParticipant(Set<TokenEntity> pollsAsParticipant) {
         this.pollsAsParticipant = pollsAsParticipant;
     }
+
 
     public Set<PollEntity> getPollsAsOrganizer() {
         return pollsAsOrganizer;

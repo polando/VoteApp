@@ -21,6 +21,8 @@
                     <b:navLink outcome="courselist" value="${msg.courseListNavItem}" icon="list" active="${view.viewId.endsWith('courselist.xhtml')}"/>
                     <b:navLink rendered="${request.isUserInRole('ADMIN')}" outcome="administration" value="${msg.adminNavItem}" icon="wrench" active="${view.viewId.endsWith('administration.xhtml')}"/>
                     <b:navLink outcome="testpage" value="test" icon="wrench" active="${view.viewId.endsWith('testPage.xhtml')}"/>
+                    <b:navLink outcome="checkTokenPage" value="checkToken" icon="wrench" active="${view.viewId.endsWith('checkToken.xhtml')}" rendered="${loginBean.loggedIn}"/>
+
                 </b:navbarLinks>
                 <b:navbarLinks rendered="${loginBean.loggedIn}" pull="right">
                     <b:navLink outcome="myaccount" value="${msg.myAccountNavItem}" icon="cog"/>

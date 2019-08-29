@@ -39,6 +39,7 @@ public class ResultEntity extends NamedEntity{
     
     
     private int numberOfVotes;
+    
 
     public PollEntity getPoll() {
         return poll;
