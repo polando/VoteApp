@@ -75,4 +75,15 @@
             <to-view-id>/logged_in/checkToken.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/logged_in/checkToken.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>confirmed</from-outcome>
+            <to-view-id>/logged_in/voting.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failed</from-outcome>
+            <to-view-id>/logged_in/checkToken.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>

@@ -201,6 +201,25 @@ public class PollLogicImpl implements PollLogic{
         return tokenEntity.getPersonEntity().equals(personEntity);  
     }
     
+    @Override
+    public Poll getPollByToken(String token){
+          TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
+          PollEntity pollEntity = pollAccess.getByUuid(tokenEntity.getPollEntity().getUuid());
+          System.out.println(pollEntity.getTitle());
+          Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+                poll.setDescription(pollEntity.getDescription());
+                poll.setTitle(pollEntity.getTitle());
+                  pollEntity.getItemEntities().forEach((e) -> {
+                      Item item = new Item(e.getUuid(),e.getJpaVersion(),e.getName());
+                      poll.getItemEntities().add(item);
+                  });
+          return poll;
+    }
+    
+    
+    
+    
+    
     
     
     

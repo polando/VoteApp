@@ -7,11 +7,15 @@ package jee19.web;
 
 import java.io.Serializable;
 import javax.ejb.EJB;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
 import jee19.logic.dto.Person;
+import jee19.logic.dto.Poll;
 
 /**
  *
@@ -39,11 +43,32 @@ public class tokenCheckBean implements Serializable {
         this.token = token;
     }
     
-    public void checkToken(){
+    private boolean checkToken(){
          Person loggedInUser = loginBean.getUser();
-         
-         System.out.println(polllogic.checkToken(loginBean.getUser().getUuid(),token));
+         return polllogic.checkToken(loginBean.getUser().getUuid(),token);
     }
     
+    private Poll getPollIfAllowed(){
+        Poll poll = null;
+        if(checkToken()){
+            System.out.println("true");
+             poll = polllogic.getPollByToken(token);
+             System.out.println("after poll"+poll.getTitle());
+        }
+        return poll;
+    }
     
+    public String goToVoting(){
+        Poll poll = getPollIfAllowed();
+        if(poll != null){
+            System.out.println("successsss");
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+            flash.put("poll", poll);
+            return "confirmed";
+        }
+        else{
+            return "failed";
+        }
+    }
 }
+

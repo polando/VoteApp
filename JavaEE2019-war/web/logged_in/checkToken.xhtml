@@ -6,7 +6,9 @@
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:b="http://bootsfaces.net/ui">
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+    xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
         <b:form id="checktokenform">
@@ -15,8 +17,8 @@
                          required="true"></b:inputText>
             <b:commandButton id="checkform"
                              value="${msg.submitButton}"
-                             actionListener="#{tokenCheckBean.checkToken}" 
-                             action="index"/>
+                             action="#{tokenCheckBean.goToVoting()}"
+                             />
         </b:form>
     </ui:define>
 </ui:composition>
