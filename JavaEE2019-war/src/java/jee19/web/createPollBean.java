@@ -159,7 +159,7 @@ public class createPollBean implements Serializable {
     
     public void createPoll(){
         setNowAsCurrentDate();
-        polllogic.createPoll(title, description, polltype, pollstate, endDateInstant, createDateInstant, startDateInstant,participants,organizers);
+        polllogic.createPoll(title, description, polltype, pollstate, endDateInstant, createDateInstant, startDateInstant,participants,organizers,items);
     }
     
     

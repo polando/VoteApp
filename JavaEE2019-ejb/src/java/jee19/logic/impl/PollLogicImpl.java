@@ -130,12 +130,13 @@ public class PollLogicImpl implements PollLogic{
     }
 
     @Override
-    public Poll createPoll(String title, String description,PollType polltype,PollState pollstate, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ) {
+    public Poll createPoll(String title, String description,PollType polltype,PollState pollstate, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ,List<Item> items) {
         PollEntity pollEntity = pollAccess.createEntity(title);
         PollTypeEntity pollTypeEntity = pollTypeAccess.getByUuid(polltype.getUuid());
        // PollStateEntity  pollStateEntity= pollStateAccess.getByUuid(pollstate.getUuid());
         Set<TokenEntity> tokenEntity = new HashSet<>();
         Set<PersonEntity> organizerEntity = new HashSet<>();
+        Set<ItemEntity> itemEntity = new HashSet<>();
       
          for(Person p: organizers){
             organizerEntity.add(personAccess.getByUuid(p.getUuid()));
@@ -154,6 +155,14 @@ public class PollLogicImpl implements PollLogic{
           
         }
         pollEntity.setTokens(tokenEntity);
+        
+        for(Item i: items){
+            itemEntity.add(itemAccess.getByUuid(i.getUuid()));
+        }
+        
+        pollEntity.setItemEntities(itemEntity);
+        
+        
         
     return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
@@ -206,14 +215,21 @@ public class PollLogicImpl implements PollLogic{
           TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
           PollEntity pollEntity = pollAccess.getByUuid(tokenEntity.getPollEntity().getUuid());
           System.out.println(pollEntity.getTitle());
+          Set<Item> items = new HashSet<>();
           Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
                 poll.setDescription(pollEntity.getDescription());
                 poll.setTitle(pollEntity.getTitle());
                   pollEntity.getItemEntities().forEach((e) -> {
                       Item item = new Item(e.getUuid(),e.getJpaVersion(),e.getName());
-                      poll.getItemEntities().add(item);
+                      item.setItem(e.getItem());
+                      items.add(item);
                   });
+                poll.setItemEntities(items);
           return poll;
+    }
+    
+    public void sendVote(){
+        
     }
     
     

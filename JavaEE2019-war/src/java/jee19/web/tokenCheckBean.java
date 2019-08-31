@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
+import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
 
@@ -53,7 +54,8 @@ public class tokenCheckBean implements Serializable {
         if(checkToken()){
             System.out.println("true");
              poll = polllogic.getPollByToken(token);
-             System.out.println("after poll"+poll.getTitle());
+             for(Item i:poll.getItemEntities())
+                System.out.println("poll items : "+i.getItem());
         }
         return poll;
     }
@@ -61,7 +63,6 @@ public class tokenCheckBean implements Serializable {
     public String goToVoting(){
         Poll poll = getPollIfAllowed();
         if(poll != null){
-            System.out.println("successsss");
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
             flash.put("poll", poll);
             return "confirmed";
