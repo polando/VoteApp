@@ -23,6 +23,7 @@ import jee19.entities.PersonEntity;
 import jee19.entities.PollEntity;
 import jee19.entities.PollStateEntity;
 import jee19.entities.PollTypeEntity;
+import jee19.entities.ResultEntity;
 import jee19.entities.TokenEntity;
 //import jee19.entities.TokenEntity;
 import jee19.logic.PollLogic;
@@ -31,6 +32,7 @@ import jee19.logic.dao.PersonAccess;
 import jee19.logic.dao.PollAccess;
 import jee19.logic.dao.PollStateAccess;
 import jee19.logic.dao.PollTypeAccess;
+import jee19.logic.dao.ResultAccess;
 import jee19.logic.dao.TokenAccess;
 //import jee19.logic.dao.TokenAccess;
 import jee19.logic.dto.Item;
@@ -60,6 +62,8 @@ public class PollLogicImpl implements PollLogic{
     @EJB
     private PollAccess pollAccess;
    
+    @EJB
+    private ResultAccess resultAccess;
         
     @EJB
     private ItemAccess itemAccess;
@@ -160,11 +164,31 @@ public class PollLogicImpl implements PollLogic{
             itemEntity.add(itemAccess.getByUuid(i.getUuid()));
         }
         
+        for(Item i: items){
+            createResultEntity(pollEntity.getName()+i.getName(),pollEntity.getUuid(),i.getUuid());
+        }
+        
         pollEntity.setItemEntities(itemEntity);
-        
-        
+
         
     return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+    }
+    
+    private ResultEntity createResultEntity(String name,String pollUUID,String ItemUUID){
+        ResultEntity resultEntity = resultAccess.createEntity(name);
+        resultEntity.setItem(itemAccess.getByUuid(ItemUUID));
+        resultEntity.setPoll(pollAccess.getByUuid(pollUUID));
+        resultEntity.setNumberOfVotes(0);
+        return resultEntity;  
+    }
+    
+    
+    @Override
+    public void addToVotes(String token,String pollUUID,String ItemUUID){
+        ResultEntity resultEntity = resultAccess.getEntityByPollAndItemID(pollUUID, ItemUUID);
+        resultEntity.setNumberOfVotes(resultEntity.getNumberOfVotes()+1);
+        TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
+        tokenEntity.setUsed(Boolean.TRUE);
     }
     
     private Token createToken(String name,Person person,PollEntity pollEntity){
@@ -173,7 +197,14 @@ public class PollLogicImpl implements PollLogic{
         tokenEntity.setPersonEntity(personEntity); 
         tokenEntity.setPollEntity(pollEntity);
         tokenEntity.setToken(hashAString(name));
+        tokenEntity.setUsed(false);
         return new Token(tokenEntity.getUuid(), tokenEntity.getJpaVersion(), tokenEntity.getName());
+    }
+    
+    @Override
+    public boolean isTokenUsed(String token){
+       TokenEntity tokenEntity = getTokenByTokenString(token);
+       return   tokenEntity.getUsed();
     }
     
     private String hashAString(String input){
@@ -228,9 +259,10 @@ public class PollLogicImpl implements PollLogic{
           return poll;
     }
     
-    public void sendVote(){
-        
+    private TokenEntity getTokenByTokenString(String token){
+        return  tokenAccess.getTokenObjectByTokenString(token);
     }
+    
     
     
     

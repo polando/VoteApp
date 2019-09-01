@@ -49,23 +49,30 @@ public class tokenCheckBean implements Serializable {
          return polllogic.checkToken(loginBean.getUser().getUuid(),token);
     }
     
+    private boolean isTokenUsed(){
+       return polllogic.isTokenUsed(token);
+    }
+    
     private Poll getPollIfAllowed(){
         Poll poll = null;
         if(checkToken()){
-            System.out.println("true");
              poll = polllogic.getPollByToken(token);
-             for(Item i:poll.getItemEntities())
-                System.out.println("poll items : "+i.getItem());
         }
         return poll;
     }
     
     public String goToVoting(){
+        if(!isTokenUsed()){
         Poll poll = getPollIfAllowed();
         if(poll != null){
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
             flash.put("poll", poll);
+            flash.put("token", token);
             return "confirmed";
+            }
+        else{
+             return "failed";
+            }
         }
         else{
             return "failed";

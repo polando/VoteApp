@@ -32,6 +32,8 @@ public class TokenEntity extends NamedEntity {
     
     private String token;
     
+    private Boolean used;
+    
 
     public PollEntity getPollEntity() {
         return pollEntity;
@@ -56,6 +58,15 @@ public class TokenEntity extends NamedEntity {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public Boolean getUsed() {
+        return used;
+    }
+
+    public void setUsed(Boolean used) {
+        this.used = used;
+    }
+    
     
     
     

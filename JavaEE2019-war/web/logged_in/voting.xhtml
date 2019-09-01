@@ -10,13 +10,15 @@
     xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
-        <pr:selectCheckboxMenu id="pollItems" value="#{votingBean.chosenItem}" label="Cars" multiple="true"
-                               filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter">
-            <f:selectItems value="#{votingBean.listOfItemsOfaPoll}" var="item" itemValue="#{item}"  itemLabel="#{item.item}" />
-        </pr:selectCheckboxMenu> 
-        <b:commandButton id="checkform"
-                         value="${msg.submitButton}"
-                         action="#{votingBean.submitVote()}"
-                         />
+        <b:form id="sendVoteForm">
+            <pr:selectCheckboxMenu id="pollItems" value="#{votingBean.chosenItems}" multiple="true"
+                                   filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter">
+                <f:selectItems value="#{votingBean.voteItems}" var="item" itemValue="#{item}"  itemLabel="#{item.item}" />
+            </pr:selectCheckboxMenu> 
+            <b:commandButton id="sendVote"
+                             value="${msg.submitButton}"
+                             action="#{votingBean.submitVote()}"
+                             />
+        </b:form>
     </ui:define>
 </ui:composition>

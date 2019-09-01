@@ -39,6 +39,10 @@ public interface PollLogic {
     public boolean checkToken(String useruuid, String token);
     
     public Poll getPollByToken(String token);
+    
+    public void addToVotes(String token,String pollUUID,String ItemUUID);
+     
+    public boolean isTokenUsed(String token);
 
     
 }

@@ -6,8 +6,10 @@
 package jee19.web;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
@@ -27,41 +29,60 @@ public class votingBean implements Serializable {
     
     private static final long serialVersionUID = -7434000390609622052L;
     
-    private List<Item> voteItems;
+    private Set<Item> voteItems;
     
-    private Item chosenItem;
+    private List<Item> chosenItems;
+    
+    private String token;
+    
     
     
     @EJB
     private PollLogic polllogic;
    
     private Poll poll;
-
-    public Item getChosenItem() {
-        return chosenItem;
-    }
-
-    public void setChosenItem(Item chosenItem) {
-        this.chosenItem = chosenItem;
-    }
     
-    
-    
-    public Set<Item> getListOfItemsOfaPoll(){
+    @PostConstruct
+    public void init(){
         poll = readPollFromFlash();
-        System.out.println(poll.getItemEntities());
-        return poll.getItemEntities();
+        voteItems = poll.getItemEntities();
+        token = readTokenFromFlash();
+        
     }
+
+    public List<Item> getChosenItems() {
+        return chosenItems;
+    }
+
+    public void setChosenItems(List<Item> chosenItems) {
+        this.chosenItems = chosenItems;
+    }
+
+    public Set<Item> getVoteItems() {
+        return voteItems;
+    }
+
+    public void setVoteItems(Set<Item> voteItems) {
+        this.voteItems = voteItems;
+    }
+
+  
     
     public void submitVote(){
-        
-        
+        for(Item i:chosenItems)
+           polllogic.addToVotes(token,poll.getUuid(), i.getUuid());
     }
     
     private Poll readPollFromFlash(){
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         return (Poll)flash.get("poll");
     }
+    
+    private String readTokenFromFlash(){
+        Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+        return (String)flash.get("token");
+    }
+    
     
     
     

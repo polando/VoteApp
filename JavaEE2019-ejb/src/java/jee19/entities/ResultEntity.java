@@ -8,13 +8,17 @@ package jee19.entities;
 import java.util.HashSet;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
  * @author ussocom
  */
-
+@NamedQueries({
+    @NamedQuery(name = "getResultByPollAndItem", query = "SELECT p FROM ResultEntity p WHERE p.poll.uuid = :pollId AND p.item.uuid = :itemId")
+})
 @Entity
 @Table(name="RESULT")
 public class ResultEntity extends NamedEntity{
