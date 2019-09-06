@@ -7,6 +7,8 @@ package jee19.utilities;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -41,6 +43,11 @@ ManagedScheduledExecutorService mses;
 
 @EJB
 private PollAccess pollAccess;
+
+private final String startEventName = "startEvent";
+private final String finsihedEventName = "finishEvent";
+
+private Map<String, ScheduledFuture<?>> eventDictionary = new HashMap<>();
     
     
     public void seTimerForPoll(String pollUUID,Instant startDate,Instant endDate){
@@ -51,9 +58,9 @@ private PollAccess pollAccess;
         Duration fromNowTillStart = Duration.between(Instant.now(),startDate);
         Duration fromNowTillEnd = Duration.between(Instant.now(),endDate);
 
-        
-        ScheduledFuture<?> pollStartVotingEvent =  mses.schedule(changePollState(pollUUID,PollState.VOTING), fromNowTillStart.toMinutes() , TimeUnit.MINUTES);
-        ScheduledFuture<?> pollFinishedVotingEvent =  mses.schedule(changePollState(pollUUID,PollState.FINISHED), fromNowTillEnd.toMinutes() , TimeUnit.MINUTES);
+        scheduleEvent(pollUUID,startEventName,fromNowTillStart.toMinutes(),PollState.VOTING);
+        scheduleEvent(pollUUID,finsihedEventName,fromNowTillEnd.toMinutes(),PollState.FINISHED);
+        cancelEvent(pollUUID,finsihedEventName);
         
     }
 
@@ -76,6 +83,17 @@ private PollAccess pollAccess;
         }
     };
     return aRunnable;
+    }
+    
+    
+    private void scheduleEvent(final String pollUUID,String eventType,long delay,PollState pollState){
+        ScheduledFuture<?> scheduledFuture =  mses.schedule(changePollState(pollUUID,pollState), delay , TimeUnit.MINUTES);
+        eventDictionary.put(pollUUID+eventType, scheduledFuture);
+    }
+    
+    private void cancelEvent(final String pollUUID,String eventType){
+         ScheduledFuture<?> pollEvent = eventDictionary.get(pollUUID+eventType);
+         pollEvent.cancel(true);
     }
     
 }
