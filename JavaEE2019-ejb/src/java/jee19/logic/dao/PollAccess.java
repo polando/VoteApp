@@ -7,6 +7,7 @@ package jee19.logic.dao;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.Entity;
 import jee19.entities.PollEntity;
 
 /**
@@ -30,6 +31,10 @@ public class PollAccess extends AbstractAccess<PollEntity>{
     @Override
     public long getEntityCount() {
         return em.createNamedQuery("getPollCount", Long.class).getSingleResult();
+    }
+    
+    public void updatePoll(PollEntity entity){
+        em.merge(entity);
     }
     
 }

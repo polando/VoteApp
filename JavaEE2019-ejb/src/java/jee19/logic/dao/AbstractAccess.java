@@ -37,4 +37,6 @@ public abstract class AbstractAccess<E extends NamedEntity> {
         em.persist(entity);
         return entity;
     }
+    
+    
 }

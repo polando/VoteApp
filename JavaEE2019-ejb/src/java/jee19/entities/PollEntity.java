@@ -9,6 +9,7 @@ package jee19.entities;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import jee19.logic.PollState;
+import jee19.utilities.PollStateJpaConverter;
 
 /**
  *
@@ -44,13 +47,16 @@ public class PollEntity extends NamedEntity{
     
     private Instant createDate;
     
+    @Convert(converter = PollStateJpaConverter.class)
+    private PollState pollState;
+    
     
     @ManyToOne
     private PollTypeEntity pollTypeEntity;
    
     
-    @ManyToOne
-    private PollStateEntity pollStateEntity;
+  /*  @ManyToOne
+    private PollStateEntity pollStateEntity;*/
     
     
     @ManyToMany
@@ -156,13 +162,13 @@ public class PollEntity extends NamedEntity{
         this.title = title;
     }
 
-    public PollStateEntity getPollStateEntity() {
+   /* public PollStateEntity getPollStateEntity() {
         return pollStateEntity;
     }
 
     public void setPollStateEntity(PollStateEntity pollStateEntity) {
         this.pollStateEntity = pollStateEntity;
-    }
+    }*/
 
     public Set<ItemEntity> getItemEntities() {
         return itemEntities;
@@ -180,6 +186,18 @@ public class PollEntity extends NamedEntity{
         this.tokens = tokens;
     }
 
+    public PollState getPollState() {
+        return pollState;
+    }
+
+    public void setPollState(PollState pollState) {
+        this.pollState = pollState;
+    }
+
+   
+
+    
+    
     
 
     

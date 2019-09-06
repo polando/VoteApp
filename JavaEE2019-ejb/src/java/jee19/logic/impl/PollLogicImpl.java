@@ -8,29 +8,27 @@ package jee19.logic.impl;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
 import jee19.entities.PollEntity;
-import jee19.entities.PollStateEntity;
 import jee19.entities.PollTypeEntity;
 import jee19.entities.ResultEntity;
 import jee19.entities.TokenEntity;
+import java.time.Instant;
+
 //import jee19.entities.TokenEntity;
 import jee19.logic.PollLogic;
+import jee19.logic.PollState;
 import jee19.logic.dao.ItemAccess;
 import jee19.logic.dao.PersonAccess;
 import jee19.logic.dao.PollAccess;
-import jee19.logic.dao.PollStateAccess;
 import jee19.logic.dao.PollTypeAccess;
 import jee19.logic.dao.ResultAccess;
 import jee19.logic.dao.TokenAccess;
@@ -38,9 +36,9 @@ import jee19.logic.dao.TokenAccess;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
-import jee19.logic.dto.PollState;
 import jee19.logic.dto.PollType;
 import jee19.logic.dto.Token;
+import jee19.utilities.BackgroundJobManager;
 
 /**
  *
@@ -57,9 +55,6 @@ public class PollLogicImpl implements PollLogic{
     private PollTypeAccess pollTypeAccess;
     
     @EJB
-    private PollStateAccess pollStateAccess;
-    
-    @EJB
     private PollAccess pollAccess;
    
     @EJB
@@ -70,6 +65,11 @@ public class PollLogicImpl implements PollLogic{
     
     @EJB
     private TokenAccess tokenAccess;
+    
+    @EJB
+    private BackgroundJobManager backgroundJobManager;
+    
+
     
 
     @Override
@@ -99,7 +99,7 @@ public class PollLogicImpl implements PollLogic{
         return result;
     }
     
-    @Override
+ /*   @Override
     public List<PollState> getAllPollStates() {
             List<PollStateEntity> l = pollStateAccess.getPollStateList();
             List<PollState> result = new ArrayList<>(l.size());
@@ -109,7 +109,7 @@ public class PollLogicImpl implements PollLogic{
             result.add(p);
         }
         return result;
-    }
+    }*/
     
 
     @Override
@@ -134,10 +134,9 @@ public class PollLogicImpl implements PollLogic{
     }
 
     @Override
-    public Poll createPoll(String title, String description,PollType polltype,PollState pollstate, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ,List<Item> items) {
+    public Poll createPoll(String title, String description,PollType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ,List<Item> items) {
         PollEntity pollEntity = pollAccess.createEntity(title);
         PollTypeEntity pollTypeEntity = pollTypeAccess.getByUuid(polltype.getUuid());
-       // PollStateEntity  pollStateEntity= pollStateAccess.getByUuid(pollstate.getUuid());
         Set<TokenEntity> tokenEntity = new HashSet<>();
         Set<PersonEntity> organizerEntity = new HashSet<>();
         Set<ItemEntity> itemEntity = new HashSet<>();
@@ -148,7 +147,6 @@ public class PollLogicImpl implements PollLogic{
         pollEntity.setPollTypeEntity(pollTypeEntity);
         pollEntity.setTitle(title);
         pollEntity.setDescription(description);
-        //pollEntity.setParticipants(participantEntity);
         pollEntity.setOrganizers(organizerEntity);
         pollEntity.setStartDate(startDateInstant);
         pollEntity.setEndDate(endDateInstant);
@@ -160,15 +158,19 @@ public class PollLogicImpl implements PollLogic{
         }
         pollEntity.setTokens(tokenEntity);
         
-        for(Item i: items){
+        items.forEach((i) -> {
             itemEntity.add(itemAccess.getByUuid(i.getUuid()));
-        }
+        });
         
-        for(Item i: items){
+        items.forEach((i) -> {
             createResultEntity(pollEntity.getName()+i.getName(),pollEntity.getUuid(),i.getUuid());
-        }
+        });
         
         pollEntity.setItemEntities(itemEntity);
+        
+        pollEntity.setPollState(PollState.STARTED);
+        
+        backgroundJobManager.seTimerForPoll(pollEntity.getUuid(), startDateInstant, endDateInstant);
 
         
     return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
@@ -263,9 +265,14 @@ public class PollLogicImpl implements PollLogic{
         return  tokenAccess.getTokenObjectByTokenString(token);
     }
     
+   
     
+   
     
+
+
     
+
     
     
     
