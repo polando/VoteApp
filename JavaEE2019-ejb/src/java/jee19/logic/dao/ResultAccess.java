@@ -5,6 +5,7 @@
  */
 package jee19.logic.dao;
 
+import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
@@ -40,6 +41,13 @@ public class ResultAccess extends AbstractAccess<ResultEntity>{
                  .setParameter("itemId", itemId)
                  .getSingleResult();
     }
+    
+    public List<ResultEntity> getEntityByPollID(String pollId){
+         return em.createNamedQuery("getResultByPollID", ResultEntity.class)
+                 .setParameter("pollId", pollId)
+                 .getResultList();
+    }
+    
 
     
     

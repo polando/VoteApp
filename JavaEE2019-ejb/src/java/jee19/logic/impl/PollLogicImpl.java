@@ -38,6 +38,7 @@ import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
 import jee19.logic.dto.PollType;
 import jee19.logic.dto.Token;
+import jee19.logic.dto.VoteResult;
 import jee19.utilities.BackgroundJobManager;
 
 /**
@@ -265,8 +266,30 @@ public class PollLogicImpl implements PollLogic{
         return  tokenAccess.getTokenObjectByTokenString(token);
     }
     
-   
+   @Override
+    public Set<Poll> getFinishedPollsIDListByOrganizer(String organizerUUID){
+        Set<Poll> polls = new HashSet<>();
+        for(PollEntity pollEntity: pollAccess.getFinishedPollsIDListByOrganizer(organizerUUID)){
+            Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+            poll.setTitle(pollEntity.getTitle());
+            polls.add(poll);
+        }
+        return polls;
+    }
     
+    
+    @Override
+    public Set<VoteResult> getPollResultByPollid(String pollUUID){
+        Set<VoteResult> results = new HashSet<>();
+        for(ResultEntity resultEntity: resultAccess.getEntityByPollID(pollUUID)){
+            VoteResult voteResult = new VoteResult(resultEntity.getUuid(), resultEntity.getJpaVersion(), resultEntity.getName());
+            voteResult.setItem(resultEntity.getItem());
+            voteResult.setNumberOfVotes(resultEntity.getNumberOfVotes());
+            results.add(voteResult);
+        }
+        
+        return results;
+    }
    
     
 

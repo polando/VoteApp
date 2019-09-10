@@ -29,6 +29,7 @@ import jee19.utilities.PollStateJpaConverter;
 @NamedQueries({
     @NamedQuery(name = "getPollCount", query = "SELECT COUNT(p) FROM PollEntity p"),
     @NamedQuery(name = "getPollList", query = "SELECT p FROM PollEntity p ORDER BY p.name, p.uuid"),
+    @NamedQuery(name = "getFinishedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID ")
 })
 @Entity
 @Table(name="POLL")

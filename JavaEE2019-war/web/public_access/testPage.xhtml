@@ -20,7 +20,7 @@
                     <h:outputText value="Title"/>
                 </b:column>
                 <b:column span="5">
-                    <b:inputText placeholder="Type Title here..." value="#{createPollBean.title}"/>
+                    <b:inputText placeholder="Type Title here..." value="#{createPollBean.title}"  required="true"/>
                 </b:column> 
             </b:row>
             <b:row>
@@ -28,7 +28,7 @@
                     <h:outputText value="Description"/>
                 </b:column>
                 <b:column span="5">
-                    <b:inputText placeholder="Type description here..." value="#{createPollBean.description}"/>
+                    <b:inputText placeholder="Type description here..." value="#{createPollBean.description}" required="true"/>
                 </b:column> 
             </b:row>
             <b:row>
@@ -36,7 +36,7 @@
                     <h:outputText value="Start Date"/>
                 </b:column>
                 <b:column span="5">
-                    <b:dateTimePicker  placeholder="Select start date" value="#{createPollBean.startDate}" mode="popup-icon" />
+                    <b:dateTimePicker  placeholder="Select start date" value="#{createPollBean.startDate}" mode="popup-icon" required="true" />
                 </b:column> 
             </b:row>
             <b:row>
@@ -44,7 +44,7 @@
                     <h:outputText value="End Date"/>
                 </b:column>
                 <b:column span="5">
-                    <b:dateTimePicker  placeholder="Select end date" value="#{createPollBean.endDate}" mode="popup-icon" />
+                    <b:dateTimePicker  placeholder="Select end date" value="#{createPollBean.endDate}" mode="popup-icon" required="true" />
                 </b:column> 
             </b:row>
             <b:row>
@@ -52,7 +52,7 @@
                     <h:outputText value="Poll Type"/>
                 </b:column> 
                 <b:column span="1">
-                    <b:selectOneMenu id="pollTypes" value="#{createPollBean.polltype}" >
+                    <b:selectOneMenu id="pollTypes" value="#{createPollBean.polltype}"  required="true">
                         <f:selectItems value="${pollBean.polltypes}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.ptype}" />
                         <f:ajax render="pollItems"  />
                     </b:selectOneMenu>
@@ -65,7 +65,7 @@
                     <b:button value="Add Item" look="primary" p:data-target="#addItemModal" p:data-toggle="modal"  />
                 </b:column>
                 <pr:selectCheckboxMenu id="pollItems" value="#{createPollBean.items}" label="Cars" multiple="true"
-                                   filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter">
+                                       filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true">
                     <f:selectItems value="#{pollBean.pollitems}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.item}" />
                 </pr:selectCheckboxMenu> 
              <!--   <b:column id="pollItems">

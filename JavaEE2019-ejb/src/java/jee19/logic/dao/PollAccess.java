@@ -5,10 +5,12 @@
  */
 package jee19.logic.dao;
 
+import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.Entity;
 import jee19.entities.PollEntity;
+import jee19.logic.PollState;
 
 /**
  *
@@ -35,6 +37,13 @@ public class PollAccess extends AbstractAccess<PollEntity>{
     
     public void updatePoll(PollEntity entity){
         em.merge(entity);
+    }
+    
+    public List<PollEntity> getFinishedPollsIDListByOrganizer(String organizerUUID){
+         return em.createNamedQuery("getFinishedPollsIDListByOrganizer", PollEntity.class)
+                 .setParameter("organizerUUID", organizerUUID)
+                // .setParameter("state", PollState.FINISHED)
+                 .getResultList();
     }
     
 }

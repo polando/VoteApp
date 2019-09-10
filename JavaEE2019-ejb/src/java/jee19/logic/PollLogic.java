@@ -9,10 +9,12 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Remote;
+import jee19.entities.PollEntity;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
 import jee19.logic.dto.PollType;
+import jee19.logic.dto.VoteResult;
 
 /**
  *
@@ -41,6 +43,9 @@ public interface PollLogic {
     public void addToVotes(String token,String pollUUID,String ItemUUID);
      
     public boolean isTokenUsed(String token);
-
+    
+    public Set<Poll> getFinishedPollsIDListByOrganizer(String organizerUUID);
+    
+    public Set<VoteResult> getPollResultByPollid(String pollUUID);
     
 }

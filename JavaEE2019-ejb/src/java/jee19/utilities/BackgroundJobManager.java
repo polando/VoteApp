@@ -60,7 +60,6 @@ private Map<String, ScheduledFuture<?>> eventDictionary = new HashMap<>();
 
         scheduleEvent(pollUUID,startEventName,fromNowTillStart.toMinutes(),PollState.VOTING);
         scheduleEvent(pollUUID,finsihedEventName,fromNowTillEnd.toMinutes(),PollState.FINISHED);
-        cancelEvent(pollUUID,finsihedEventName);
         
     }
 
