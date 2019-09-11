@@ -22,6 +22,8 @@ import jee19.entities.PollTypeEntity;
 import jee19.entities.ResultEntity;
 import jee19.entities.TokenEntity;
 import java.time.Instant;
+import java.util.HashMap;
+import jee19.entities.NamedEntity;
 
 //import jee19.entities.TokenEntity;
 import jee19.logic.PollLogic;
@@ -39,6 +41,8 @@ import jee19.logic.dto.Poll;
 import jee19.logic.dto.PollType;
 import jee19.logic.dto.Token;
 import jee19.utilities.BackgroundJobManager;
+import jee19.utilities.MailBean;
+import jee19.utilities.Notification;
 
 /**
  *
@@ -69,6 +73,8 @@ public class PollLogicImpl implements PollLogic{
     @EJB
     private BackgroundJobManager backgroundJobManager;
     
+    @EJB
+    private Notification notification;
 
     
 
@@ -134,13 +140,23 @@ public class PollLogicImpl implements PollLogic{
     }
 
     @Override
-    public Poll createPoll(String title, String description,PollType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ,List<Item> items) {
+    public Poll createPoll(
+            String title,
+            String description,
+            PollType polltype,
+            Instant endDateInstant,
+            Instant createDateInstant,
+            Instant startDateInstant,
+            List<Person> participants,
+            List<Person> organizers,
+            List<Item> items
+    ) {
         PollEntity pollEntity = pollAccess.createEntity(title);
         PollTypeEntity pollTypeEntity = pollTypeAccess.getByUuid(polltype.getUuid());
         Set<TokenEntity> tokenEntity = new HashSet<>();
         Set<PersonEntity> organizerEntity = new HashSet<>();
         Set<ItemEntity> itemEntity = new HashSet<>();
-      
+
          for(Person p: organizers){
             organizerEntity.add(personAccess.getByUuid(p.getUuid()));
         }
@@ -151,17 +167,23 @@ public class PollLogicImpl implements PollLogic{
         pollEntity.setStartDate(startDateInstant);
         pollEntity.setEndDate(endDateInstant);
         pollEntity.setCreateDate(createDateInstant);
-                
+
+        HashMap<String, String> emailInfo = new HashMap<String, String>();
+        emailInfo = getPollInfo(pollEntity, participants);
+
         for(Person p: participants){
-          tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName()+pollEntity.getName(),p,pollEntity).getUuid()));
-          
+            Token token = createToken(p.getName()+pollEntity.getName(),p,pollEntity);
+            tokenEntity.add(tokenAccess.getByUuid(token.getUuid()));
+            emailInfo.put("token", token.getToken());
+            emailInfo.put("email", p.getName());
+            notification.sendNotificationToParticioants(emailInfo);
         }
         pollEntity.setTokens(tokenEntity);
         
         items.forEach((i) -> {
             itemEntity.add(itemAccess.getByUuid(i.getUuid()));
         });
-        
+
         items.forEach((i) -> {
             createResultEntity(pollEntity.getName()+i.getName(),pollEntity.getUuid(),i.getUuid());
         });
@@ -176,6 +198,16 @@ public class PollLogicImpl implements PollLogic{
     return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
     
+    private HashMap getPollInfo(PollEntity pollEntity, List<Person> participants)
+    {
+        HashMap<String, String> emailInfo = new HashMap<String, String>();
+        emailInfo.put("title", pollEntity.getTitle());
+        emailInfo.put("start_date", pollEntity.getStartDate().toString());
+        emailInfo.put("end_date", pollEntity.getEndDate().toString());
+        emailInfo.put("number_of_participants", Integer.toString(participants.size()));
+        return emailInfo;
+    }
+
     private ResultEntity createResultEntity(String name,String pollUUID,String ItemUUID){
         ResultEntity resultEntity = resultAccess.createEntity(name);
         resultEntity.setItem(itemAccess.getByUuid(ItemUUID));
@@ -200,7 +232,11 @@ public class PollLogicImpl implements PollLogic{
         tokenEntity.setPollEntity(pollEntity);
         tokenEntity.setToken(hashAString(name));
         tokenEntity.setUsed(false);
-        return new Token(tokenEntity.getUuid(), tokenEntity.getJpaVersion(), tokenEntity.getName());
+
+        Token token   = new Token(tokenEntity.getUuid(), tokenEntity.getJpaVersion(), tokenEntity.getName());
+        token.setToken(tokenEntity.getToken());
+        return token;
+
     }
     
     @Override
@@ -264,21 +300,4 @@ public class PollLogicImpl implements PollLogic{
     private TokenEntity getTokenByTokenString(String token){
         return  tokenAccess.getTokenObjectByTokenString(token);
     }
-    
-   
-    
-   
-    
-
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
 }
