@@ -37,7 +37,7 @@ public class itemBean implements Serializable{
     
     
     public void createItem(){
-        polllogic.createPollItem(item);
+        polllogic.createPollItem(item,false);
     }
     
 }

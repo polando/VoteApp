@@ -11,9 +11,9 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
+import jee19.logic.PollType;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
-import jee19.logic.dto.PollType;
 
 /**
  *
@@ -48,6 +48,11 @@ public class pollBean implements Serializable {
     
     public List<Item> getPollitems() {
         return polllogic.getAllPollItems();
+    }
+    
+        
+    public List<Item> getNonPermanentPollItems() {
+        return polllogic.getNonPermanentPollItems();
     }
     
     

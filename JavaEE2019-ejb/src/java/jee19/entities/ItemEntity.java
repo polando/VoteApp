@@ -21,6 +21,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "getPollItemCount", query = "SELECT COUNT(p) FROM ItemEntity p"),
     @NamedQuery(name = "getPollItemList", query = "SELECT p FROM ItemEntity p ORDER BY p.name, p.uuid"),
+    @NamedQuery(name = "getNonPermanentPollItems", query = "SELECT p FROM ItemEntity p WHERE p.permanentItem = FALSE ORDER BY p.name, p.uuid")
 })
 @Entity
 @Table(name="ITEM")
@@ -34,7 +35,11 @@ public class ItemEntity extends NamedEntity {
     
     @ManyToMany(mappedBy = "itemEntities")
     private Set<PollEntity> pollEntities;
-
+    
+    private String Item;
+    
+    private boolean permanentItem;
+    
     public ItemEntity() {
     }
 
@@ -45,7 +50,7 @@ public class ItemEntity extends NamedEntity {
         }
     }
     
-    private String Item;
+   
 
     public Set<ResultEntity> getResultEntities() {
         return resultEntities;
@@ -70,6 +75,14 @@ public class ItemEntity extends NamedEntity {
 
     public void setPollEntities(Set<PollEntity> pollEntities) {
         this.pollEntities = pollEntities;
+    }
+
+    public boolean isPermanentItem() {
+        return permanentItem;
+    }
+
+    public void setPermanentItem(boolean permanentItem) {
+        this.permanentItem = permanentItem;
     }
     
     

@@ -8,7 +8,8 @@ package jee19.logic.dto;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
-import jee19.entities.PollTypeEntity;
+import jee19.logic.PollType;
+
 
 
 /**

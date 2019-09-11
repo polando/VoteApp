@@ -15,20 +15,17 @@ import javax.mail.MessagingException;
 import jee19.entities.CourseEntity;
 import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
-import jee19.entities.PollTypeEntity;
 import jee19.entities.TeamEntity;
 import jee19.logic.TeamBusinessLogic;
 import jee19.logic.Term;
 import jee19.logic.dao.CourseAccess;
 import jee19.logic.dao.ItemAccess;
 import jee19.logic.dao.PersonAccess;
-import jee19.logic.dao.PollTypeAccess;
 import jee19.logic.dao.TeamAccess;
 import jee19.logic.dto.Course;
 import jee19.logic.dto.CourseDetails;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
-import jee19.logic.dto.PollType;
 import jee19.logic.dto.Team;
 
 /**
@@ -46,8 +43,6 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
     @EJB
     private TeamAccess teamAccess;
     
-    @EJB
-    private PollTypeAccess pollTypeAccess;
     
     @EJB
     private ItemAccess itemAccess;
@@ -236,9 +231,10 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
             "mike", "november", "oscar", "papa", "quebec", "romeo", "sierra",
             "tango", "uniform", "victor", "whiskey", "xray", "yankee", "zulu"};
         
-        final String[] POLLTYPES = {"yes/no","1 of n" , "m of n"};
         
-        final String[] POLLITEMS = {"item1","item2","item3"};
+        final String[] PREPOLLITEMS = {"Yes","No"};
+        
+        final String[] NONPREPOLLITEMS = {"item 1","item 2"};
 
         Random rnd = new Random();
 
@@ -248,12 +244,12 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
             persons.add(personAccess.createEntity(name));
         }
         
-        for (String name : POLLTYPES){
-             createPollType(name);
+        for (String name : PREPOLLITEMS){
+             createPollItem(name,true);
         }
         
-        for (String name : POLLITEMS){
-             createPollItem(name);
+        for (String name : NONPREPOLLITEMS){
+             createPollItem(name,false);
         }
         
 
@@ -280,15 +276,11 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
         }
     }
     
-    public PollType createPollType(String name) {
-        PollTypeEntity p = pollTypeAccess.createEntity(name);
-        p.setPollType(name);
-        return new PollType(p.getUuid(), p.getJpaVersion(), p.getName());
-    }
     
-    public Item createPollItem(String name) {
+    public Item createPollItem(String name,boolean premenant) {
         ItemEntity p = itemAccess.createEntity(name);
         p.setItem(name);
+        p.setPermanentItem(premenant);
         return new Item(p.getUuid(), p.getJpaVersion(), p.getName());
     }
 

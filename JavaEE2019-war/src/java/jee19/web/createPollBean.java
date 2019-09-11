@@ -19,10 +19,10 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
+import jee19.logic.PollType;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollState;
-import jee19.logic.dto.PollType;
 
 /**
  *
@@ -150,11 +150,12 @@ public class createPollBean implements Serializable {
         this.pollstate = pollstate;
     }
     
-    
 
     @PostConstruct
     public void init(){
          participants = new ArrayList<>();
+         polltype = PollType.YesNo;
+         
     }
     
     public void createPoll(){
@@ -180,10 +181,18 @@ public class createPollBean implements Serializable {
          return t;
     }
     
+    
     void setNowAsCurrentDate(){
         setCreateDate(new Date());
     }
     
+    
+    public boolean isYesNo(){
+       if(polltype.equals(PollType.YesNo))
+        return true;
+       else
+        return false;
+    }
     
     
     

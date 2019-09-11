@@ -20,7 +20,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import jee19.logic.PollState;
+import jee19.logic.PollType;
 import jee19.utilities.PollStateJpaConverter;
+import jee19.utilities.PollTypeJpaConverter;
 
 /**
  *
@@ -51,9 +53,8 @@ public class PollEntity extends NamedEntity{
     @Convert(converter = PollStateJpaConverter.class)
     private PollState pollState;
     
-    
-    @ManyToOne
-    private PollTypeEntity pollTypeEntity;
+    @Convert(converter = PollTypeJpaConverter.class)
+    private PollType pollType;
    
     
   /*  @ManyToOne
@@ -114,14 +115,6 @@ public class PollEntity extends NamedEntity{
         this.resultEntities = resultEntities;
     }
 
-    
-    public PollTypeEntity getPollTypeEntity() {
-        return pollTypeEntity;
-    }
-
-    public void setPollTypeEntity(PollTypeEntity pollTypeEntity) {
-        this.pollTypeEntity = pollTypeEntity;
-    }
 
     public Instant getStartDate() {
         return startDate;
@@ -195,8 +188,16 @@ public class PollEntity extends NamedEntity{
         this.pollState = pollState;
     }
 
-   
+    public PollType getPollType() {
+        return pollType;
+    }
 
+    public void setPollType(PollType pollType) {
+        this.pollType = pollType;
+    }
+
+   
+    
     
     
     

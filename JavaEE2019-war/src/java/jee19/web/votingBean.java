@@ -16,6 +16,7 @@ import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
+import jee19.logic.PollType;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Poll;
 
@@ -32,6 +33,8 @@ public class votingBean implements Serializable {
     private Set<Item> voteItems;
     
     private List<Item> chosenItems;
+    
+    private Item chosenItem;
     
     private String token;
     
@@ -69,8 +72,11 @@ public class votingBean implements Serializable {
   
     
     public void submitVote(){
+      if(isMultipleAllowed())  
         for(Item i:chosenItems)
            polllogic.addToVotes(token,poll.getUuid(), i.getUuid());
+      else if(isOneOfM())
+           polllogic.addToVotes(token,poll.getUuid(), chosenItem.getUuid());
     }
     
     private Poll readPollFromFlash(){
@@ -82,6 +88,37 @@ public class votingBean implements Serializable {
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
         return (String)flash.get("token");
     }
+    
+    public boolean isMultipleAllowed(){
+       if(poll.getPollType().equals(PollType.NOfM))
+        return true;
+       else
+        return false;
+    }
+    
+    public boolean isOneOfM(){
+       if(poll.getPollType().equals(PollType.OneOfM))
+        return true;
+       else
+        return false;
+    }
+    
+    public boolean isYesNo(){
+       if(poll.getPollType().equals(PollType.YesNo))
+        return true;
+       else
+        return false;
+    }
+
+    public Item getChosenItem() {
+        return chosenItem;
+    }
+
+    public void setChosenItem(Item chosenItem) {
+        this.chosenItem = chosenItem;
+    }
+    
+    
     
     
     

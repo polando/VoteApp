@@ -53,6 +53,5 @@ public class pollResult implements Serializable {
              System.out.println("poll id" + res.getItem());
          }
          return results; 
-    }
-    
+    }    
 }

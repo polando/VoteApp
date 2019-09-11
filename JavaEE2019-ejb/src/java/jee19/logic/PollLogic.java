@@ -13,7 +13,6 @@ import jee19.entities.PollEntity;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
-import jee19.logic.dto.PollType;
 import jee19.logic.dto.VoteResult;
 
 /**
@@ -30,9 +29,11 @@ public interface PollLogic {
     
     public List<Item> getAllPollItems();
     
+    public List<Item> getNonPermanentPollItems(); 
+    
   //  public List<PollState> getAllPollStates();
     
-    public Item createPollItem(String name);
+    public Item createPollItem(String name,boolean permanent);
     
     public Poll createPoll(String title, String description,PollType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers,List<Item> items );
     

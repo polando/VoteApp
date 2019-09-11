@@ -18,7 +18,6 @@ import javax.ejb.Stateless;
 import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
 import jee19.entities.PollEntity;
-import jee19.entities.PollTypeEntity;
 import jee19.entities.ResultEntity;
 import jee19.entities.TokenEntity;
 import java.time.Instant;
@@ -26,17 +25,16 @@ import java.time.Instant;
 //import jee19.entities.TokenEntity;
 import jee19.logic.PollLogic;
 import jee19.logic.PollState;
+import jee19.logic.PollType;
 import jee19.logic.dao.ItemAccess;
 import jee19.logic.dao.PersonAccess;
 import jee19.logic.dao.PollAccess;
-import jee19.logic.dao.PollTypeAccess;
 import jee19.logic.dao.ResultAccess;
 import jee19.logic.dao.TokenAccess;
 //import jee19.logic.dao.TokenAccess;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
-import jee19.logic.dto.PollType;
 import jee19.logic.dto.Token;
 import jee19.logic.dto.VoteResult;
 import jee19.utilities.BackgroundJobManager;
@@ -52,8 +50,6 @@ public class PollLogicImpl implements PollLogic{
     @EJB
     private PersonAccess personAccess;
     
-    @EJB
-    private PollTypeAccess pollTypeAccess;
     
     @EJB
     private PollAccess pollAccess;
@@ -90,13 +86,9 @@ public class PollLogicImpl implements PollLogic{
 
     @Override
     public List<PollType> getAllPollTypes() {
-        List<PollTypeEntity> l = pollTypeAccess.getPollTypeList();
-                List<PollType> result = new ArrayList<>(l.size());
-        for (PollTypeEntity pe : l) {
-            PollType p = new PollType(pe.getUuid(), pe.getJpaVersion(), pe.getName());
-            p.setPtype(pe.getPollType());
+            List<PollType> result = new ArrayList<>();
+            for(PollType p:PollType.values())
             result.add(p);
-        }
         return result;
     }
     
@@ -128,16 +120,16 @@ public class PollLogicImpl implements PollLogic{
     }
     
     @Override
-    public Item createPollItem(String name) {
+    public Item createPollItem(String name,boolean permanent) {
         ItemEntity p = itemAccess.createEntity(name);
         p.setItem(name);
+        p.setPermanentItem(permanent);
         return new Item(p.getUuid(), p.getJpaVersion(), p.getName());
     }
 
     @Override
     public Poll createPoll(String title, String description,PollType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ,List<Item> items) {
         PollEntity pollEntity = pollAccess.createEntity(title);
-        PollTypeEntity pollTypeEntity = pollTypeAccess.getByUuid(polltype.getUuid());
         Set<TokenEntity> tokenEntity = new HashSet<>();
         Set<PersonEntity> organizerEntity = new HashSet<>();
         Set<ItemEntity> itemEntity = new HashSet<>();
@@ -145,7 +137,7 @@ public class PollLogicImpl implements PollLogic{
          for(Person p: organizers){
             organizerEntity.add(personAccess.getByUuid(p.getUuid()));
         }
-        pollEntity.setPollTypeEntity(pollTypeEntity);
+        pollEntity.setPollType(polltype);
         pollEntity.setTitle(title);
         pollEntity.setDescription(description);
         pollEntity.setOrganizers(organizerEntity);
@@ -258,6 +250,7 @@ public class PollLogicImpl implements PollLogic{
                       item.setItem(e.getItem());
                       items.add(item);
                   });
+                poll.setPollType(pollEntity.getPollType());
                 poll.setItemEntities(items);
           return poll;
     }
@@ -290,6 +283,22 @@ public class PollLogicImpl implements PollLogic{
         
         return results;
     }
+
+    @Override
+    public List<Item> getNonPermanentPollItems() {
+        List<ItemEntity> l = itemAccess.getNonPermanentPollItems();
+        List<Item> result = new ArrayList<>(l.size());
+        
+        for (ItemEntity pe : l) {
+            Item p = new Item(pe.getUuid(), pe.getJpaVersion(), pe.getName());
+            p.setItem(pe.getItem());
+            p.setPermanentItem(pe.isPermanentItem());
+            result.add(p);
+        }
+        return result;
+    }
+
+
    
     
 

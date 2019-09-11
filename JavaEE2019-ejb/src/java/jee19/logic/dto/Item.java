@@ -18,6 +18,8 @@ public class Item extends Named {
     }
     
      private String Item;
+     
+     private boolean permanentItem; 
 
 
     public String getItem() {
@@ -26,6 +28,14 @@ public class Item extends Named {
 
     public void setItem(String Item) {
         this.Item = Item;
+    }
+
+    public boolean isPermanentItem() {
+        return permanentItem;
+    }
+
+    public void setPermanentItem(boolean permanentItem) {
+        this.permanentItem = permanentItem;
     }
      
      
