@@ -158,10 +158,12 @@ public class createPollBean implements Serializable {
          
     }
     
-    public void createPoll(){
+    public String createPoll(){
         setNowAsCurrentDate();
         polllogic.createPoll(title, description, polltype, endDateInstant, createDateInstant, startDateInstant,participants,organizers,items);
+        return "pollCreatedSuccessfully";
     }
+    
     
     
     

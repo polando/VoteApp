@@ -10,16 +10,6 @@
     xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
-        <b:form id="voteResultPage">
-            <pr:dataTable id="voteTable"
-                          value="${pollResult.pollResultByPollidFromFlash()}" var="res">
-                <pr:column headerText="Item">
-                    <h:outputText value="#{res.item.item}" />
-                </pr:column>             
-                <pr:column headerText="Number of votes">
-                    <h:outputText value="#{res.numberOfVotes}" />
-                </pr:column>
-            </pr:dataTable>
-        </b:form>
+        <pr:staticMessage severity="info" summary="Successful" detail="Your vote was successfully submitted"/>
     </ui:define>
 </ui:composition>

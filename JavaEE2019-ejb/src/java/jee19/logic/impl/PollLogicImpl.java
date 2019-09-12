@@ -92,18 +92,6 @@ public class PollLogicImpl implements PollLogic{
         return result;
     }
     
- /*   @Override
-    public List<PollState> getAllPollStates() {
-            List<PollStateEntity> l = pollStateAccess.getPollStateList();
-            List<PollState> result = new ArrayList<>(l.size());
-        for (PollStateEntity pe : l) {
-            PollState p = new PollState(pe.getUuid(), pe.getJpaVersion(), pe.getName());
-            p.setState(pe.getPollState());
-            result.add(p);
-        }
-        return result;
-    }*/
-    
 
     @Override
     public List<Item> getAllPollItems() {
@@ -149,17 +137,28 @@ public class PollLogicImpl implements PollLogic{
           tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName()+pollEntity.getName(),p,pollEntity).getUuid()));
           
         }
+        
         pollEntity.setTokens(tokenEntity);
         
+        if(polltype.equals(PollType.YesNo))
+        {
+            itemEntity.addAll(getPermanentPollItems());
+        }
+        else{
+            
         items.forEach((i) -> {
             itemEntity.add(itemAccess.getByUuid(i.getUuid()));
-        });
+         });    
+        }
         
-        items.forEach((i) -> {
+        
+        itemEntity.forEach((i) -> {
             createResultEntity(pollEntity.getName()+i.getName(),pollEntity.getUuid(),i.getUuid());
         });
         
+        
         pollEntity.setItemEntities(itemEntity);
+
         
         pollEntity.setPollState(PollState.STARTED);
         
@@ -299,7 +298,9 @@ public class PollLogicImpl implements PollLogic{
     }
 
 
-   
+   private List<ItemEntity> getPermanentPollItems(){
+       return itemAccess.getPermanentPollItems();
+   }
     
 
 

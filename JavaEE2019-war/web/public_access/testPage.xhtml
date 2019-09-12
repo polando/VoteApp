@@ -39,48 +39,45 @@
                     <f:selectItems value="${pollBean.polltypes}" var="poll" itemValue="#{poll}"  itemLabel="#{poll}" />
                     <f:ajax render=":pollForm:pollItems"/>
                 </pr:selectOneMenu>
-                
+
                 <pr:outputLabel value="Participants"/>
-                
+
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%">
-                <pr:dataTable id="personTable" value="#{createPollBean.participants}"  var="person">
-                    <pr:column headerText="Email">
-                    <h:outputText value="#{person.name}"/>
-                    </pr:column>
-                </pr:dataTable>
-                <pr:commandButton value="Edit List" type="button" onclick="PF('amodal').show();" />
+                    <pr:dataTable id="personTable" value="#{createPollBean.participants}"  var="person">
+                        <pr:column headerText="Email">
+                            <h:outputText value="#{person.name}"/>
+                        </pr:column>
+                    </pr:dataTable>
+                    <pr:commandButton value="Edit List" type="button" onclick="PF('amodal').show();" />
                 </pr:panelGrid>
-                
-                
+
                 <pr:outputLabel value="Organizers" />
-                
+
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%">
-                <pr:dataTable id="organizersTable" value="#{createPollBean.organizers}" var="person">
-                    <pr:column headerText="Email">
-                    <h:outputText value="#{person.name}"/>
-                    </pr:column>
-                </pr:dataTable>
-                <pr:commandButton value="Edit List" type="button" onclick="PF('orgModal').show();" />
+                    <pr:dataTable id="organizersTable" value="#{createPollBean.organizers}" var="person">
+                        <pr:column headerText="Email">
+                            <h:outputText value="#{person.name}"/>
+                        </pr:column>
+                    </pr:dataTable>
+                    <pr:commandButton value="Edit List" type="button" onclick="PF('orgModal').show();" />
                 </pr:panelGrid> 
-                
 
                 <pr:outputLabel value="Items"/>
-                
+
                 <pr:panelGrid  columns="1" layout="grid" id="pollItems">
-                    <pr:selectCheckboxMenu  value="#{createPollBean.items}" label="Cars" multiple="true"
+                    <pr:selectCheckboxMenu  value="#{createPollBean.items}" multiple="true"
                                             filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" disabled="#{createPollBean.yesNo}" >
                         <f:selectItems value="#{pollBean.nonPermanentPollItems}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.item}" />
                     </pr:selectCheckboxMenu> 
                     <pr:commandButton  value="Item" type="button" onclick="PF('addItemModal').show();" icon="pi pi-plus" disabled="#{createPollBean.yesNo}"/>
                 </pr:panelGrid>
+                
             </pr:panelGrid>
-            
-            
-                <b:commandButton id="createPollButton"
-                                 icon="ok"
-                                 value="Create Poll"
-                                 action="createPoll"
-                                 actionListener="#{createPollBean.createPoll}"/>
+
+            <pr:commandButton id="createPollButton"
+                             icon="pi pi-check"
+                             value="Create Poll"
+                             action="#{createPollBean.createPoll}"/>
 
         </h:form>
 

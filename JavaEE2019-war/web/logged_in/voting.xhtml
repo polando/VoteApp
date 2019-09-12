@@ -10,7 +10,9 @@
     xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
-        <b:form id="sendVoteForm">
+        <h:form id="sendVoteForm">
+            <pr:panelGrid  columns="1" layout="grid" >
+            <pr:outputLabel value="Choose your vote" />        
             <pr:selectCheckboxMenu value="#{votingBean.chosenItems}" multiple="true"
                                    filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" rendered="#{votingBean.multipleAllowed}">
                 <f:selectItems value="#{votingBean.voteItems}" var="item" itemValue="#{item}"  itemLabel="#{item.item}" />
@@ -23,10 +25,11 @@
                                converter="entityConverter" rendered="#{votingBean.yesNo}">
                 <f:selectItems value="#{votingBean.voteItems}" var="item" itemValue="#{item}"  itemLabel="#{item.item}" />
             </pr:selectOneMenu> 
-            <b:commandButton id="sendVote"
+            <pr:commandButton id="sendVote"
                              value="${msg.submitButton}"
                              action="#{votingBean.submitVote()}"
                              />
-        </b:form>
+            </pr:panelGrid>
+        </h:form>
     </ui:define>
 </ui:composition>

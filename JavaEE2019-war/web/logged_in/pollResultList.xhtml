@@ -10,14 +10,17 @@
     xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
-        <b:form id="sendVoteForm">
-            <b:selectOneMenu value="#{pollListBean.selectedPoll}">
-                <f:selectItems value="${pollListBean.finishedPollsByOrganizer}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.title}" />
-            </b:selectOneMenu> 
-            <b:commandButton id="getResult"
-                             value="${msg.submitButton}"
-                             action="#{pollListBean.seeResult}"
-                             />
-        </b:form>
+        <h:form id="sendVoteForm">
+            <pr:panelGrid columns="1" layout="grid">
+                <pr:outputLabel value="Choose the poll" />
+                <pr:selectOneMenu value="#{pollListBean.selectedPoll}" converter="entityConverter">
+                    <f:selectItems value="${pollListBean.finishedPollsByOrganizer}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.title}" />
+                </pr:selectOneMenu> 
+                <pr:commandButton id="getResult"
+                                  value="${msg.submitButton}"
+                                  action="#{pollListBean.seeResult()}"
+                                  />
+            </pr:panelGrid>
+        </h:form>
     </ui:define>
 </ui:composition>

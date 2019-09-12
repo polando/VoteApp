@@ -40,7 +40,7 @@
     <navigation-rule>
         <from-view-id>/public_access/testPage.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>createCourse</from-outcome>
+            <from-outcome>pollCreatedSuccessfully</from-outcome>
             <to-view-id>/logged_in/pollCreationResult.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
@@ -95,6 +95,13 @@
         <navigation-case>
             <from-outcome>showResult</from-outcome>
             <to-view-id>/logged_in/voteResult.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/logged_in/voting.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>voteSumbitSuccess</from-outcome>
+            <to-view-id>/logged_in/voteSubmitResult.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

@@ -11,14 +11,18 @@
     xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
-        <b:form id="checktokenform">
-            <b:inputText id="token" label="token"
+        <h:form id="checktokenform">
+            <pr:panelGrid  columns="1" layout="grid" >
+            <pr:outputLabel value="Token" />    
+            <pr:inputText id="token"
                          value="#{tokenCheckBean.token}"
-                         required="true"></b:inputText>
-            <b:commandButton id="checkform"
+                         required="true"/>
+                        <pr:commandButton id="checkform"
                              value="${msg.submitButton}"
                              action="#{tokenCheckBean.goToVoting()}"
                              />
-        </b:form>
+            </pr:panelGrid>
+
+        </h:form>
     </ui:define>
 </ui:composition>

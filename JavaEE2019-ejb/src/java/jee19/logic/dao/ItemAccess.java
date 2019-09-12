@@ -43,4 +43,12 @@ public class ItemAccess extends AbstractAccess<ItemEntity>{
         ).getResultList();
     }
     
+    public List<ItemEntity> getPermanentPollItems() {
+        return em.createNamedQuery("getPermanentPollItems", ItemEntity.class
+        ).getResultList();
+    }
+    
+    
+    
+    
 }

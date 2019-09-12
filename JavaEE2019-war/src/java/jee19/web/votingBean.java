@@ -71,12 +71,13 @@ public class votingBean implements Serializable {
 
   
     
-    public void submitVote(){
+    public String submitVote(){
       if(isMultipleAllowed())  
         for(Item i:chosenItems)
            polllogic.addToVotes(token,poll.getUuid(), i.getUuid());
       else if(isOneOfM())
            polllogic.addToVotes(token,poll.getUuid(), chosenItem.getUuid());
+      return "voteSumbitSuccess";
     }
     
     private Poll readPollFromFlash(){

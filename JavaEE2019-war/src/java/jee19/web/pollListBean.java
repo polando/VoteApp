@@ -55,6 +55,7 @@ public class pollListBean implements Serializable {
     }
     
     public String seeResult(){
+            System.out.println("changed pageeee");
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
             flash.put("selectedPoll", selectedPoll);
             return "showResult";

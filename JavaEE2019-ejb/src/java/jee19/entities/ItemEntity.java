@@ -21,7 +21,9 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "getPollItemCount", query = "SELECT COUNT(p) FROM ItemEntity p"),
     @NamedQuery(name = "getPollItemList", query = "SELECT p FROM ItemEntity p ORDER BY p.name, p.uuid"),
-    @NamedQuery(name = "getNonPermanentPollItems", query = "SELECT p FROM ItemEntity p WHERE p.permanentItem = FALSE ORDER BY p.name, p.uuid")
+    @NamedQuery(name = "getNonPermanentPollItems", query = "SELECT p FROM ItemEntity p WHERE p.permanentItem = FALSE ORDER BY p.name, p.uuid"),
+    @NamedQuery(name = "getPermanentPollItems", query = "SELECT p FROM ItemEntity p WHERE p.permanentItem = TRUE ORDER BY p.name, p.uuid")
+
 })
 @Entity
 @Table(name="ITEM")
