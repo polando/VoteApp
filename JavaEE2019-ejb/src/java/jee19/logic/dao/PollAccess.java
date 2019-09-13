@@ -46,4 +46,8 @@ public class PollAccess extends AbstractAccess<PollEntity>{
                  .getResultList();
     }
     
+    public List<String> getAllPollTitles(){
+        return em.createNamedQuery("getAllPollTitles", String.class).getResultList();
+    }
+    
 }

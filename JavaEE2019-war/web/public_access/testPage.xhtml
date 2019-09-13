@@ -15,23 +15,39 @@
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
         <h:form id="pollForm">
-            <pr:panelGrid columns="2" layout="grid">
+            <pr:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3">
 
                 <pr:outputLabel value="Title" class="pf"/>
 
-                <pr:inputText placeholder="Type Title here..." value="#{createPollBean.title}"  required="true" class="pf"/>
+                <pr:inputText  id="titleInput" placeholder="Type Title here..." value="#{createPollBean.title}"  required="true" class="pf" validator="#{titleValidator.validate}" requiredMessage="This field cant be empty" style="width: 100%">
+                    <f:ajax event="blur" render="titleInputMessage" /> 
+                </pr:inputText>
+                
+                <pr:message id="titleInputMessage" for="titleInput" />
 
                 <pr:outputLabel value="Description"/>
 
-                <pr:inputText placeholder="Type description here..." value="#{createPollBean.description}" required="true"/>
+                <pr:inputText  id="discInput" placeholder="Type description here..." value="#{createPollBean.description}" required="true" requiredMessage="This field cant be empty" style="width: 100%">
+                    <f:ajax event="blur" render="discInputMessage" /> 
+                </pr:inputText>
+            
+                <pr:message id="discInputMessage" for="discInput" />
 
                 <pr:outputLabel value="Start Date"/>
 
-                <b:dateTimePicker  placeholder="Select start date" value="#{createPollBean.startDate}" mode="popup-icon" required="true" />
+                <b:dateTimePicker   id="startDateInput" placeholder="Select start date" value="#{createPollBean.startDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
+                    <f:ajax event="blur" render="startDateMessage" /> 
+                </b:dateTimePicker>
+                
+                <pr:message id="startDateMessage" for="startDateInput" />
 
                 <pr:outputLabel value="End Date"/>
 
-                <b:dateTimePicker  placeholder="Select end date" value="#{createPollBean.endDate}" mode="popup-icon" required="true" />
+                <b:dateTimePicker id="endDateInput"  placeholder="Select end date" value="#{createPollBean.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
+                    <f:ajax event="blur" render="endDateMessage" /> 
+                </b:dateTimePicker>
+                
+                <pr:message id="endDateMessage" for="endDateInput" />
 
                 <pr:outputLabel value="Poll Type"/>
 
@@ -39,6 +55,8 @@
                     <f:selectItems value="${pollBean.polltypes}" var="poll" itemValue="#{poll}"  itemLabel="#{poll}" />
                     <f:ajax render=":pollForm:pollItems"/>
                 </pr:selectOneMenu>
+                
+                <pr:message id="pollTypesMessage" for="pollTypes" />
 
                 <pr:outputLabel value="Participants"/>
 
@@ -50,6 +68,8 @@
                     </pr:dataTable>
                     <pr:commandButton value="Edit List" type="button" onclick="PF('amodal').show();" />
                 </pr:panelGrid>
+                
+                <pr:message id="personTableMessage" for="personTable" />
 
                 <pr:outputLabel value="Organizers" />
 
@@ -62,17 +82,26 @@
                     <pr:commandButton value="Edit List" type="button" onclick="PF('orgModal').show();" />
                 </pr:panelGrid> 
 
+                
+                <pr:message id="organizersTableMessage" for="organizersTable" />
+
+                                
                 <pr:outputLabel value="Items"/>
 
                 <pr:panelGrid  columns="1" layout="grid" id="pollItems">
                     <pr:selectCheckboxMenu  value="#{createPollBean.items}" multiple="true"
-                                            filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" disabled="#{createPollBean.yesNo}" >
+                                            filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" disabled="#{createPollBean.yesNo}" requiredMessage="This field cant be empty" >
                         <f:selectItems value="#{pollBean.nonPermanentPollItems}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.item}" />
+                        <f:ajax event="change" render="pollItemsMessage" />
                     </pr:selectCheckboxMenu> 
                     <pr:commandButton  value="Item" type="button" onclick="PF('addItemModal').show();" icon="pi pi-plus" disabled="#{createPollBean.yesNo}"/>
                 </pr:panelGrid>
                 
+                <pr:message id="pollItemsMessage" for="pollItems" />
+                
             </pr:panelGrid>
+            
+              
 
             <pr:commandButton id="createPollButton"
                              icon="pi pi-check"
@@ -105,7 +134,6 @@
 
         <pr:dialog id="addItemModal" modal="true" header="Modal Dialog" widgetVar="addItemModal">
             <h:form>
-
                 <pr:inputText placeholder="Type description here..." value="#{itemBean.item}"/>
                 <pr:button value="Cancel" onclick="PF('addItemModal').hide();"/>
                 <pr:commandButton value="Ok"  actionListener="#{itemBean.createItem}" oncomplete="$('#addItemModal').modal('hide')" update=":pollForm:pollItems"/>

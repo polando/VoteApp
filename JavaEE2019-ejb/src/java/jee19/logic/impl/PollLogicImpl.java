@@ -301,6 +301,11 @@ public class PollLogicImpl implements PollLogic{
    private List<ItemEntity> getPermanentPollItems(){
        return itemAccess.getPermanentPollItems();
    }
+
+    @Override
+    public List<String> getAllPollTitles() {
+        return pollAccess.getAllPollTitles();
+    }
     
 
 

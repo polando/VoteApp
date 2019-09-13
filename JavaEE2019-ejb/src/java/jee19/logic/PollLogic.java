@@ -48,5 +48,7 @@ public interface PollLogic {
     public Set<Poll> getFinishedPollsIDListByOrganizer(String organizerUUID);
     
     public Set<VoteResult> getPollResultByPollid(String pollUUID);
+
+    public List<String> getAllPollTitles();
     
 }

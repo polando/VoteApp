@@ -8,6 +8,7 @@ package jee19.web;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
@@ -20,7 +21,7 @@ import jee19.logic.dto.Person;
  * @author ussocom
  */
 
-@ViewScoped
+@SessionScoped
 @Named
 public class pollBean implements Serializable {
     
@@ -36,7 +37,6 @@ public class pollBean implements Serializable {
 
 
     public List<Person> getPersons() {
-    
         return polllogic.getAllUsers();
     }
     
@@ -53,6 +53,10 @@ public class pollBean implements Serializable {
         
     public List<Item> getNonPermanentPollItems() {
         return polllogic.getNonPermanentPollItems();
+    }
+    
+    public List<String> getAllPollTitles(){
+        return polllogic.getAllPollTitles();
     }
     
     
