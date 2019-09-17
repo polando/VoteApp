@@ -21,18 +21,22 @@ import jee19.entities.PollEntity;
 import jee19.entities.ResultEntity;
 import jee19.entities.TokenEntity;
 import java.time.Instant;
+import javax.annotation.PostConstruct;
+import jee19.entities.OptEntity;
 
 //import jee19.entities.TokenEntity;
 import jee19.logic.PollLogic;
 import jee19.logic.PollState;
-import jee19.logic.PollType;
+import jee19.logic.ItemType;
 import jee19.logic.dao.ItemAccess;
+import jee19.logic.dao.OptionAccess;
 import jee19.logic.dao.PersonAccess;
 import jee19.logic.dao.PollAccess;
 import jee19.logic.dao.ResultAccess;
 import jee19.logic.dao.TokenAccess;
 //import jee19.logic.dao.TokenAccess;
 import jee19.logic.dto.Item;
+import jee19.logic.dto.Option;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
 import jee19.logic.dto.Token;
@@ -66,7 +70,12 @@ public class PollLogicImpl implements PollLogic{
     @EJB
     private BackgroundJobManager backgroundJobManager;
     
+    @EJB
+    private OptionAccess optionAccess;
+    
+    
 
+    
     
 
     @Override
@@ -85,9 +94,9 @@ public class PollLogicImpl implements PollLogic{
     }
 
     @Override
-    public List<PollType> getAllPollTypes() {
-            List<PollType> result = new ArrayList<>();
-            for(PollType p:PollType.values())
+    public List<ItemType> getAllItemTypes() {
+            List<ItemType> result = new ArrayList<>();
+            for(ItemType p:ItemType.values())
             result.add(p);
         return result;
     }
@@ -100,7 +109,6 @@ public class PollLogicImpl implements PollLogic{
         
         for (ItemEntity pe : l) {
             Item p = new Item(pe.getUuid(), pe.getJpaVersion(), pe.getName());
-            p.setItem(pe.getItem());
             result.add(p);
         }
         return result;
@@ -108,24 +116,42 @@ public class PollLogicImpl implements PollLogic{
     }
     
     @Override
-    public Item createPollItem(String name,boolean permanent) {
-        ItemEntity p = itemAccess.createEntity(name);
-        p.setItem(name);
-        p.setPermanentItem(permanent);
-        return new Item(p.getUuid(), p.getJpaVersion(), p.getName());
+    public Item createItem(String title,ItemType itemType,List<Option> options) {
+        ItemEntity p = itemAccess.createEntity(title);
+        p.setTitle(title);
+        p.setItemType(itemType);
+        List<OptEntity> optionEntities = new ArrayList<>();
+        List<Option> ops = new ArrayList<>();
+        for (Option option : options) {
+            optionEntities.add(optionAccess.getByUuid(option.getUuid()));
+        }
+        p.setOptionEntities(optionEntities);
+        Item item = new Item(p.getUuid(), p.getJpaVersion(), p.getName());
+        item.setTitle(p.getTitle());
+        item.setItemType(p.getItemType());
+        p.getOptionEntities().forEach((o) -> {
+            Option option = new Option(o.getUuid(), o.getJpaVersion(), o.getName());
+            option.setShortName(o.getShortName());
+            option.setDiscription(o.getDiscription());
+            option.setPermanentOption(o.isPermanentOption());
+            ops.add(option);
+        });
+        item.setOptions(ops);
+        
+        return item;
     }
 
     @Override
-    public Poll createPoll(String title, String description,PollType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ,List<Item> items) {
+    public Poll createPoll(String title, String description,ItemType itemType, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers ,List<Item> items) {
         PollEntity pollEntity = pollAccess.createEntity(title);
         Set<TokenEntity> tokenEntity = new HashSet<>();
         Set<PersonEntity> organizerEntity = new HashSet<>();
-        Set<ItemEntity> itemEntity = new HashSet<>();
+        List<ItemEntity> itemEntities = new ArrayList<>();
       
-         for(Person p: organizers){
+        organizers.forEach((p) -> {
             organizerEntity.add(personAccess.getByUuid(p.getUuid()));
-        }
-        pollEntity.setPollType(polltype);
+        });
+         
         pollEntity.setTitle(title);
         pollEntity.setDescription(description);
         pollEntity.setOrganizers(organizerEntity);
@@ -133,33 +159,35 @@ public class PollLogicImpl implements PollLogic{
         pollEntity.setEndDate(endDateInstant);
         pollEntity.setCreateDate(createDateInstant);
                 
-        for(Person p: participants){
-          tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName()+pollEntity.getName(),p,pollEntity).getUuid()));
-          
-        }
+        participants.forEach((p) -> {
+            tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName()+pollEntity.getName(),p,pollEntity).getUuid()));
+        });
         
         pollEntity.setTokens(tokenEntity);
         
-        if(polltype.equals(PollType.YesNo))
-        {
-            itemEntity.addAll(getPermanentPollItems());
-        }
-        else{
-            
-        items.forEach((i) -> {
-            itemEntity.add(itemAccess.getByUuid(i.getUuid()));
-         });    
-        }
-        
-        
-        itemEntity.forEach((i) -> {
-            createResultEntity(pollEntity.getName()+i.getName(),pollEntity.getUuid(),i.getUuid());
-        });
-        
-        
-        pollEntity.setItemEntities(itemEntity);
 
-        
+        items.forEach((i) -> {
+           ItemEntity  itemEntity = itemAccess.getByUuid(i.getUuid());
+           itemEntity.setTitle(i.getTitle());
+           itemEntity.setItemType(i.getItemType());
+           List<OptEntity> optionEntities = new ArrayList<>();
+           i.getOptions().forEach((option) -> {
+               optionEntities.add(optionAccess.getByUuid(option.getUuid()));
+            });
+           itemEntity.setOptionEntities(optionEntities);
+           itemEntities.add(itemEntity);
+         });    
+
+          pollEntity.setItemEntities(itemEntities);
+                
+                
+        items.forEach((i) -> {
+            i.getOptions().forEach((o) -> {
+                createResultEntity(pollEntity.getName()+i.getName(),pollEntity.getUuid(),i.getUuid(),o.getUuid());
+            });
+        });
+
+
         pollEntity.setPollState(PollState.STARTED);
         
         backgroundJobManager.seTimerForPoll(pollEntity.getUuid(), startDateInstant, endDateInstant);
@@ -168,10 +196,11 @@ public class PollLogicImpl implements PollLogic{
     return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
     
-    private ResultEntity createResultEntity(String name,String pollUUID,String ItemUUID){
+    private ResultEntity createResultEntity(String name,String pollUUID,String ItemUUID,String optionUUID){
         ResultEntity resultEntity = resultAccess.createEntity(name);
         resultEntity.setItem(itemAccess.getByUuid(ItemUUID));
         resultEntity.setPoll(pollAccess.getByUuid(pollUUID));
+        resultEntity.setOption(optionAccess.getByUuid(optionUUID));
         resultEntity.setNumberOfVotes(0);
         return resultEntity;  
     }
@@ -193,6 +222,15 @@ public class PollLogicImpl implements PollLogic{
         tokenEntity.setToken(hashAString(name));
         tokenEntity.setUsed(false);
         return new Token(tokenEntity.getUuid(), tokenEntity.getJpaVersion(), tokenEntity.getName());
+    }
+    
+    @Override
+    public Option createOption(String shortName,String disc,boolean permanentOption ){
+        OptEntity optEntity = optionAccess.createEntity(shortName);
+        optEntity.setShortName(shortName);
+        optEntity.setDiscription(disc);
+        optEntity.setPermanentOption(permanentOption);
+        return new Option(optEntity.getUuid(), optEntity.getJpaVersion(), optEntity.getName());
     }
     
     @Override
@@ -241,15 +279,26 @@ public class PollLogicImpl implements PollLogic{
           PollEntity pollEntity = pollAccess.getByUuid(tokenEntity.getPollEntity().getUuid());
           System.out.println(pollEntity.getTitle());
           Set<Item> items = new HashSet<>();
+          List<Option> options = new ArrayList<>();
+          
           Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
                 poll.setDescription(pollEntity.getDescription());
                 poll.setTitle(pollEntity.getTitle());
                   pollEntity.getItemEntities().forEach((e) -> {
                       Item item = new Item(e.getUuid(),e.getJpaVersion(),e.getName());
-                      item.setItem(e.getItem());
+                      item.setTitle(e.getTitle());
+                      item.setItemType(e.getItemType());
+                      e.getOptionEntities().forEach((o)->{
+                          Option option = new Option(o.getUuid(),o.getJpaVersion(),o.getName());
+                          option.setShortName(o.getShortName());
+                          option.setDiscription(o.getDiscription());
+                          option.setPermanentOption(o.isPermanentOption());
+                          options.add(option);
+                      });
+                      item.setOptions(options);
                       items.add(item);
                   });
-                poll.setPollType(pollEntity.getPollType());
+                  
                 poll.setItemEntities(items);
           return poll;
     }
@@ -283,29 +332,41 @@ public class PollLogicImpl implements PollLogic{
         return results;
     }
 
+   
     @Override
-    public List<Item> getNonPermanentPollItems() {
-        List<ItemEntity> l = itemAccess.getNonPermanentPollItems();
-        List<Item> result = new ArrayList<>(l.size());
+    public List<Option> getNonPermanentOptions(){
+        List<OptEntity> optEntities = optionAccess.getNonPermanentOptions();
+        List<Option> result = new ArrayList<>(optEntities.size());
         
-        for (ItemEntity pe : l) {
-            Item p = new Item(pe.getUuid(), pe.getJpaVersion(), pe.getName());
-            p.setItem(pe.getItem());
-            p.setPermanentItem(pe.isPermanentItem());
-            result.add(p);
-        }
+        optEntities.stream().map((oe) -> {
+            Option option = new Option(oe.getUuid(), oe.getJpaVersion(), oe.getName());
+            option.setShortName(oe.getShortName());
+            option.setDiscription(oe.getDiscription());
+            return option;
+        }).forEachOrdered((option) -> {
+            result.add(option);
+        });
         return result;
     }
 
 
-   private List<ItemEntity> getPermanentPollItems(){
-       return itemAccess.getPermanentPollItems();
+   private List<OptEntity> getPermanentPollItems(){
+       return optionAccess.getPermanentOptions();
    }
 
     @Override
     public List<String> getAllPollTitles() {
         return pollAccess.getAllPollTitles();
     }
+
+    public void CreatetestData() {
+
+        
+    }
+
+
+
+
     
 
 

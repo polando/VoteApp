@@ -6,13 +6,17 @@
 package jee19.entities;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import jee19.logic.ItemType;
+import jee19.utilities.ItemTypeJpaConverter;
 
 /**
  *
@@ -21,9 +25,6 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "getPollItemCount", query = "SELECT COUNT(p) FROM ItemEntity p"),
     @NamedQuery(name = "getPollItemList", query = "SELECT p FROM ItemEntity p ORDER BY p.name, p.uuid"),
-    @NamedQuery(name = "getNonPermanentPollItems", query = "SELECT p FROM ItemEntity p WHERE p.permanentItem = FALSE ORDER BY p.name, p.uuid"),
-    @NamedQuery(name = "getPermanentPollItems", query = "SELECT p FROM ItemEntity p WHERE p.permanentItem = TRUE ORDER BY p.name, p.uuid")
-
 })
 @Entity
 @Table(name="ITEM")
@@ -36,11 +37,17 @@ public class ItemEntity extends NamedEntity {
     private Set<ResultEntity> resultEntities;
     
     @ManyToMany(mappedBy = "itemEntities")
-    private Set<PollEntity> pollEntities;
+    private List<PollEntity> pollEntities;
     
-    private String Item;
+    @ManyToMany
+    private List<OptEntity> optionEntities;
     
-    private boolean permanentItem;
+    private String Title;
+    
+    @Convert(converter = ItemTypeJpaConverter.class)
+    private ItemType itemType;
+    
+
     
     public ItemEntity() {
     }
@@ -51,8 +58,6 @@ public class ItemEntity extends NamedEntity {
             resultEntities = new HashSet<>();
         }
     }
-    
-   
 
     public Set<ResultEntity> getResultEntities() {
         return resultEntities;
@@ -61,31 +66,44 @@ public class ItemEntity extends NamedEntity {
     public void setResultEntities(Set<ResultEntity> resultEntities) {
         this.resultEntities = resultEntities;
     }
-    
 
-    public String getItem() {
-        return Item;
-    }
-
-    public void setItem(String Item) {
-        this.Item = Item;
-    }
-
-    public Set<PollEntity> getPollEntities() {
+    public List<PollEntity> getPollEntities() {
         return pollEntities;
     }
 
-    public void setPollEntities(Set<PollEntity> pollEntities) {
+    public void setPollEntities(List<PollEntity> pollEntities) {
         this.pollEntities = pollEntities;
     }
 
-    public boolean isPermanentItem() {
-        return permanentItem;
+    public List<OptEntity> getOptionEntities() {
+        return optionEntities;
     }
 
-    public void setPermanentItem(boolean permanentItem) {
-        this.permanentItem = permanentItem;
+    public void setOptionEntities(List<OptEntity> optionEntities) {
+        this.optionEntities = optionEntities;
     }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String Title) {
+        this.Title = Title;
+    }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
+    }
+    
+   
+
+    
+    
+    
     
     
     

@@ -19,7 +19,7 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
-import jee19.logic.PollType;
+import jee19.logic.ItemType;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollState;
@@ -38,7 +38,7 @@ public class createPollBean implements Serializable {
     @EJB
     private PollLogic polllogic;
     
-    private PollType polltype;
+    private ItemType itemtype;
     
     private PollState pollstate;
     
@@ -64,14 +64,27 @@ public class createPollBean implements Serializable {
     
     private Instant createDateInstant;
     
+    private List<String> test;
 
-    public PollType getPolltype() {
-        return polltype;
+    public List<String> getTest() {
+        return test;
     }
 
-    public void setPolltype(PollType polltype) {
-        this.polltype = polltype;
+    public void setTest(List<String> test) {
+        this.test = test;
     }
+    
+    
+    
+
+    public ItemType getItemtype() {
+        return itemtype;
+    }
+
+    public void setItemtype(ItemType itemtype) {
+        this.itemtype = itemtype;
+    }
+
 
     public List<Person> getParticipants() {
         return participants;
@@ -154,17 +167,20 @@ public class createPollBean implements Serializable {
     @PostConstruct
     public void init(){
          participants = new ArrayList<>();
-         polltype = PollType.YesNo;
-         
+         items = new ArrayList<>();
     }
+    
+    
     
     public String createPoll(){
         setNowAsCurrentDate();
-        polllogic.createPoll(title, description, polltype, endDateInstant, createDateInstant, startDateInstant,participants,organizers,items);
+        polllogic.createPoll(title, description, itemtype, endDateInstant, createDateInstant, startDateInstant,participants,organizers,items);
         return "pollCreatedSuccessfully";
     }
     
-    
+    public void addItem(Item e){
+        items.add(e);
+    }
     
     
     Instant DateToInstant(Date date){
@@ -189,12 +205,7 @@ public class createPollBean implements Serializable {
     }
     
     
-    public boolean isYesNo(){
-       if(polltype.equals(PollType.YesNo))
-        return true;
-       else
-        return false;
-    }
+
     
     
     

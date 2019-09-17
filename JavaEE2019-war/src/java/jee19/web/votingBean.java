@@ -16,7 +16,7 @@ import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
-import jee19.logic.PollType;
+import jee19.logic.ItemType;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Poll;
 
@@ -91,21 +91,21 @@ public class votingBean implements Serializable {
     }
     
     public boolean isMultipleAllowed(){
-       if(poll.getPollType().equals(PollType.NOfM))
+       if(poll.getPollType().equals(ItemType.NOfM))
         return true;
        else
         return false;
     }
     
     public boolean isOneOfM(){
-       if(poll.getPollType().equals(PollType.OneOfM))
+       if(poll.getPollType().equals(ItemType.OneOfM))
         return true;
        else
         return false;
     }
     
     public boolean isYesNo(){
-       if(poll.getPollType().equals(PollType.YesNo))
+       if(poll.getPollType().equals(ItemType.YesNo))
         return true;
        else
         return false;

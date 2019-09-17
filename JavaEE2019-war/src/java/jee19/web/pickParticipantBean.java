@@ -41,7 +41,7 @@ public class pickParticipantBean implements Serializable {
         target = new ArrayList<>();
         }
         
-        peronsDualList = new DualListModel<Person>(allParticipants, target);
+        peronsDualList = new DualListModel<>(allParticipants, target);
          
 
         }

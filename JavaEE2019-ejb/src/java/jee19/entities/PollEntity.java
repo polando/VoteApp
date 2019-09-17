@@ -8,21 +8,19 @@ package jee19.entities;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import jee19.logic.PollState;
-import jee19.logic.PollType;
 import jee19.utilities.PollStateJpaConverter;
-import jee19.utilities.PollTypeJpaConverter;
 
 /**
  *
@@ -55,23 +53,14 @@ public class PollEntity extends NamedEntity{
     @Convert(converter = PollStateJpaConverter.class)
     private PollState pollState;
     
-    @Convert(converter = PollTypeJpaConverter.class)
-    private PollType pollType;
+
    
-    
-  /*  @ManyToOne
-    private PollStateEntity pollStateEntity;*/
     
     
     @ManyToMany
-    private Set<ItemEntity> itemEntities;
+    private List<ItemEntity> itemEntities;
     
-    
-  /*  @ManyToMany
-    @JoinTable(name = "POLL_PARTICIPANTS",
-        joinColumns = @JoinColumn(name = "poll_id"), 
-        inverseJoinColumns = @JoinColumn(name = "participant_id"))
-    private Set<PersonEntity> participants;*/
+
     
     @OneToMany(mappedBy = "pollEntity")
     private Set<TokenEntity> tokens;
@@ -158,21 +147,15 @@ public class PollEntity extends NamedEntity{
         this.title = title;
     }
 
-   /* public PollStateEntity getPollStateEntity() {
-        return pollStateEntity;
-    }
 
-    public void setPollStateEntity(PollStateEntity pollStateEntity) {
-        this.pollStateEntity = pollStateEntity;
-    }*/
-
-    public Set<ItemEntity> getItemEntities() {
+    public List<ItemEntity> getItemEntities() {
         return itemEntities;
     }
 
-    public void setItemEntities(Set<ItemEntity> itemEntities) {
+    public void setItemEntities(List<ItemEntity> itemEntities) {
         this.itemEntities = itemEntities;
     }
+
 
     public Set<TokenEntity> getTokens() {
         return tokens;
@@ -188,14 +171,6 @@ public class PollEntity extends NamedEntity{
 
     public void setPollState(PollState pollState) {
         this.pollState = pollState;
-    }
-
-    public PollType getPollType() {
-        return pollType;
-    }
-
-    public void setPollType(PollType pollType) {
-        this.pollType = pollType;
     }
 
    

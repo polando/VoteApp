@@ -16,6 +16,8 @@ import jee19.entities.CourseEntity;
 import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
 import jee19.entities.TeamEntity;
+import jee19.logic.ItemType;
+import jee19.logic.PollLogic;
 import jee19.logic.TeamBusinessLogic;
 import jee19.logic.Term;
 import jee19.logic.dao.CourseAccess;
@@ -47,6 +49,8 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
     @EJB
     private ItemAccess itemAccess;
 
+    @EJB
+    private PollLogic polllogic;
 //    @Resource(lookup = "mail/uniko-mail")
 //    private Session mailSession;
     // @AroundInvoke
@@ -232,9 +236,7 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
             "tango", "uniform", "victor", "whiskey", "xray", "yankee", "zulu"};
         
         
-        final String[] PREPOLLITEMS = {"Yes","No"};
-        
-        final String[] NONPREPOLLITEMS = {"item 1","item 2"};
+
 
         Random rnd = new Random();
 
@@ -244,13 +246,19 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
             persons.add(personAccess.createEntity(name));
         }
         
-        for (String name : PREPOLLITEMS){
-             createPollItem(name,true);
+        
+        final String[] PREPOLLITEMS = {"Yes","No"};
+        
+        final String[] NONPREPOLLITEMS = {"option 1","option 2"};
+        
+        for(String s:PREPOLLITEMS){
+            polllogic.createOption(s,s,true);
         }
         
-        for (String name : NONPREPOLLITEMS){
-             createPollItem(name,false);
+        for(String s:NONPREPOLLITEMS){
+            polllogic.createOption(s,s,false);
         }
+        
         
 
         for (String name : COURSES) {
@@ -275,14 +283,7 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
             }
         }
     }
-    
-    
-    public Item createPollItem(String name,boolean premenant) {
-        ItemEntity p = itemAccess.createEntity(name);
-        p.setItem(name);
-        p.setPermanentItem(premenant);
-        return new Item(p.getUuid(), p.getJpaVersion(), p.getName());
-    }
+
 
     @RolesAllowed("AUTHENTICATED")
     @Override

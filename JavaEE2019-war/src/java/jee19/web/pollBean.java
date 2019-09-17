@@ -12,8 +12,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
-import jee19.logic.PollType;
+import jee19.logic.ItemType;
 import jee19.logic.dto.Item;
+import jee19.logic.dto.Option;
 import jee19.logic.dto.Person;
 
 /**
@@ -30,35 +31,37 @@ public class pollBean implements Serializable {
     @EJB
     private PollLogic polllogic;
     
-    private List<PollType> polltypes;
+    private List<ItemType> itemTypes;
 
     private List<Person> persons;
     
+ 
+    public List<Option> getNonPermanentOptions() {
+        return polllogic.getNonPermanentOptions();
+    }
+
+    public PollLogic getPolllogic() {
+        return polllogic;
+    }
+
+    public void setPolllogic(PollLogic polllogic) {
+        this.polllogic = polllogic;
+    }
+
+    public List<ItemType> getItemTypes() {
+        return polllogic.getAllItemTypes();
+    }
 
 
     public List<Person> getPersons() {
         return polllogic.getAllUsers();
     }
+
+    public void setPersons(List<Person> persons) {
+        this.persons = persons;
+    }
     
 
-    public List<PollType> getPolltypes() {
-        return polllogic.getAllPollTypes();
-    }
-    
-    
-    public List<Item> getPollitems() {
-        return polllogic.getAllPollItems();
-    }
-    
-        
-    public List<Item> getNonPermanentPollItems() {
-        return polllogic.getNonPermanentPollItems();
-    }
-    
-    public List<String> getAllPollTitles(){
-        return polllogic.getAllPollTitles();
-    }
-    
     
     
     

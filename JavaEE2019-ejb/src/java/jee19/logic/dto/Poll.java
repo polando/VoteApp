@@ -8,7 +8,7 @@ package jee19.logic.dto;
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
-import jee19.logic.PollType;
+import jee19.logic.ItemType;
 
 
 
@@ -28,7 +28,7 @@ public class Poll extends Named{
     
     private String description;
     
-    private PollType pollType;
+    private ItemType pollType;
     
     private List<Person> participants;
     
@@ -65,11 +65,11 @@ public class Poll extends Named{
         this.description = description;
     }
 
-    public PollType getPollType() {
+    public ItemType getPollType() {
         return pollType;
     }
 
-    public void setPollType(PollType pollType) {
+    public void setPollType(ItemType pollType) {
         this.pollType = pollType;
     }
 

@@ -44,6 +44,8 @@ public class ResultEntity extends NamedEntity{
     @ManyToOne
     private ItemEntity item;
     
+    @ManyToOne
+    private OptEntity option;
     
     private int numberOfVotes;
     
@@ -71,6 +73,15 @@ public class ResultEntity extends NamedEntity{
     public void setNumberOfVotes(int numberOfVotes) {
         this.numberOfVotes = numberOfVotes;
     }
+
+    public OptEntity getOption() {
+        return option;
+    }
+
+    public void setOption(OptEntity option) {
+        this.option = option;
+    }
+    
     
     
 }

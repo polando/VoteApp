@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.ejb.Remote;
 import jee19.entities.PollEntity;
 import jee19.logic.dto.Item;
+import jee19.logic.dto.Option;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
 import jee19.logic.dto.VoteResult;
@@ -25,17 +26,19 @@ public interface PollLogic {
     
     public List<Person> getAllUsers();
     
-    public List<PollType> getAllPollTypes();
+    public List<ItemType> getAllItemTypes();
     
     public List<Item> getAllPollItems();
     
-    public List<Item> getNonPermanentPollItems(); 
+    public List<Option> getNonPermanentOptions(); 
     
   //  public List<PollState> getAllPollStates();
     
-    public Item createPollItem(String name,boolean permanent);
+    public Item createItem(String title, ItemType itemType, List<Option> options);
     
-    public Poll createPoll(String title, String description,PollType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers,List<Item> items );
+    public Option createOption(String shortName,String disc,boolean permanentOption);
+
+    public Poll createPoll(String title, String description,ItemType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers,List<Item> items );
     
     public boolean checkToken(String useruuid, String token);
     
@@ -50,5 +53,7 @@ public interface PollLogic {
     public Set<VoteResult> getPollResultByPollid(String pollUUID);
 
     public List<String> getAllPollTitles();
+
+    
     
 }

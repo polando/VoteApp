@@ -5,6 +5,9 @@
  */
 package jee19.logic.dto;
 
+import java.util.List;
+import jee19.logic.ItemType;
+
 /**
  *
  * @author ussocom
@@ -17,26 +20,44 @@ public class Item extends Named {
         super(uuid, jpaVersion, name);
     }
     
-     private String Item;
-     
-     private boolean permanentItem; 
+
+    private List<Option> options;
+    
+    private String Title;
+    
+    private ItemType itemType;
 
 
-    public String getItem() {
-        return Item;
+    public List<Option> getOptions() {
+        return options;
     }
 
-    public void setItem(String Item) {
-        this.Item = Item;
+    public void setOptions(List<Option> options) {
+        this.options = options;
     }
 
-    public boolean isPermanentItem() {
-        return permanentItem;
+    public String getTitle() {
+        return Title;
     }
 
-    public void setPermanentItem(boolean permanentItem) {
-        this.permanentItem = permanentItem;
+    public void setTitle(String Title) {
+        this.Title = Title;
     }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
+    }
+    
+    
+
+
+    
+
+    
      
      
     
