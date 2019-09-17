@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/resetBSToPF.css" />
 
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    
     <ui:define name="content">
         <h:form id="pollForm">
             <pr:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3">
@@ -48,8 +49,6 @@
                 </b:dateTimePicker>
                 
                 <pr:message id="endDateMessage" for="endDateInput" />
-
-
 
                 <pr:outputLabel value="Participants"/>
 
@@ -99,7 +98,7 @@
 
                 <pr:selectOneMenu id="itemTypes" value="#{item.itemType}"  required="true" class="pf">
                     <f:selectItems value="${pollBean.itemTypes}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes}" />
-                    <f:ajax event="change" render="itemOptions"/>
+                    <f:ajax event="change" render="itemOptions" listener="#{item.resetOptions}"/>
                 </pr:selectOneMenu>
                 
                 <pr:message id="itemTypesMessage" for="itemTypes" />
@@ -108,7 +107,7 @@
 
                 <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
                     <pr:selectCheckboxMenu  value="#{item.options}" multiple="true"
-                                            filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" disabled="#{itemBean.yesNo}" requiredMessage="This field cant be empty" >
+                                            filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" disabled="#{item.yesNo}" requiredMessage="This field cant be empty" >
                         <f:selectItems value="#{pollBean.nonPermanentOptions}" var="opts" itemValue="#{opts}"  itemLabel="#{opts.shortName}" />
                         <f:ajax event="change" render="pollItemsMessage" />
                     </pr:selectCheckboxMenu> 
@@ -116,21 +115,15 @@
                 
                 <pr:message id="pollItemsMessage" for="itemOptions" />
                 
-            </pr:panelGrid>
-                
-                
+                </pr:panelGrid>
                 
             </ui:repeat>
-
             
-              
-
             <pr:commandButton id="createPollButton"
                              icon="pi pi-check"
                              value="Create Poll"
                              action="#{createPollBean.createPoll}"
                              ajax="false"/>
-
         </h:form>
 
         <pr:dialog id="itemModal" modal="true" header="Modal Dialog" widgetVar="itemModal"  width="700" height="300">
@@ -149,7 +142,7 @@
 
                 <pr:selectOneMenu id="itemTypes" value="#{itemBean.itemType}"  required="true" class="pf">
                     <f:selectItems value="${pollBean.itemTypes}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes}" />
-                    <f:ajax event="change" render="itemOptions"/>
+                    <f:ajax event="change" render="itemOptions"  />
                 </pr:selectOneMenu>
                 
                 <pr:message id="itemTypesMessage" for="itemTypes" />
@@ -192,7 +185,6 @@
                 <pr:commandButton value="Save" actionListener="#{createPollBean.setOrganizers(pickOrganizerBean.peronsDualList.target)}" oncomplete="PF('orgModal').hide();"  update=":pollForm:organizersTable" />
             </h:form>
         </pr:dialog>
-
 
         <pr:dialog id="addOptionModal" modal="true" header="Modal Dialog" widgetVar="addOptionModal">
             <h:form>

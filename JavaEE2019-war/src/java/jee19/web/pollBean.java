@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
@@ -62,8 +63,7 @@ public class pollBean implements Serializable {
     }
     
 
-    
-    
+
     
     
 }

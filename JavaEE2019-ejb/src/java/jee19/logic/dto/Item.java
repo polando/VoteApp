@@ -52,14 +52,12 @@ public class Item extends Named {
         this.itemType = itemType;
     }
     
-    
-
-
-    
-
-    
-     
-     
-    
+    public boolean isYesNo(){
+        return itemType.equals(ItemType.YesNo);
+    }
+       
+    public void resetOptions(){
+        options.clear();
+    }
     
 }

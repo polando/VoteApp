@@ -180,6 +180,9 @@ public class createPollBean implements Serializable {
     
     public void addItem(Item e){
         items.add(e);
+        items.forEach((i) -> {
+            System.out.println("i"+i);
+        });
     }
     
     
@@ -207,6 +210,10 @@ public class createPollBean implements Serializable {
     
 
     
+    public void resetOptions()
+    {
+        
+    }
     
     
     
