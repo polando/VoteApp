@@ -35,10 +35,11 @@ public class ResultAccess extends AbstractAccess<ResultEntity>{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public ResultEntity getEntityByPollAndItemID(String pollId,String itemId){
-         return em.createNamedQuery("getResultByPollAndItem", ResultEntity.class)
+    public ResultEntity getEntityByPollAndItemIDAndOptID(String pollId,String itemId,String optionId){
+         return em.createNamedQuery("getResultByPollAndItemAndOpt", ResultEntity.class)
                  .setParameter("pollId", pollId)
                  .setParameter("itemId", itemId)
+                 .setParameter("optionId", optionId)
                  .getSingleResult();
     }
     

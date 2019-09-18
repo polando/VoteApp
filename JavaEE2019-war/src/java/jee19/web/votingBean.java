@@ -31,9 +31,7 @@ public class votingBean implements Serializable {
     private static final long serialVersionUID = -7434000390609622052L;
     
     private Set<Item> voteItems;
-    
-    private List<Item> chosenItems;
-    
+      
     private Item chosenItem;
     
     private String token;
@@ -53,13 +51,6 @@ public class votingBean implements Serializable {
         
     }
 
-    public List<Item> getChosenItems() {
-        return chosenItems;
-    }
-
-    public void setChosenItems(List<Item> chosenItems) {
-        this.chosenItems = chosenItems;
-    }
 
     public Set<Item> getVoteItems() {
         return voteItems;
@@ -72,11 +63,16 @@ public class votingBean implements Serializable {
   
     
     public String submitVote(){
-      if(isMultipleAllowed())  
-        for(Item i:chosenItems)
-           polllogic.addToVotes(token,poll.getUuid(), i.getUuid());
-      else if(isOneOfM())
-           polllogic.addToVotes(token,poll.getUuid(), chosenItem.getUuid());
+          voteItems.forEach((i) -> {
+              if(i.isNOfM()){
+              i.getChosenOptions().forEach((o)->{
+                polllogic.addToVotes(token,poll.getUuid(), i.getUuid(),o.getUuid());
+              });
+              }
+              else{
+                  polllogic.addToVotes(token,poll.getUuid(), i.getUuid(),i.getChosenOption().getUuid());
+              }
+      });
       return "voteSumbitSuccess";
     }
     
@@ -90,26 +86,6 @@ public class votingBean implements Serializable {
         return (String)flash.get("token");
     }
     
-    public boolean isMultipleAllowed(){
-       if(poll.getPollType().equals(ItemType.NOfM))
-        return true;
-       else
-        return false;
-    }
-    
-    public boolean isOneOfM(){
-       if(poll.getPollType().equals(ItemType.OneOfM))
-        return true;
-       else
-        return false;
-    }
-    
-    public boolean isYesNo(){
-       if(poll.getPollType().equals(ItemType.YesNo))
-        return true;
-       else
-        return false;
-    }
 
     public Item getChosenItem() {
         return chosenItem;

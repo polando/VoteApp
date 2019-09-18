@@ -18,7 +18,7 @@ import javax.persistence.Table;
  */
 @NamedQueries({
     
-    @NamedQuery(name = "getResultByPollAndItem", query = "SELECT p FROM ResultEntity p WHERE p.poll.uuid = :pollId AND p.item.uuid = :itemId"),
+    @NamedQuery(name = "getResultByPollAndItemAndOpt", query = "SELECT p FROM ResultEntity p WHERE p.poll.uuid = :pollId AND p.item.uuid = :itemId AND p.option.uuid = :optionId"),
     @NamedQuery(name = "getResultByPollID", query = "SELECT p FROM ResultEntity p WHERE p.poll.uuid = :pollId")
 
 })

@@ -209,8 +209,8 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public void addToVotes(String token, String pollUUID, String ItemUUID) {
-        ResultEntity resultEntity = resultAccess.getEntityByPollAndItemID(pollUUID, ItemUUID);
+    public void addToVotes(String token, String pollUUID, String ItemUUID,String OptionUUID) {
+        ResultEntity resultEntity = resultAccess.getEntityByPollAndItemIDAndOptID(pollUUID, ItemUUID, OptionUUID);
         resultEntity.setNumberOfVotes(resultEntity.getNumberOfVotes() + 1);
         TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
         tokenEntity.setUsed(Boolean.TRUE);
@@ -236,9 +236,12 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public boolean isTokenUsed(String token) {
+    public boolean tokenExistAndNotUsed(String token) {
         TokenEntity tokenEntity = getTokenByTokenString(token);
-        return tokenEntity.getUsed();
+        if(tokenEntity != null)
+            return !(tokenEntity.getUsed());
+        else
+            return false;
     }
 
     private String hashAString(String input) {
@@ -317,11 +320,13 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public Set<VoteResult> getPollResultByPollid(String pollUUID) {
-        Set<VoteResult> results = new HashSet<>();
+    public List<VoteResult> getPollResultByPollid(String pollUUID) {
+        List<VoteResult> results = new ArrayList<>();
         for (ResultEntity resultEntity : resultAccess.getEntityByPollID(pollUUID)) {
             VoteResult voteResult = new VoteResult(resultEntity.getUuid(), resultEntity.getJpaVersion(), resultEntity.getName());
+            voteResult.setPoll(resultEntity.getPoll());
             voteResult.setItem(resultEntity.getItem());
+            voteResult.setOption(resultEntity.getOption());
             voteResult.setNumberOfVotes(resultEntity.getNumberOfVotes());
             results.add(voteResult);
         }

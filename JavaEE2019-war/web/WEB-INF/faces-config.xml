@@ -38,7 +38,7 @@
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
-        <from-view-id>/public_access/testPage.xhtml</from-view-id>
+        <from-view-id>/logged_in/createPoll.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>pollCreatedSuccessfully</from-outcome>
             <to-view-id>/logged_in/pollCreationResult.xhtml</to-view-id>
@@ -63,8 +63,8 @@
             <to-view-id>/admin/administration.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-outcome>testpage</from-outcome>
-            <to-view-id>/public_access/testPage.xhtml?faces-redirect=true</to-view-id>
+            <from-outcome>createPollPage</from-outcome>
+            <to-view-id>/logged_in/createPoll.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
         <navigation-case>
             <from-outcome>login</from-outcome>
@@ -87,7 +87,7 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>failed</from-outcome>
-            <to-view-id>/logged_in/checkToken.xhtml?faces-redirect=true</to-view-id>
+            <to-view-id>/logged_in/tokenError.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>

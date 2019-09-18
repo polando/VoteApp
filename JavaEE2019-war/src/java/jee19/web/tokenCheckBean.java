@@ -49,8 +49,8 @@ public class tokenCheckBean implements Serializable {
          return polllogic.checkToken(loginBean.getUser().getUuid(),token);
     }
     
-    private boolean isTokenUsed(){
-       return polllogic.isTokenUsed(token);
+    private boolean tokenExistAndNotUsed(){
+       return polllogic.tokenExistAndNotUsed(token);
     }
     
     private Poll getPollIfAllowed(){
@@ -62,7 +62,7 @@ public class tokenCheckBean implements Serializable {
     }
     
     public String goToVoting(){
-        if(!isTokenUsed()){
+        if(tokenExistAndNotUsed()){
         Poll poll = getPollIfAllowed();
         if(poll != null){
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();

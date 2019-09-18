@@ -6,6 +6,7 @@
 package jee19.logic.dto;
 
 import jee19.entities.ItemEntity;
+import jee19.entities.OptEntity;
 import jee19.entities.PollEntity;
 
 /**
@@ -23,6 +24,8 @@ public class VoteResult extends Named {
     private PollEntity poll;
     
     private ItemEntity item;
+    
+    private OptEntity option;
     
     private int numberOfVotes;
 
@@ -49,6 +52,16 @@ public class VoteResult extends Named {
     public void setNumberOfVotes(int numberOfVotes) {
         this.numberOfVotes = numberOfVotes;
     }
+
+    public OptEntity getOption() {
+        return option;
+    }
+
+    public void setOption(OptEntity option) {
+        this.option = option;
+    }
+    
+    
     
     
     

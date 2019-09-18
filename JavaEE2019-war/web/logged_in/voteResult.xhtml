@@ -9,17 +9,26 @@
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+
     <ui:define name="content">
+
         <b:form id="voteResultPage">
-            <pr:dataTable id="voteTable"
-                          value="${pollResult.pollResultByPollidFromFlash()}" var="res">
-                <pr:column headerText="Item">
-                    <h:outputText value="#{res.item.item}" />
-                </pr:column>             
-                <pr:column headerText="Number of votes">
+            <pr:dataTable var="res" value="#{pollResult.pollResultByPollidFromFlash()}">
+                <pr:column headerText="poll" groupRow="true">
+                    <h:outputText value="#{res.poll.title}" />
+                </pr:column>
+                <pr:column headerText="item" groupRow="true">
+                    <h:outputText value="#{res.item.title}" />
+                </pr:column>
+                <pr:column headerText="option">
+                    <h:outputText value="#{res.option.shortName}" />
+                </pr:column>
+                <pr:column headerText="numberOfVotes">
                     <h:outputText value="#{res.numberOfVotes}" />
                 </pr:column>
             </pr:dataTable>
         </b:form>
+
     </ui:define>
+
 </ui:composition>

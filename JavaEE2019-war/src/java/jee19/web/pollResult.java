@@ -6,9 +6,11 @@
 package jee19.web;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.view.ViewScoped;
@@ -43,15 +45,12 @@ public class pollResult implements Serializable {
         return (Poll)flash.get("selectedPoll");
     }
     
-    public Set<VoteResult> pollResultByPollidFromFlash(){
+    public List<VoteResult> pollResultByPollidFromFlash(){
+        System.out.println("poll"+poll);
          return getPollResultByPollid(poll.getUuid());
     }
     
-    private Set<VoteResult> getPollResultByPollid(String pollID){
-         Set<VoteResult> results = polllogic.getPollResultByPollid(pollID);
-         for(VoteResult res:results){
-             System.out.println("poll id" + res.getItem());
-         }
-         return results; 
+    private List<VoteResult> getPollResultByPollid(String pollID){
+         return polllogic.getPollResultByPollid(pollID);
     }    
 }

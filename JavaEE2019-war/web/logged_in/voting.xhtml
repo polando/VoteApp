@@ -11,25 +11,47 @@
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
         <h:form id="sendVoteForm">
-            <pr:panelGrid  columns="1" layout="grid" >
-            <pr:outputLabel value="Choose your vote" />        
-            <pr:selectCheckboxMenu value="#{votingBean.chosenItems}" multiple="true"
-                                   filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" rendered="#{votingBean.multipleAllowed}">
-                <f:selectItems value="#{votingBean.voteItems}" var="item" itemValue="#{item}"  itemLabel="#{item.item}" />
-            </pr:selectCheckboxMenu> 
-            <pr:selectOneMenu  value="#{votingBean.chosenItem}" 
-                               converter="entityConverter" rendered="#{votingBean.oneOfM}">
-                <f:selectItems value="#{votingBean.voteItems}" var="item" itemValue="#{item}"  itemLabel="#{item.item}" />
-            </pr:selectOneMenu> 
-            <pr:selectOneMenu  value="#{votingBean.chosenItem}" 
-                               converter="entityConverter" rendered="#{votingBean.yesNo}">
-                <f:selectItems value="#{votingBean.voteItems}" var="item" itemValue="#{item}"  itemLabel="#{item.item}" />
-            </pr:selectOneMenu> 
-            <pr:commandButton id="sendVote"
-                             value="${msg.submitButton}"
-                             action="#{votingBean.submitVote()}"
-                             />
-            </pr:panelGrid>
+            
+            <pr:outputLabel value="Choose your vote" />   
+
+             <ui:repeat var="item" value="#{votingBean.voteItems}" varStatus="status">
+
+                <pr:panelGrid columns="2" layout="grid">   
+
+                    <pr:outputLabel value="Item Title"/> 
+
+                    <pr:outputLabel id="itemtitle" value="#{item.title}"/>
+
+                    <pr:outputLabel value="Item Type"/>
+
+                    <pr:outputLabel value="#{item.itemType}"/>
+
+                    <pr:outputLabel value="Options"/>
+
+                    <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
+
+                        <pr:selectCheckboxMenu  value="#{item.chosenOption}" multiple="true"
+                                                filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" requiredMessage="This field cant be empty" rendered="#{item.NOfM}">
+                            <f:selectItems value="#{item.options}" var="opt" itemValue="#{opt}"  itemLabel="#{opt.shortName}" />
+                            <f:ajax event="change" render="pollItemsMessage" />
+                        </pr:selectCheckboxMenu> 
+
+                        <pr:selectOneMenu  value="#{item.chosenOption}" 
+                                           converter="entityConverter" rendered="#{not item.NOfM}">
+                            <f:selectItems value="#{item.options}" var="opt" itemValue="#{opt}"  itemLabel="#{opt.shortName}" />
+                        </pr:selectOneMenu> 
+
+                    </pr:panelGrid>
+
+                </pr:panelGrid>
+
+            </ui:repeat>
+            
+                <pr:commandButton id="sendVote"
+                                  value="${msg.submitButton}"
+                                  action="#{votingBean.submitVote()}"
+                                  ajax="false"
+                                  />
         </h:form>
     </ui:define>
 </ui:composition>

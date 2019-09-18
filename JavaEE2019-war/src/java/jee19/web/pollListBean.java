@@ -9,9 +9,9 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
@@ -22,7 +22,7 @@ import jee19.logic.dto.Poll;
  *
  * @author ussocom
  */
-@RequestScoped
+@ViewScoped
 @Named
 public class pollListBean implements Serializable {
 

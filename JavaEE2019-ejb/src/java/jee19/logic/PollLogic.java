@@ -44,13 +44,13 @@ public interface PollLogic {
     
     public Poll getPollByToken(String token);
     
-    public void addToVotes(String token,String pollUUID,String ItemUUID);
+    public void addToVotes(String token,String pollUUID,String ItemUUID,String optionUUID);
      
-    public boolean isTokenUsed(String token);
+    public boolean tokenExistAndNotUsed(String token);
     
     public Set<Poll> getFinishedPollsIDListByOrganizer(String organizerUUID);
     
-    public Set<VoteResult> getPollResultByPollid(String pollUUID);
+    public List<VoteResult> getPollResultByPollid(String pollUUID);
 
     public List<String> getAllPollTitles();
 

@@ -26,6 +26,10 @@ public class Item extends Named {
     private String Title;
     
     private ItemType itemType;
+    
+    private List<Option> chosenOptions;
+    
+    private Option chosenOption;
 
 
     public List<Option> getOptions() {
@@ -55,9 +59,36 @@ public class Item extends Named {
     public boolean isYesNo(){
         return itemType.equals(ItemType.YesNo);
     }
+    
+    public boolean isNOfM(){
+        return itemType.equals(ItemType.NOfM);
+    }
        
     public void resetOptions(){
         options.clear();
     }
+
+    public List<Option> getChosenOptions() {
+        return chosenOptions;
+    }
+
+    public void setChosenOptions(List<Option> chosenOptions) {
+        this.chosenOptions = chosenOptions;
+    }
+
+    public Option getChosenOption() {
+        return chosenOption;
+    }
+
+    public void setChosenOption(Option chosenOption) {
+        this.chosenOption = chosenOption;
+    }
+
+    
+    
+
+    
+    
+    
     
 }
