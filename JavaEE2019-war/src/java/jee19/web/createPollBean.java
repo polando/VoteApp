@@ -57,11 +57,7 @@ public class createPollBean implements Serializable {
     private Date endDate;
     
     private Date createDate;
-    
-    private Instant startDateInstant;
-    
-    private Instant endDateInstant;
-    
+ 
     private Instant createDateInstant;
     
     private List<String> test;
@@ -116,7 +112,6 @@ public class createPollBean implements Serializable {
 
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
-        startDateInstant = DateToInstant(startDate);
     }
 
     public Date getEndDate() {
@@ -124,9 +119,7 @@ public class createPollBean implements Serializable {
     }
 
     public void setEndDate(Date endDate) {
-        
         this.endDate = endDate;
-        endDateInstant = DateToInstant(endDate);
     }
 
     public Date getCreateDate() {
@@ -135,7 +128,6 @@ public class createPollBean implements Serializable {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
-        createDateInstant = createDate.toInstant();
     }
 
     public List<Person> getOrganizers() {
@@ -174,7 +166,7 @@ public class createPollBean implements Serializable {
     
     public String createPoll(){
         setNowAsCurrentDate();
-        polllogic.createPoll(title, description, itemtype, endDateInstant, createDateInstant, startDateInstant,participants,organizers,items);
+        polllogic.createPoll(title, description, endDate, createDateInstant, startDate,participants,organizers,items);
         return "pollCreatedSuccessfully";
     }
     
@@ -208,12 +200,6 @@ public class createPollBean implements Serializable {
     }
     
     
-
-    
-    public void resetOptions()
-    {
-        
-    }
     
     
     

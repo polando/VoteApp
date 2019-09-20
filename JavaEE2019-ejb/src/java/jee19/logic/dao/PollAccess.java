@@ -46,8 +46,21 @@ public class PollAccess extends AbstractAccess<PollEntity>{
                  .getResultList();
     }
     
+    public List<PollEntity> getPreparedPollsIDListByOrganizer(String organizerUUID){
+         return em.createNamedQuery("getPreparedPollsIDListByOrganizer", PollEntity.class)
+                 .setParameter("organizerUUID", organizerUUID)
+                 .setParameter("state", PollState.PREPARED)
+                 .getResultList();
+    }
+    
     public List<String> getAllPollTitles(){
         return em.createNamedQuery("getAllPollTitles", String.class).getResultList();
+    }
+    
+    public PollEntity getPollByPollID(String pollUUID){
+         return em.createNamedQuery("getPollbyPollUUID", PollEntity.class)
+                 .setParameter("pollUUID", pollUUID)
+                 .getSingleResult();
     }
     
 }

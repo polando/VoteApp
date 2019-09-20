@@ -6,6 +6,7 @@
 package jee19.logic;
 
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Remote;
@@ -38,7 +39,6 @@ public interface PollLogic {
     
     public Option createOption(String shortName,String disc,boolean permanentOption);
 
-    public Poll createPoll(String title, String description,ItemType polltype, Instant endDateInstant, Instant createDateInstant,Instant startDateInstant,List<Person> participants,List<Person> organizers,List<Item> items );
     
     public boolean checkToken(String useruuid, String token);
     
@@ -50,9 +50,18 @@ public interface PollLogic {
     
     public Set<Poll> getFinishedPollsIDListByOrganizer(String organizerUUID);
     
+    public Set<Poll> getPreparedPollsIDListByOrganizer(String organizerUUID);
+
+    
     public List<VoteResult> getPollResultByPollid(String pollUUID);
 
     public List<String> getAllPollTitles();
+
+    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items);
+
+    public Poll editPoll(Poll poll);
+
+    public Poll getPollByPollUUID(String pollUUID);
 
     
     

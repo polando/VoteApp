@@ -45,6 +45,15 @@ public class pollListBean implements Serializable {
             }*/            
         return poll;
     } 
+    
+    public Set<Poll> getPreparedPollsByOrganizer(){
+            Person loggedInUser = loginBean.getUser();
+            Set<Poll> poll = polllogic.getPreparedPollsIDListByOrganizer(loggedInUser.getUuid()); 
+            for(Poll p:poll){
+                System.out.println(p.getUuid());
+            }
+        return poll;
+    } 
 
     public Poll getSelectedPoll() {
         return selectedPoll;
@@ -54,11 +63,16 @@ public class pollListBean implements Serializable {
         this.selectedPoll = selectedPoll;
     }
     
-    public String seeResult(){
-            System.out.println("changed pageeee");
+    public String seePollResult(){
             Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
             flash.put("selectedPoll", selectedPoll);
             return "showResult";
+        }
+    
+    public String seePoll(){
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+            flash.put("selectedPoll", selectedPoll);
+            return "showPoll";
         }
 
 }

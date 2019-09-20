@@ -31,7 +31,12 @@ import jee19.utilities.PollStateJpaConverter;
     @NamedQuery(name = "getPollCount", query = "SELECT COUNT(p) FROM PollEntity p"),
     @NamedQuery(name = "getPollList", query = "SELECT p FROM PollEntity p ORDER BY p.name, p.uuid"),
     @NamedQuery(name = "getFinishedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID "),
-    @NamedQuery(name = "getAllPollTitles", query = "SELECT p.title FROM PollEntity p")
+    @NamedQuery(name = "getAllPollTitles", query = "SELECT p.title FROM PollEntity p"),
+    @NamedQuery(name = "getPreparedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND p.pollState = :state"),
+    @NamedQuery(name = "getPollbyPollUUID", query = "SELECT p FROM PollEntity p WHERE p.uuid = :pollUUID "),
+
+
+        
 })
 @Entity
 @Table(name="POLL")
@@ -70,7 +75,13 @@ public class PollEntity extends NamedEntity{
     @JoinTable(name = "POLL_ORGANIZERS",
         joinColumns = @JoinColumn(name = "poll_id"), 
         inverseJoinColumns = @JoinColumn(name = "organizer_id"))
-    private Set<PersonEntity> organizers;
+    private List<PersonEntity> organizers;
+    
+    @ManyToMany
+    @JoinTable(name = "POLL_PARTICIPANTS",
+        joinColumns = @JoinColumn(name = "poll_id"), 
+        inverseJoinColumns = @JoinColumn(name = "participant_id"))
+    private List<PersonEntity> participants;
     
    
     @OneToMany(mappedBy = "poll")
@@ -89,11 +100,11 @@ public class PollEntity extends NamedEntity{
     }
 
 
-    public Set<PersonEntity> getOrganizers() {
+    public List<PersonEntity> getOrganizers() {
         return organizers;
     }
 
-    public void setOrganizers(Set<PersonEntity> organizers) {
+    public void setOrganizers(List<PersonEntity> organizers) {
         this.organizers = organizers;
     }
 
@@ -171,6 +182,14 @@ public class PollEntity extends NamedEntity{
 
     public void setPollState(PollState pollState) {
         this.pollState = pollState;
+    }
+
+    public List<PersonEntity> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<PersonEntity> participants) {
+        this.participants = participants;
     }
 
    

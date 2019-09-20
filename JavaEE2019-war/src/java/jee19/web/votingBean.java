@@ -30,7 +30,7 @@ public class votingBean implements Serializable {
     
     private static final long serialVersionUID = -7434000390609622052L;
     
-    private Set<Item> voteItems;
+    private List<Item> voteItems;
       
     private Item chosenItem;
     
@@ -46,17 +46,17 @@ public class votingBean implements Serializable {
     @PostConstruct
     public void init(){
         poll = readPollFromFlash();
-        voteItems = poll.getItemEntities();
+        voteItems = poll.getItems();
         token = readTokenFromFlash();
         
     }
 
 
-    public Set<Item> getVoteItems() {
+    public List<Item> getVoteItems() {
         return voteItems;
     }
 
-    public void setVoteItems(Set<Item> voteItems) {
+    public void setVoteItems(List<Item> voteItems) {
         this.voteItems = voteItems;
     }
 

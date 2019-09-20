@@ -43,7 +43,7 @@ public class pickParticipantBean implements Serializable {
         
         peronsDualList = new DualListModel<>(allParticipants, target);
          
-
+        
         }
 
     public DualListModel<Person> getPeronsDualList() {
@@ -53,6 +53,8 @@ public class pickParticipantBean implements Serializable {
     public void setPeronsDualList(DualListModel<Person> peronsDualList) {
         this.peronsDualList = peronsDualList;
     }
+    
+
      
         
 }

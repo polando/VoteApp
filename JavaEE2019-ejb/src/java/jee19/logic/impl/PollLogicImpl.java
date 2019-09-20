@@ -8,6 +8,9 @@ package jee19.logic.impl;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +24,8 @@ import jee19.entities.PollEntity;
 import jee19.entities.ResultEntity;
 import jee19.entities.TokenEntity;
 import java.time.Instant;
+import java.util.Date;
+import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import jee19.entities.OptEntity;
 
@@ -139,64 +144,84 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public Poll createPoll(String title, String description, ItemType itemType, Instant endDateInstant, Instant createDateInstant, Instant startDateInstant, List<Person> participants, List<Person> organizers, List<Item> items) {
+    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items) {  
         PollEntity pollEntity = pollAccess.createEntity(title);
-        Set<TokenEntity> tokenEntity = new HashSet<>();
-        Set<PersonEntity> organizerEntity = new HashSet<>();
+        setPollProperties(pollEntity,title,description, endDate, createDateInstant, startDate,participants, organizers, items);
+        return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+    }
+    
+    @Override
+    public Poll editPoll(Poll poll){
+        PollEntity pollEntity = pollAccess.getByUuid(poll.getUuid());
+        setPollProperties(pollEntity,poll.getTitle(),poll.getDescription(), poll.getEndDate(), poll.getCreateDate(), poll.getStartDate(),poll.getParticipants(),poll.getOrganizers(), poll.getItems());
+        return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+    }
+    
+    
+    private void setPollProperties(PollEntity pollEntity,String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items){
+        List<PersonEntity> organizerEntity = new ArrayList<>();
+        List<PersonEntity> participantEntity = new ArrayList<>();
         List<ItemEntity> itemEntities = new ArrayList<>();
-
+        
         organizers.forEach((p) -> {
             organizerEntity.add(personAccess.getByUuid(p.getUuid()));
+        });
+        
+        participants.forEach((p) -> {
+            participantEntity.add(personAccess.getByUuid(p.getUuid()));
         });
 
         pollEntity.setTitle(title);
         pollEntity.setDescription(description);
         pollEntity.setOrganizers(organizerEntity);
-        pollEntity.setStartDate(startDateInstant);
-        pollEntity.setEndDate(endDateInstant);
+        pollEntity.setParticipants(participantEntity);
+        pollEntity.setStartDate(DateToInstant(startDate));
+        pollEntity.setEndDate(DateToInstant(endDate));
         pollEntity.setCreateDate(createDateInstant);
 
-        participants.forEach((p) -> {
-            tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName() + pollEntity.getName(), p, pollEntity).getUuid()));
-        });
-
-        pollEntity.setTokens(tokenEntity);
-
         items.forEach((i) -> {
-            System.out.println("I exist"+i);
             ItemEntity itemEntity = itemAccess.getByUuid(i.getUuid());
-            System.out.println("I exist 2"+i);
             itemEntity.setTitle(i.getTitle());
-            System.out.println("I exist 3"+i);
             itemEntity.setItemType(i.getItemType());
-            System.out.println("I exist 4"+i);
             List<OptEntity> optionEntities = new ArrayList<>();
             if (i.getItemType().equals(ItemType.YesNo)) {
+                System.out.println("opt added");
                 optionEntities.addAll(optionAccess.getPermanentOptions());
             } else {
                 i.getOptions().forEach((option) -> {
                     optionEntities.add(optionAccess.getByUuid(option.getUuid()));
                 });
             }
-            System.out.println("I exist 5"+i);
             itemEntity.setOptionEntities(optionEntities);
-            System.out.println("I exist 6"+i);
             itemEntities.add(itemEntity);
         });
 
         pollEntity.setItemEntities(itemEntities);
 
-        items.forEach((i) -> {
-            i.getOptions().forEach((o) -> {
+        pollEntity.setPollState(PollState.PREPARED);
+        
+    }
+    
+    private void StartPoll(String pollUUID,Instant startDateInstant,Instant endDateInstant){
+        
+        Set<TokenEntity> tokenEntity = new HashSet<>();
+        
+        PollEntity pollEntity = pollAccess.getByUuid(pollUUID);
+        
+        pollEntity.getParticipants().forEach((p) -> {
+            tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName() + pollEntity.getName(), p, pollEntity).getUuid()));
+        });
+
+        pollEntity.setTokens(tokenEntity);
+        
+        pollEntity.getItemEntities().forEach((i) -> {
+            i.getOptionEntities().forEach((o) -> {
                 createResultEntity(pollEntity.getName() + i.getName(), pollEntity.getUuid(), i.getUuid(), o.getUuid());
             });
         });
-
-        pollEntity.setPollState(PollState.STARTED);
-
         backgroundJobManager.seTimerForPoll(pollEntity.getUuid(), startDateInstant, endDateInstant);
-
-        return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+        
+        pollEntity.setPollState(PollState.STARTED);
     }
 
     private ResultEntity createResultEntity(String name, String pollUUID, String ItemUUID, String optionUUID) {
@@ -216,9 +241,8 @@ public class PollLogicImpl implements PollLogic {
         tokenEntity.setUsed(Boolean.TRUE);
     }
 
-    private Token createToken(String name, Person person, PollEntity pollEntity) {
+    private Token createToken(String name, PersonEntity personEntity, PollEntity pollEntity) {
         TokenEntity tokenEntity = tokenAccess.createEntity(name);
-        PersonEntity personEntity = personAccess.getByUuid(person.getUuid());
         tokenEntity.setPersonEntity(personEntity);
         tokenEntity.setPollEntity(pollEntity);
         tokenEntity.setToken(hashAString(name));
@@ -280,7 +304,7 @@ public class PollLogicImpl implements PollLogic {
         TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
         PollEntity pollEntity = pollAccess.getByUuid(tokenEntity.getPollEntity().getUuid());
         System.out.println(pollEntity.getTitle());
-        Set<Item> items = new HashSet<>();
+        List<Item> items = new ArrayList<>();
         List<Option> options = new ArrayList<>();
         Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
         poll.setDescription(pollEntity.getDescription());
@@ -300,9 +324,49 @@ public class PollLogicImpl implements PollLogic {
             items.add(item);
         });
 
-        poll.setItemEntities(items);
+        poll.setItems(items);
         return poll;
     }
+    
+    
+    private Poll pollEnityToPoll(PollEntity pollEntity,Poll poll){
+        List<Item> items = new ArrayList<>();
+        List<Option> options = new ArrayList<>();
+        List<Person> participants = new ArrayList<>();
+        List<Person> oraganizers = new ArrayList<>();
+        poll.setDescription(pollEntity.getDescription());
+        poll.setTitle(pollEntity.getTitle());
+        poll.setCreateDate(pollEntity.getCreateDate());
+        poll.setStartDate(InstantToDate(pollEntity.getStartDate()));
+        poll.setEndDate(InstantToDate(pollEntity.getEndDate()));
+        pollEntity.getParticipants().forEach((p) -> {
+            Person person = new Person(p.getUuid(), p.getJpaVersion(), p.getName());
+            participants.add(person);
+        });
+        pollEntity.getOrganizers().forEach((p) -> {
+            Person person = new Person(p.getUuid(), p.getJpaVersion(), p.getName());
+            oraganizers.add(person);
+        });        
+        pollEntity.getItemEntities().forEach((e) -> {
+            Item item = new Item(e.getUuid(), e.getJpaVersion(), e.getName());
+            item.setTitle(e.getTitle());
+            item.setItemType(e.getItemType());
+            e.getOptionEntities().forEach((o) -> {
+                Option option = new Option(o.getUuid(), o.getJpaVersion(), o.getName());
+                option.setShortName(o.getShortName());
+                option.setDiscription(o.getDiscription());
+                option.setPermanentOption(o.isPermanentOption());
+                options.add(option);
+            });
+            item.setOptions(options);
+            items.add(item);
+            });
+         poll.setItems(items);
+         poll.setParticipants(participants);
+         poll.setOrganizers(oraganizers);
+         return poll;
+    }
+    
 
     private TokenEntity getTokenByTokenString(String token) {
         return tokenAccess.getTokenObjectByTokenString(token);
@@ -315,6 +379,25 @@ public class PollLogicImpl implements PollLogic {
             Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
             poll.setTitle(pollEntity.getTitle());
             polls.add(poll);
+        }
+        return polls;
+    }
+    
+    
+    @Override
+    public Poll getPollByPollUUID(String pollUUID) {
+        PollEntity pollEntity = pollAccess.getPollByPollID(pollUUID);
+        Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+        return pollEnityToPoll(pollEntity,poll);
+    }
+    
+    @Override
+    public Set<Poll> getPreparedPollsIDListByOrganizer(String organizerUUID) {
+        Set<Poll> polls = new HashSet<>();
+        for (PollEntity pollEntity : pollAccess.getPreparedPollsIDListByOrganizer(organizerUUID)) {
+            Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+            //poll.setTitle(pollEntity.getTitle());
+            polls.add(pollEnityToPoll(pollEntity,poll));
         }
         return polls;
     }
@@ -333,6 +416,8 @@ public class PollLogicImpl implements PollLogic {
 
         return results;
     }
+    
+     
 
     @Override
     public List<Option> getNonPermanentOptions() {
@@ -358,9 +443,41 @@ public class PollLogicImpl implements PollLogic {
     public List<String> getAllPollTitles() {
         return pollAccess.getAllPollTitles();
     }
+    
+    
 
-    public void CreatetestData() {
+    public Instant DateToInstant(Date date) {
+        Instant t = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateString = formatter.format(date);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            Date d = formatter.parse(dateString);
+            t = d.toInstant();
+        } catch (ParseException e) {
+            System.err.println("Error parsing date to instant " + e.getMessage());
+        }
 
+        return t;
     }
+    
+    
+    public Date InstantToDate(Instant instant) {
+        Date date = Date.from(instant);
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dateString = formatter.format(date);
+        try {
+            date = formatter.parse(dateString);
+        } catch (ParseException e) {
+            System.err.println("Error parsing date to instant " + e.getMessage());
+        }
+
+        return date;
+    }
+    
+    
+    
+
 
 }

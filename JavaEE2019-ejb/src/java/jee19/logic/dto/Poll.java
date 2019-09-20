@@ -5,9 +5,13 @@
  */
 package jee19.logic.dto;
 
+import jee19.utilities.DateConvertor;
 import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
+import javax.inject.Inject;
 import jee19.logic.ItemType;
 
 
@@ -31,23 +35,21 @@ public class Poll extends Named{
     private ItemType pollType;
     
     private List<Person> participants;
-    
-    private Instant startDate;
-    
-    private Instant endDate;
-    
+   
     private Instant createDate;
     
     private PollState pollStateEntity;
     
-    private Set<Item> itemEntities;
+    private List<Item> items;
     
     private Set<Token> tokens;
  
-    private Set<Person> organizers;
+    private List<Person> organizers;
     
+    private Date startDate;
     
-   
+    private Date endDate;
+
 
     public String getTitle() {
         return title;
@@ -81,20 +83,38 @@ public class Poll extends Named{
         this.participants = participants;
     }
 
-    public Instant getStartDate() {
-        return startDate;
+    public PollState getPollStateEntity() {
+        return pollStateEntity;
     }
 
-    public void setStartDate(Instant startDate) {
-        this.startDate = startDate;
+    public void setPollStateEntity(PollState pollStateEntity) {
+        this.pollStateEntity = pollStateEntity;
     }
 
-    public Instant getEndDate() {
-        return endDate;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setEndDate(Instant endDate) {
-        this.endDate = endDate;
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    
+
+    public Set<Token> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(Set<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    public List<Person> getOrganizers() {
+        return organizers;
+    }
+
+    public void setOrganizers(List<Person> organizers) {
+        this.organizers = organizers;
     }
 
     public Instant getCreateDate() {
@@ -105,44 +125,21 @@ public class Poll extends Named{
         this.createDate = createDate;
     }
 
-    public PollState getPollStateEntity() {
-        return pollStateEntity;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setPollStateEntity(PollState pollStateEntity) {
-        this.pollStateEntity = pollStateEntity;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Set<Item> getItemEntities() {
-        return itemEntities;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setItemEntities(Set<Item> itemEntities) {
-        this.itemEntities = itemEntities;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
-    public Set<Token> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(Set<Token> tokens) {
-        this.tokens = tokens;
-    }
-
-    public Set<Person> getOrganizers() {
-        return organizers;
-    }
-
-    public void setOrganizers(Set<Person> organizers) {
-        this.organizers = organizers;
-    }
-
- 
-
-    
-
-
-    
-    
     
 }

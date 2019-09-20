@@ -77,7 +77,11 @@
         <navigation-case>
             <from-outcome>resultList</from-outcome>
             <to-view-id>/logged_in/pollResultList.xhtml?faces-redirect=true</to-view-id>
-        </navigation-case>   
+        </navigation-case> 
+        <navigation-case>
+            <from-outcome>pollList</from-outcome>
+            <to-view-id>/logged_in/pollList.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>    
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/logged_in/checkToken.xhtml</from-view-id>
@@ -95,6 +99,13 @@
         <navigation-case>
             <from-outcome>showResult</from-outcome>
             <to-view-id>/logged_in/voteResult.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/logged_in/pollList.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>showPoll</from-outcome>
+            <to-view-id>/logged_in/changePoll.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
