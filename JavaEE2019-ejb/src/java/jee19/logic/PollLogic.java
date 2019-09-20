@@ -63,6 +63,12 @@ public interface PollLogic {
 
     public Poll getPollByPollUUID(String pollUUID);
 
+    public void startPoll(String pollUUID);
+
+    public boolean checkAllVotesSubmitted(String pollUUID);
+
+    public void setPollStateByPollUUID(String pollUUID);
+
     
     
 }

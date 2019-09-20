@@ -202,7 +202,8 @@ public class PollLogicImpl implements PollLogic {
         
     }
     
-    private void StartPoll(String pollUUID,Instant startDateInstant,Instant endDateInstant){
+    @Override
+    public void startPoll(String pollUUID){
         
         Set<TokenEntity> tokenEntity = new HashSet<>();
         
@@ -219,7 +220,7 @@ public class PollLogicImpl implements PollLogic {
                 createResultEntity(pollEntity.getName() + i.getName(), pollEntity.getUuid(), i.getUuid(), o.getUuid());
             });
         });
-        backgroundJobManager.seTimerForPoll(pollEntity.getUuid(), startDateInstant, endDateInstant);
+        backgroundJobManager.seTimerForPoll(pollEntity.getUuid(), pollEntity.getStartDate(), pollEntity.getEndDate());
         
         pollEntity.setPollState(PollState.STARTED);
     }
@@ -392,6 +393,15 @@ public class PollLogicImpl implements PollLogic {
     }
     
     @Override
+     public void setPollStateByPollUUID(String pollUUID) {
+        PollEntity pollEntity = pollAccess.getPollByPollID(pollUUID);
+        pollEntity.setPollState(PollState.FINISHED);
+    }
+    
+    
+    
+    
+    @Override
     public Set<Poll> getPreparedPollsIDListByOrganizer(String organizerUUID) {
         Set<Poll> polls = new HashSet<>();
         for (PollEntity pollEntity : pollAccess.getPreparedPollsIDListByOrganizer(organizerUUID)) {
@@ -474,6 +484,11 @@ public class PollLogicImpl implements PollLogic {
         }
 
         return date;
+    }
+    
+    @Override
+    public boolean checkAllVotesSubmitted(String pollUUID){
+        return !(Math.toIntExact(tokenAccess.numberOfUsersDidntSubmit(pollUUID)) > 0);
     }
     
     

@@ -73,7 +73,14 @@ public class votingBean implements Serializable {
                   polllogic.addToVotes(token,poll.getUuid(), i.getUuid(),i.getChosenOption().getUuid());
               }
       });
+          if(isAllVotesSubmitted(poll.getUuid())){
+              polllogic.setPollStateByPollUUID(poll.getUuid());
+          }
       return "voteSumbitSuccess";
+    }
+    
+    private boolean isAllVotesSubmitted(String pollUUID){
+        return polllogic.checkAllVotesSubmitted(pollUUID);
     }
     
     private Poll readPollFromFlash(){

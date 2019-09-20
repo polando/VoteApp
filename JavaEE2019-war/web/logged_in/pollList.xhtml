@@ -11,16 +11,21 @@
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
         <h:form id="sendVoteForm">
-            <pr:panelGrid columns="1" layout="grid">
+            <pr:panelGrid columns="4" layout="grid">
                 <pr:outputLabel value="Choose the poll" />
-                <pr:selectOneMenu value="#{pollListBean.selectedPoll}" converter="entityConverter">
-                    <f:selectItems value="${pollListBean.preparedPollsByOrganizer}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.title}" />
+                <pr:selectOneMenu value="#{preparedPollsListBean.selectedPoll}" converter="entityConverter">
+                    <f:selectItems value="${preparedPollsListBean.preparedPollsByOrganaizer}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.title}" />
                 </pr:selectOneMenu> 
                 <pr:commandButton id="getResult"
-                                  value="${msg.submitButton}"
-                                  action="#{pollListBean.seePoll()}"
+                                  value="edit"
+                                  action="#{preparedPollsListBean.seePoll()}"
                                   ajax="false"
-                                  />
+                                  disabled="#{empty preparedPollsListBean.preparedPollsByOrganaizer}"/>
+                <pr:commandButton id="startPoll"
+                                  value="start"
+                                  action="#{preparedPollsListBean.startPoll()}"
+                                  ajax="false"
+                                  disabled="#{empty preparedPollsListBean.preparedPollsByOrganaizer}"/>
             </pr:panelGrid>
         </h:form>
     </ui:define>

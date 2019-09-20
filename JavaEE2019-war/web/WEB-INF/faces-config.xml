@@ -45,6 +45,13 @@
         </navigation-case>
     </navigation-rule>
     <navigation-rule>
+        <from-view-id>/logged_in/pollList.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>pollStarted</from-outcome>
+            <to-view-id>/logged_in/pollStartResult.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
         <from-view-id>*</from-view-id>
         <navigation-case>
             <from-outcome>index</from-outcome>

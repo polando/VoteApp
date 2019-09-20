@@ -8,7 +8,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @NamedQueries({
-    @NamedQuery(name = "getTokenObjectByTokenString", query = "SELECT p FROM TokenEntity p WHERE p.token = :token")
+    @NamedQuery(name = "getTokenObjectByTokenString", query = "SELECT p FROM TokenEntity p WHERE p.token = :token"),
+    @NamedQuery(name = "numberOfUsersDidntSubmit", query = "SELECT COUNT(p) FROM TokenEntity p WHERE p.pollEntity.uuid = :pollId AND p.used = 0")
+
 })
 @Entity
 @Table(name = "TOKEN")

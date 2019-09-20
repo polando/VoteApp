@@ -47,4 +47,9 @@ public class TokenAccess extends AbstractAccess<TokenEntity> {
         return tokenEntity;
          }
     
+    public Long numberOfUsersDidntSubmit(String pollId){
+         return em.createNamedQuery("numberOfUsersDidntSubmit", Long.class)
+                 .setParameter("pollId", pollId)
+                 .getSingleResult();
+    }
 }

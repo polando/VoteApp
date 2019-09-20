@@ -99,8 +99,6 @@ public class Poll extends Named{
         this.items = items;
     }
 
-    
-
     public Set<Token> getTokens() {
         return tokens;
     }
