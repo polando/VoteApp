@@ -144,29 +144,28 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items) {  
+    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items) {
         PollEntity pollEntity = pollAccess.createEntity(title);
-        setPollProperties(pollEntity,title,description, endDate, createDateInstant, startDate,participants, organizers, items);
+        setPollProperties(pollEntity, title, description, endDate, createDateInstant, startDate, participants, organizers, items);
         return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
-    
+
     @Override
-    public Poll editPoll(Poll poll){
+    public Poll editPoll(Poll poll) {
         PollEntity pollEntity = pollAccess.getByUuid(poll.getUuid());
-        setPollProperties(pollEntity,poll.getTitle(),poll.getDescription(), poll.getEndDate(), poll.getCreateDate(), poll.getStartDate(),poll.getParticipants(),poll.getOrganizers(), poll.getItems());
+        setPollProperties(pollEntity, poll.getTitle(), poll.getDescription(), poll.getEndDate(), poll.getCreateDate(), poll.getStartDate(), poll.getParticipants(), poll.getOrganizers(), poll.getItems());
         return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
-    
-    
-    private void setPollProperties(PollEntity pollEntity,String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items){
+
+    private void setPollProperties(PollEntity pollEntity, String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items) {
         List<PersonEntity> organizerEntity = new ArrayList<>();
         List<PersonEntity> participantEntity = new ArrayList<>();
         List<ItemEntity> itemEntities = new ArrayList<>();
-        
+
         organizers.forEach((p) -> {
             organizerEntity.add(personAccess.getByUuid(p.getUuid()));
         });
-        
+
         participants.forEach((p) -> {
             participantEntity.add(personAccess.getByUuid(p.getUuid()));
         });
@@ -199,29 +198,29 @@ public class PollLogicImpl implements PollLogic {
         pollEntity.setItemEntities(itemEntities);
 
         pollEntity.setPollState(PollState.PREPARED);
-        
+
     }
-    
+
     @Override
-    public void startPoll(String pollUUID){
-        
+    public void startPoll(String pollUUID) {
+
         Set<TokenEntity> tokenEntity = new HashSet<>();
-        
+
         PollEntity pollEntity = pollAccess.getByUuid(pollUUID);
-        
+
         pollEntity.getParticipants().forEach((p) -> {
             tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName() + pollEntity.getName(), p, pollEntity).getUuid()));
         });
 
         pollEntity.setTokens(tokenEntity);
-        
+
         pollEntity.getItemEntities().forEach((i) -> {
             i.getOptionEntities().forEach((o) -> {
                 createResultEntity(pollEntity.getName() + i.getName(), pollEntity.getUuid(), i.getUuid(), o.getUuid());
             });
         });
         backgroundJobManager.seTimerForPoll(pollEntity.getUuid(), pollEntity.getStartDate(), pollEntity.getEndDate());
-        
+
         pollEntity.setPollState(PollState.STARTED);
     }
 
@@ -235,7 +234,7 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public void addToVotes(String token, String pollUUID, String ItemUUID,String OptionUUID) {
+    public void addToVotes(String token, String pollUUID, String ItemUUID, String OptionUUID) {
         ResultEntity resultEntity = resultAccess.getEntityByPollAndItemIDAndOptID(pollUUID, ItemUUID, OptionUUID);
         resultEntity.setNumberOfVotes(resultEntity.getNumberOfVotes() + 1);
         TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
@@ -263,10 +262,11 @@ public class PollLogicImpl implements PollLogic {
     @Override
     public boolean tokenExistAndNotUsed(String token) {
         TokenEntity tokenEntity = getTokenByTokenString(token);
-        if(tokenEntity != null)
+        if (tokenEntity != null) {
             return !(tokenEntity.getUsed());
-        else
+        } else {
             return false;
+        }
     }
 
     private String hashAString(String input) {
@@ -328,9 +328,8 @@ public class PollLogicImpl implements PollLogic {
         poll.setItems(items);
         return poll;
     }
-    
-    
-    private Poll pollEnityToPoll(PollEntity pollEntity,Poll poll){
+
+    private Poll pollEnityToPoll(PollEntity pollEntity, Poll poll) {
         List<Item> items = new ArrayList<>();
         List<Option> options = new ArrayList<>();
         List<Person> participants = new ArrayList<>();
@@ -347,7 +346,7 @@ public class PollLogicImpl implements PollLogic {
         pollEntity.getOrganizers().forEach((p) -> {
             Person person = new Person(p.getUuid(), p.getJpaVersion(), p.getName());
             oraganizers.add(person);
-        });        
+        });
         pollEntity.getItemEntities().forEach((e) -> {
             Item item = new Item(e.getUuid(), e.getJpaVersion(), e.getName());
             item.setTitle(e.getTitle());
@@ -361,13 +360,12 @@ public class PollLogicImpl implements PollLogic {
             });
             item.setOptions(options);
             items.add(item);
-            });
-         poll.setItems(items);
-         poll.setParticipants(participants);
-         poll.setOrganizers(oraganizers);
-         return poll;
+        });
+        poll.setItems(items);
+        poll.setParticipants(participants);
+        poll.setOrganizers(oraganizers);
+        return poll;
     }
-    
 
     private TokenEntity getTokenByTokenString(String token) {
         return tokenAccess.getTokenObjectByTokenString(token);
@@ -383,31 +381,27 @@ public class PollLogicImpl implements PollLogic {
         }
         return polls;
     }
-    
-    
+
     @Override
     public Poll getPollByPollUUID(String pollUUID) {
         PollEntity pollEntity = pollAccess.getPollByPollID(pollUUID);
         Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
-        return pollEnityToPoll(pollEntity,poll);
+        return pollEnityToPoll(pollEntity, poll);
     }
-    
+
     @Override
-     public void setPollStateByPollUUID(String pollUUID) {
+    public void setPollStateByPollUUID(String pollUUID) {
         PollEntity pollEntity = pollAccess.getPollByPollID(pollUUID);
         pollEntity.setPollState(PollState.FINISHED);
     }
-    
-    
-    
-    
+
     @Override
     public Set<Poll> getPreparedPollsIDListByOrganizer(String organizerUUID) {
         Set<Poll> polls = new HashSet<>();
         for (PollEntity pollEntity : pollAccess.getPreparedPollsIDListByOrganizer(organizerUUID)) {
             Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
             //poll.setTitle(pollEntity.getTitle());
-            polls.add(pollEnityToPoll(pollEntity,poll));
+            polls.add(pollEnityToPoll(pollEntity, poll));
         }
         return polls;
     }
@@ -426,8 +420,6 @@ public class PollLogicImpl implements PollLogic {
 
         return results;
     }
-    
-     
 
     @Override
     public List<Option> getNonPermanentOptions() {
@@ -453,8 +445,6 @@ public class PollLogicImpl implements PollLogic {
     public List<String> getAllPollTitles() {
         return pollAccess.getAllPollTitles();
     }
-    
-    
 
     public Instant DateToInstant(Date date) {
         Instant t = null;
@@ -470,8 +460,7 @@ public class PollLogicImpl implements PollLogic {
 
         return t;
     }
-    
-    
+
     public Date InstantToDate(Instant instant) {
         Date date = Date.from(instant);
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -485,14 +474,10 @@ public class PollLogicImpl implements PollLogic {
 
         return date;
     }
-    
+
     @Override
-    public boolean checkAllVotesSubmitted(String pollUUID){
+    public boolean checkAllVotesSubmitted(String pollUUID) {
         return !(Math.toIntExact(tokenAccess.numberOfUsersDidntSubmit(pollUUID)) > 0);
     }
-    
-    
-    
-
 
 }

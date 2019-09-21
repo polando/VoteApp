@@ -76,6 +76,7 @@
                     <pr:commandButton value="Edit List" type="button" onclick="PF('orgModal').show();" />
                 </pr:panelGrid> 
 
+                <f:event type="postValidate" listener="#{changePollBean.validatePoll}"/>
                 
                 <pr:message id="organizersTableMessage" for="organizersTable" />
                 

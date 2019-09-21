@@ -10,17 +10,23 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import javax.faces.event.ComponentSystemEvent;
+import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Poll;
+import jee19.web.utilities.errorMessageUtility;
 
 /**
  *
@@ -35,6 +41,9 @@ public class changePollBean  implements Serializable{
 
     @EJB
     private PollLogic polllogic;
+    
+        @Inject
+    private errorMessageUtility  errorMessageUtility;
 
     private Poll poll;
 
@@ -65,5 +74,27 @@ public class changePollBean  implements Serializable{
     public void addItem(Item item){
         poll.getItems().add(item);
     }
+    
+        public void validatePoll(ComponentSystemEvent event) throws ValidatorException {
+        ArrayList<String> problems = new ArrayList<>();
+        
+        if (poll.getParticipants() == null || poll.getParticipants().size()<3) {
+            problems.add("There must be at least 3 participants"); 
+        }
+        if(errorMessageUtility.isNullOrEmpty(poll.getOrganizers())){
+            problems.add("There must be at least one oraganizer"); 
+        }
+        if(errorMessageUtility.isNullOrEmpty(poll.getItems())){
+            problems.add("There must be at least one item"); 
+        }
+        if(poll.getStartDate().after(poll.getEndDate()) || poll.getStartDate().equals(poll.getEndDate())){
+             problems.add("End Date must be later than start date");
+        }
+        
+        if(!problems.isEmpty()){
+            errorMessageUtility.errorCall(problems);
+        }
+    }
+    
 
 }

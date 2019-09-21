@@ -16,50 +16,57 @@ import java.util.List;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
+import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
 import jee19.logic.ItemType;
 import jee19.logic.dto.Item;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.PollState;
+import jee19.web.utilities.errorMessageUtility;
+import org.jboss.weld.probe.Strings;
+import org.primefaces.PrimeFaces;
 
 /**
  *
  * @author ussocom
  */
-
 @ViewScoped
 @Named
 public class createPollBean implements Serializable {
 
     private static final long serialVersionUID = -8672602607708913941L;
-    
+
     @EJB
     private PollLogic polllogic;
-    
+
     private ItemType itemtype;
-    
+
     private PollState pollstate;
-    
+
     private List<Item> items;
-    
+
     private List<Person> participants;
-    
+
     private List<Person> organizers;
-        
-    private String title;  
-    
+
+    private String title;
+
     private String description;
-    
+
     private Date startDate;
-    
+
     private Date endDate;
-    
+
     private Date createDate;
- 
+
     private Instant createDateInstant;
-    
+
     private List<String> test;
 
     public List<String> getTest() {
@@ -69,9 +76,6 @@ public class createPollBean implements Serializable {
     public void setTest(List<String> test) {
         this.test = test;
     }
-    
-    
-    
 
     public ItemType getItemtype() {
         return itemtype;
@@ -80,7 +84,6 @@ public class createPollBean implements Serializable {
     public void setItemtype(ItemType itemtype) {
         this.itemtype = itemtype;
     }
-
 
     public List<Person> getParticipants() {
         return participants;
@@ -146,7 +149,6 @@ public class createPollBean implements Serializable {
         this.items = items;
     }
 
-  
     public PollState getPollstate() {
         return pollstate;
     }
@@ -155,52 +157,67 @@ public class createPollBean implements Serializable {
         this.pollstate = pollstate;
     }
     
+    @Inject
+    private errorMessageUtility  errorMessageUtility;
 
     @PostConstruct
-    public void init(){
-         participants = new ArrayList<>();
-         items = new ArrayList<>();
+    public void init() {
+        participants = new ArrayList<>();
+        items = new ArrayList<>();
     }
-    
-    
-    
-    public String createPoll(){
+
+    public String createPoll() {
         setNowAsCurrentDate();
-        polllogic.createPoll(title, description, endDate, createDateInstant, startDate,participants,organizers,items);
+        polllogic.createPoll(title, description, endDate, createDateInstant, startDate, participants, organizers, items);
         return "pollCreatedSuccessfully";
     }
-    
-    public void addItem(Item e){
+
+    public void addItem(Item e) {
         items.add(e);
         items.forEach((i) -> {
-            System.out.println("i"+i);
+            System.out.println("i" + i);
         });
     }
-    
-    
-    Instant DateToInstant(Date date){
+
+    Instant DateToInstant(Date date) {
         Instant t = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(date);
         formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-        try{
-        Date d = formatter.parse(dateString);
-        t = d.toInstant();
-        }
-        catch(ParseException e){
+        try {
+            Date d = formatter.parse(dateString);
+            t = d.toInstant();
+        } catch (ParseException e) {
             System.err.println("Error parsing date to instant " + e.getMessage());
         }
-        
-         return t;
+
+        return t;
     }
-    
-    
-    void setNowAsCurrentDate(){
+
+    void setNowAsCurrentDate() {
         setCreateDate(new Date());
     }
-    
-    
-    
-    
+
+    public void validatePoll(ComponentSystemEvent event) throws ValidatorException {
+        ArrayList<String> problems = new ArrayList<>();
+        
+        if (participants == null || participants.size()<3) {
+            problems.add("There must be at least 3 participants"); 
+        }
+        if(errorMessageUtility.isNullOrEmpty(organizers)){
+            problems.add("There must be at least one oraganizer"); 
+        }
+        if(errorMessageUtility.isNullOrEmpty(items)){
+            problems.add("There must be at least one item"); 
+        }
+        if(startDate.after(endDate) || startDate.equals(endDate)){
+             problems.add("End Date must be later than start date");
+        }
+        
+        if(!problems.isEmpty()){
+            errorMessageUtility.errorCall(problems);
+        }
+    }
+  
     
 }
