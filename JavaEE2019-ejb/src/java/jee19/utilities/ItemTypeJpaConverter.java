@@ -14,25 +14,26 @@ import jee19.logic.ItemType;
  * @author ussocom
  */
 @Converter
-public class ItemTypeJpaConverter implements AttributeConverter<ItemType, String>  {
+public class ItemTypeJpaConverter implements AttributeConverter<ItemType, String> {
 
     @Override
     public String convertToDatabaseColumn(ItemType attribute) {
         if (attribute == null) {
-           return null;
-       }
-       return attribute.toString();
+            return null;
+        }
+        return attribute.toString();
     }
 
     @Override
     public ItemType convertToEntityAttribute(String dbData) {
-       if (dbData == null) {
-           return null;
-       }
-       try {
-           return ItemType.valueOf(dbData);
-       } catch (IllegalArgumentException e) {
-           return null;
-       }    }
-    
+        if (dbData == null) {
+            return null;
+        }
+        try {
+            return ItemType.valueOf(dbData);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
 }

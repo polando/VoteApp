@@ -5,6 +5,8 @@
  */
 package jee19.logic.dto;
 
+import jee19.logic.OptionType;
+
 /**
  *
  * @author ussocom
@@ -21,7 +23,7 @@ public class Option extends Named {
     
     private String discription;
     
-    private boolean permanentOption;
+    private OptionType optionType;
 
     public String getShortName() {
         return shortName;
@@ -39,13 +41,15 @@ public class Option extends Named {
         this.discription = discription;
     }
 
-    public boolean isPermanentOption() {
-        return permanentOption;
+    public OptionType getOptionType() {
+        return optionType;
     }
 
-    public void setPermanentOption(boolean permanentOption) {
-        this.permanentOption = permanentOption;
+    public void setOptionType(OptionType optionType) {
+        this.optionType = optionType;
     }
+
+    
     
     
     

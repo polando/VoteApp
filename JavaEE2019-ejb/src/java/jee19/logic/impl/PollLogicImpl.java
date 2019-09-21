@@ -33,6 +33,7 @@ import jee19.entities.OptEntity;
 import jee19.logic.PollLogic;
 import jee19.logic.PollState;
 import jee19.logic.ItemType;
+import jee19.logic.OptionType;
 import jee19.logic.dao.ItemAccess;
 import jee19.logic.dao.OptionAccess;
 import jee19.logic.dao.PersonAccess;
@@ -121,7 +122,7 @@ public class PollLogicImpl implements PollLogic {
         List<OptEntity> optionEntities = new ArrayList<>();
         List<Option> ops = new ArrayList<>();
         if (itemType.equals(ItemType.YesNo)) {
-            optionEntities.addAll(optionAccess.getPermanentOptions());
+            optionEntities.addAll(optionAccess.getOptionByType(OptionType.YesNo));
         } else {
             options.forEach((option) -> {
                 optionEntities.add(optionAccess.getByUuid(option.getUuid()));
@@ -135,7 +136,7 @@ public class PollLogicImpl implements PollLogic {
             Option option = new Option(o.getUuid(), o.getJpaVersion(), o.getName());
             option.setShortName(o.getShortName());
             option.setDiscription(o.getDiscription());
-            option.setPermanentOption(o.isPermanentOption());
+            option.setOptionType(o.getOptiontype());
             ops.add(option);
         });
         item.setOptions(ops);
@@ -183,14 +184,16 @@ public class PollLogicImpl implements PollLogic {
             itemEntity.setTitle(i.getTitle());
             itemEntity.setItemType(i.getItemType());
             List<OptEntity> optionEntities = new ArrayList<>();
-            if (i.getItemType().equals(ItemType.YesNo)) {
-                System.out.println("opt added");
-                optionEntities.addAll(optionAccess.getPermanentOptions());
+            /*  if (i.getItemType().equals(ItemType.YesNo)) {
+                optionEntities.addAll(optionAccess.getOptionByType(OptionType.YesNo));
             } else {
                 i.getOptions().forEach((option) -> {
                     optionEntities.add(optionAccess.getByUuid(option.getUuid()));
                 });
-            }
+            }*/
+            i.getOptions().forEach((option) -> {
+                optionEntities.add(optionAccess.getByUuid(option.getUuid()));
+            });
             itemEntity.setOptionEntities(optionEntities);
             itemEntities.add(itemEntity);
         });
@@ -211,9 +214,13 @@ public class PollLogicImpl implements PollLogic {
         pollEntity.getParticipants().forEach((p) -> {
             tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName() + pollEntity.getName(), p, pollEntity).getUuid()));
         });
+        
+        pollEntity.getItemEntities().forEach((i) -> {
+            i.getOptionEntities().add(optionAccess.getByUuid(createOption("Abstain", "abstainDisc", OptionType.Abstain).getUuid())); 
+        });    
 
         pollEntity.setTokens(tokenEntity);
-
+        
         pollEntity.getItemEntities().forEach((i) -> {
             i.getOptionEntities().forEach((o) -> {
                 createResultEntity(pollEntity.getName() + i.getName(), pollEntity.getUuid(), i.getUuid(), o.getUuid());
@@ -251,11 +258,11 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public Option createOption(String shortName, String disc, boolean permanentOption) {
+    public Option createOption(String shortName, String disc, OptionType optionType) {
         OptEntity optEntity = optionAccess.createEntity(shortName);
         optEntity.setShortName(shortName);
         optEntity.setDiscription(disc);
-        optEntity.setPermanentOption(permanentOption);
+        optEntity.setOptiontype(optionType);
         return new Option(optEntity.getUuid(), optEntity.getJpaVersion(), optEntity.getName());
     }
 
@@ -318,7 +325,7 @@ public class PollLogicImpl implements PollLogic {
                 Option option = new Option(o.getUuid(), o.getJpaVersion(), o.getName());
                 option.setShortName(o.getShortName());
                 option.setDiscription(o.getDiscription());
-                option.setPermanentOption(o.isPermanentOption());
+                option.setOptionType(o.getOptiontype());
                 options.add(option);
             });
             item.setOptions(options);
@@ -355,7 +362,7 @@ public class PollLogicImpl implements PollLogic {
                 Option option = new Option(o.getUuid(), o.getJpaVersion(), o.getName());
                 option.setShortName(o.getShortName());
                 option.setDiscription(o.getDiscription());
-                option.setPermanentOption(o.isPermanentOption());
+                option.setOptionType(o.getOptiontype());
                 options.add(option);
             });
             item.setOptions(options);
@@ -423,7 +430,7 @@ public class PollLogicImpl implements PollLogic {
 
     @Override
     public List<Option> getNonPermanentOptions() {
-        List<OptEntity> optEntities = optionAccess.getNonPermanentOptions();
+        List<OptEntity> optEntities = optionAccess.getOptionByType(OptionType.NonPermanent);
         List<Option> result = new ArrayList<>(optEntities.size());
 
         optEntities.stream().map((oe) -> {
@@ -435,10 +442,6 @@ public class PollLogicImpl implements PollLogic {
             result.add(option);
         });
         return result;
-    }
-
-    private List<OptEntity> getPermanentPollItems() {
-        return optionAccess.getPermanentOptions();
     }
 
     @Override

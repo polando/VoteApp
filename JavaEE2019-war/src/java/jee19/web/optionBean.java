@@ -10,28 +10,25 @@ import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.ItemType;
+import jee19.logic.OptionType;
 import jee19.logic.PollLogic;
 
 /**
  *
  * @author ussocom
  */
-
 @ViewScoped
 @Named
-public class optionBean implements Serializable{
-    
+public class optionBean implements Serializable {
+
     private static final long serialVersionUID = 3193800306634223242L;
-    
+
     @EJB
     private PollLogic polllogic;
-    
-    
+
     private String shortName;
-    
+
     private String discription;
-    
-    private boolean permanentOption;
 
     public String getShortName() {
         return shortName;
@@ -49,17 +46,8 @@ public class optionBean implements Serializable{
         this.discription = discription;
     }
 
-    public boolean isPermanentOption() {
-        return permanentOption;
+    public void createOption() {
+        polllogic.createOption(shortName, discription, OptionType.NonPermanent);
     }
 
-    public void setPermanentOption(boolean permanentOption) {
-        this.permanentOption = permanentOption;
-    }
-
-    
-    public void createOption(){
-        polllogic.createOption(shortName,discription,false);
-    }
-    
 }

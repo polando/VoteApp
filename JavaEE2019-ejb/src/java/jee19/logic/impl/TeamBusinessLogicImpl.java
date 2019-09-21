@@ -17,6 +17,7 @@ import jee19.entities.ItemEntity;
 import jee19.entities.PersonEntity;
 import jee19.entities.TeamEntity;
 import jee19.logic.ItemType;
+import jee19.logic.OptionType;
 import jee19.logic.PollLogic;
 import jee19.logic.TeamBusinessLogic;
 import jee19.logic.Term;
@@ -252,11 +253,11 @@ public class TeamBusinessLogicImpl implements TeamBusinessLogic {
         final String[] NONPREPOLLITEMS = {"option 1","option 2"};
         
         for(String s:PREPOLLITEMS){
-            polllogic.createOption(s,s,true);
+            polllogic.createOption(s,s,OptionType.YesNo);
         }
         
         for(String s:NONPREPOLLITEMS){
-            polllogic.createOption(s,s,false);
+            polllogic.createOption(s,s,OptionType.NonPermanent);
         }
         
         

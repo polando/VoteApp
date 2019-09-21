@@ -9,6 +9,7 @@ import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import jee19.entities.OptEntity;
+import jee19.logic.OptionType;
 
 /**
  *
@@ -33,14 +34,11 @@ public class OptionAccess extends AbstractAccess<OptEntity> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public List<OptEntity> getPermanentOptions() {
-        return em.createNamedQuery("getPermanentOptions", OptEntity.class
-        ).getResultList();
-    }
     
-    public List<OptEntity> getNonPermanentOptions() {
-        return em.createNamedQuery("getNonPermanentOptions", OptEntity.class
-        ).getResultList();
+    public List<OptEntity> getOptionByType(OptionType optionType) {
+        return em.createNamedQuery("getPermanentOptionByState", OptEntity.class)
+                .setParameter("optionType", optionType)
+                .getResultList();
     }
     
 }

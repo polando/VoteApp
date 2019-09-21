@@ -37,8 +37,6 @@ public interface PollLogic {
     
     public Item createItem(String title, ItemType itemType, List<Option> options);
     
-    public Option createOption(String shortName,String disc,boolean permanentOption);
-
     
     public boolean checkToken(String useruuid, String token);
     
@@ -68,6 +66,8 @@ public interface PollLogic {
     public boolean checkAllVotesSubmitted(String pollUUID);
 
     public void setPollStateByPollUUID(String pollUUID);
+
+    public Option createOption(String shortName, String disc, OptionType optionType);
 
     
     

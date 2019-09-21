@@ -5,21 +5,22 @@
  */
 package jee19.entities;
 
-import java.util.HashSet;
 import java.util.List;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import jee19.logic.OptionType;
+import jee19.utilities.OptionTypeJpaConverter;
 
 /**
  *
  * @author ussocom
  */
 @NamedQueries({
-    @NamedQuery(name = "getPermanentOptions", query = "SELECT p FROM OptEntity p WHERE p.permanentOption = TRUE"),
-    @NamedQuery(name = "getNonPermanentOptions", query = "SELECT p FROM OptEntity p WHERE p.permanentOption = FALSE"),
+    @NamedQuery(name = "getPermanentOptionByState", query = "SELECT p FROM OptEntity p WHERE p.optiontype = :optionType"),
 })
 @Entity
 @Table(name="OPT")
@@ -41,7 +42,9 @@ public class OptEntity extends NamedEntity  {
     
     private String discription;
     
-    private boolean permanentOption;
+    @Convert(converter = OptionTypeJpaConverter.class)
+    private OptionType optiontype;
+    
     
     @ManyToMany(mappedBy = "optionEntities")
     private List<ItemEntity> ItemEntities;
@@ -70,13 +73,14 @@ public class OptEntity extends NamedEntity  {
         this.ItemEntities = ItemEntities;
     }
 
-    public boolean isPermanentOption() {
-        return permanentOption;
+    public OptionType getOptiontype() {
+        return optiontype;
     }
 
-    public void setPermanentOption(boolean permanentOption) {
-        this.permanentOption = permanentOption;
+    public void setOptiontype(OptionType optiontype) {
+        this.optiontype = optiontype;
     }
+
     
     
     
