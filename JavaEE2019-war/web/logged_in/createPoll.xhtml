@@ -60,7 +60,8 @@
                     </pr:dataTable>
                     <pr:commandButton value="Edit List" type="button" onclick="PF('amodal').show();" />
                 </pr:panelGrid>
-                <f:event type="postValidate" listener="#{createPollBean.validatePoll}"/>
+                
+                <f:event type="postValidate" listener="#{pollValidator.validatePoll(createPollBean.participants, createPollBean.organizers, createPollBean.items, createPollBean.startDate, createPollBean.endDate)}"/>
 
                 <pr:message id="personTableMessage" for="personTable" />
 
@@ -113,7 +114,7 @@
                             <f:ajax event="change" render="pollItemsMessage" />
                         </pr:selectCheckboxMenu> 
                     </pr:panelGrid>
-
+                    
                     <pr:message id="pollItemsMessage" for="listOfItems" />
 
                 </pr:panelGrid>
@@ -136,7 +137,7 @@
                     <pr:outputLabel value="Item Title" class="pf"/>
 
                     <pr:inputText  id="itemtitleInput"  placeholder="Type Title here..." value="#{itemBean.title}"  required="true" class="pf"  requiredMessage="This field cant be empty" style="width: 100%">
-                        <f:ajax event="blur" render="titleInputMessage" /> 
+                        <f:ajax event="blur" render="itemtitleInputMessage" /> 
                     </pr:inputText>
 
                     <pr:message id="itemtitleInputMessage" for="itemtitleInput" />
@@ -162,14 +163,17 @@
                     </pr:panelGrid>
 
                     <pr:message id="pollItemsMessage" for="itemOptions" />
-
+                    
+                    <f:event type="postValidate" listener="#{pollValidator.validateItem(itemBean.title, createPollBean.items)}"/>
+                    
                 </pr:panelGrid>
 
-                <pr:commandButton value="Save"   actionListener="#{createPollBean.addItem(itemBean.createItem())}" oncomplete="PF('itemModal').hide();"  update=":pollForm" />
+                <pr:commandButton value="Save"   actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm"/>
 
             </h:form>
 
         </pr:dialog>
+        
 
         <pr:dialog id="amodal" modal="true" header="Modal Dialog" widgetVar="amodal">
             <h:form>

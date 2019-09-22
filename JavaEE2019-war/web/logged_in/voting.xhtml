@@ -8,7 +8,8 @@
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:b="http://bootsfaces.net/ui"
-    xmlns:pr="http://primefaces.org/ui">
+    xmlns:pr="http://primefaces.org/ui"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="removeList">
         <h:outputStylesheet name="css/removeDisabledList" />
@@ -17,8 +18,8 @@
         <h:form id="sendVoteForm">
 
             <pr:outputLabel value="Choose your vote" />   
-
-            <ui:repeat var="item" value="#{votingBean.voteItems}" varStatus="status">
+            
+            <c:forEach items="#{votingBean.voteItems}" var="item">
 
                 <pr:panelGrid columns="2" layout="grid" id="AItem">   
 
@@ -33,7 +34,7 @@
                     <pr:outputLabel value="Options"/>
 
                     <pr:panelGrid  columns="2" layout="grid" id="itemOptions">
-                        
+
                         <h:outputText value="Abstain " />
                         <pr:toggleSwitch value="#{item.isAbstainChosen}">
                             <pr:ajax update="itemOptions"/>
@@ -54,7 +55,7 @@
 
                 </pr:panelGrid>
 
-            </ui:repeat>
+            </c:forEach>
 
             <pr:commandButton id="sendVote"
                               value="${msg.submitButton}"

@@ -75,26 +75,4 @@ public class changePollBean  implements Serializable{
         poll.getItems().add(item);
     }
     
-        public void validatePoll(ComponentSystemEvent event) throws ValidatorException {
-        ArrayList<String> problems = new ArrayList<>();
-        
-        if (poll.getParticipants() == null || poll.getParticipants().size()<3) {
-            problems.add("There must be at least 3 participants"); 
-        }
-        if(errorMessageUtility.isNullOrEmpty(poll.getOrganizers())){
-            problems.add("There must be at least one oraganizer"); 
-        }
-        if(errorMessageUtility.isNullOrEmpty(poll.getItems())){
-            problems.add("There must be at least one item"); 
-        }
-        if(poll.getStartDate().after(poll.getEndDate()) || poll.getStartDate().equals(poll.getEndDate())){
-             problems.add("End Date must be later than start date");
-        }
-        
-        if(!problems.isEmpty()){
-            errorMessageUtility.errorCall(problems);
-        }
-    }
-    
-
 }

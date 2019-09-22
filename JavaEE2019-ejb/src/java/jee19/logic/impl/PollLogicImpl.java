@@ -184,16 +184,16 @@ public class PollLogicImpl implements PollLogic {
             itemEntity.setTitle(i.getTitle());
             itemEntity.setItemType(i.getItemType());
             List<OptEntity> optionEntities = new ArrayList<>();
-            /*  if (i.getItemType().equals(ItemType.YesNo)) {
+            if (i.getItemType().equals(ItemType.YesNo)) {
                 optionEntities.addAll(optionAccess.getOptionByType(OptionType.YesNo));
             } else {
                 i.getOptions().forEach((option) -> {
                     optionEntities.add(optionAccess.getByUuid(option.getUuid()));
                 });
-            }*/
-            i.getOptions().forEach((option) -> {
+            }
+           /* i.getOptions().forEach((option) -> {
                 optionEntities.add(optionAccess.getByUuid(option.getUuid()));
-            });
+            });*/
             itemEntity.setOptionEntities(optionEntities);
             itemEntities.add(itemEntity);
         });
@@ -311,11 +311,9 @@ public class PollLogicImpl implements PollLogic {
     public Poll getPollByToken(String token) {
         TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
         PollEntity pollEntity = pollAccess.getByUuid(tokenEntity.getPollEntity().getUuid());
-        System.out.println(pollEntity.getTitle());
-        List<Item> items = new ArrayList<>();
-        List<Option> options = new ArrayList<>();
         Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
-        poll.setDescription(pollEntity.getDescription());
+        return pollEnityToPoll(pollEntity,poll);
+      /*  poll.setDescription(pollEntity.getDescription());
         poll.setTitle(pollEntity.getTitle());
         pollEntity.getItemEntities().forEach((e) -> {
             Item item = new Item(e.getUuid(), e.getJpaVersion(), e.getName());
@@ -333,12 +331,11 @@ public class PollLogicImpl implements PollLogic {
         });
 
         poll.setItems(items);
-        return poll;
+        return poll;*/
     }
 
     private Poll pollEnityToPoll(PollEntity pollEntity, Poll poll) {
         List<Item> items = new ArrayList<>();
-        List<Option> options = new ArrayList<>();
         List<Person> participants = new ArrayList<>();
         List<Person> oraganizers = new ArrayList<>();
         poll.setDescription(pollEntity.getDescription());
@@ -358,6 +355,7 @@ public class PollLogicImpl implements PollLogic {
             Item item = new Item(e.getUuid(), e.getJpaVersion(), e.getName());
             item.setTitle(e.getTitle());
             item.setItemType(e.getItemType());
+            List<Option> options = new ArrayList<>();
             e.getOptionEntities().forEach((o) -> {
                 Option option = new Option(o.getUuid(), o.getJpaVersion(), o.getName());
                 option.setShortName(o.getShortName());
@@ -409,7 +407,6 @@ public class PollLogicImpl implements PollLogic {
         Set<Poll> polls = new HashSet<>();
         for (PollEntity pollEntity : pollAccess.getPreparedPollsIDListByOrganizer(organizerUUID)) {
             Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
-            //poll.setTitle(pollEntity.getTitle());
             polls.add(pollEnityToPoll(pollEntity, poll));
         }
         return polls;

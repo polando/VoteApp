@@ -72,6 +72,12 @@ public class votingBean implements Serializable {
         });
          */
         token = readTokenFromFlash();
+        
+        for(Item i: voteItems){
+            for(Option o:i.getOptions()){
+                System.out.println("item:"+i.getTitle()+"opt:"+o.getShortName());
+            }
+        }
 
     }
 

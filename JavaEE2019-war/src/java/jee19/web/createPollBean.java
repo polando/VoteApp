@@ -69,6 +69,8 @@ public class createPollBean implements Serializable {
 
     private List<String> test;
 
+    private Item currentEditItem;
+
     public List<String> getTest() {
         return test;
     }
@@ -156,9 +158,15 @@ public class createPollBean implements Serializable {
     public void setPollstate(PollState pollstate) {
         this.pollstate = pollstate;
     }
-    
-    @Inject
-    private errorMessageUtility  errorMessageUtility;
+
+    public Item getCurrentEditItem() {
+        return currentEditItem;
+    }
+
+    public void setCurrentEditItem(Item currentEditItem) {
+        this.currentEditItem = currentEditItem;
+    }
+
 
     @PostConstruct
     public void init() {
@@ -198,26 +206,4 @@ public class createPollBean implements Serializable {
         setCreateDate(new Date());
     }
 
-    public void validatePoll(ComponentSystemEvent event) throws ValidatorException {
-        ArrayList<String> problems = new ArrayList<>();
-        
-        if (participants == null || participants.size()<3) {
-            problems.add("There must be at least 3 participants"); 
-        }
-        if(errorMessageUtility.isNullOrEmpty(organizers)){
-            problems.add("There must be at least one oraganizer"); 
-        }
-        if(errorMessageUtility.isNullOrEmpty(items)){
-            problems.add("There must be at least one item"); 
-        }
-        if(startDate.after(endDate) || startDate.equals(endDate)){
-             problems.add("End Date must be later than start date");
-        }
-        
-        if(!problems.isEmpty()){
-            errorMessageUtility.errorCall(problems);
-        }
-    }
-  
-    
 }

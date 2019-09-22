@@ -76,7 +76,7 @@
                     <pr:commandButton value="Edit List" type="button" onclick="PF('orgModal').show();" />
                 </pr:panelGrid> 
 
-                <f:event type="postValidate" listener="#{changePollBean.validatePoll}"/>
+                <f:event type="postValidate" listener="#{pollValidator.validatePoll(changePollBean.poll)}"/>
                 
                 <pr:message id="organizersTableMessage" for="organizersTable" />
                 
@@ -163,9 +163,11 @@
                 
                 <pr:message id="pollItemsMessage" for="itemOptions" />
                 
+                <f:event type="postValidate" listener="#{pollValidator.validateItem(itemBean.title, changePollBean.poll.items)}"/>
+                
             </pr:panelGrid>
                 
-                <pr:commandButton value="Save"   actionListener="#{changePollBean.addItem(itemBean.createItem())}" oncomplete="PF('itemModal').hide();"  update=":changePollForm" />
+                <pr:commandButton value="Save"   actionListener="#{changePollBean.addItem(itemBean.createItem())}"  update=":changePollForm" />
                 
             </h:form>
             
