@@ -17,7 +17,9 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
 import jee19.logic.ItemType;
+import jee19.logic.OptionType;
 import jee19.logic.dto.Item;
+import jee19.logic.dto.Option;
 import jee19.logic.dto.Poll;
 
 /**
@@ -27,30 +29,51 @@ import jee19.logic.dto.Poll;
 @ViewScoped
 @Named
 public class votingBean implements Serializable {
-    
+
     private static final long serialVersionUID = -7434000390609622052L;
-    
+
     private List<Item> voteItems;
-      
+
+    private List<Item> abstains;
+
     private Item chosenItem;
-    
+
     private String token;
-    
-    
-    
+
     @EJB
     private PollLogic polllogic;
-   
+
     private Poll poll;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         poll = readPollFromFlash();
         voteItems = poll.getItems();
-        token = readTokenFromFlash();
-        
-    }
+        /*  abstains = poll.getItems();
 
+        voteItems.forEach((i) -> {
+            List<Option> options = new ArrayList<>();
+            i.getOptions().forEach((o) -> {
+                if (o.getOptionType() != OptionType.Abstain) {
+                    options.add(o);
+                }
+            });
+            i.setOptions(options);
+        });
+
+        abstains.forEach((i) -> {
+            List<Option> options = new ArrayList<>();
+            i.getOptions().forEach((o) -> {
+                if (o.getOptionType() == OptionType.Abstain) {
+                    options.add(o);
+                }
+            });
+            i.setOptions(options);
+        });
+         */
+        token = readTokenFromFlash();
+
+    }
 
     public List<Item> getVoteItems() {
         return voteItems;
@@ -60,39 +83,43 @@ public class votingBean implements Serializable {
         this.voteItems = voteItems;
     }
 
-  
-    
-    public String submitVote(){
-          voteItems.forEach((i) -> {
-              if(i.isNOfM()){
-              i.getChosenOptions().forEach((o)->{
-                polllogic.addToVotes(token,poll.getUuid(), i.getUuid(),o.getUuid());
-              });
-              }
-              else{
-                  polllogic.addToVotes(token,poll.getUuid(), i.getUuid(),i.getChosenOption().getUuid());
-              }
-      });
-          if(isAllVotesSubmitted(poll.getUuid())){
-              polllogic.setPollStateByPollUUID(poll.getUuid());
-          }
-      return "voteSumbitSuccess";
+    public String submitVote() {
+        voteItems.forEach((i) -> {
+            if (i.isIsAbstainChosen()) {
+                for (Option o : i.getOptions()) {
+                    if (o.getOptionType() == OptionType.Abstain) {
+                        i.setChosenOption(o);
+                    }
+                }
+                polllogic.addToVotes(token, poll.getUuid(), i.getUuid(), i.getChosenOption().getUuid());
+            } else if (i.isNOfM()) {
+                i.getChosenOptions().forEach((o) -> {
+                    polllogic.addToVotes(token, poll.getUuid(), i.getUuid(), o.getUuid());
+                });
+            } else {
+                polllogic.addToVotes(token, poll.getUuid(), i.getUuid(), i.getChosenOption().getUuid());
+            }
+
+        });
+        if (isAllVotesSubmitted(poll.getUuid())) {
+            polllogic.setPollStateByPollUUID(poll.getUuid());
+        }
+        return "voteSumbitSuccess";
     }
-    
-    private boolean isAllVotesSubmitted(String pollUUID){
+
+    private boolean isAllVotesSubmitted(String pollUUID) {
         return polllogic.checkAllVotesSubmitted(pollUUID);
     }
-    
-    private Poll readPollFromFlash(){
+
+    private Poll readPollFromFlash() {
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        return (Poll)flash.get("poll");
+        return (Poll) flash.get("poll");
     }
-    
-    private String readTokenFromFlash(){
+
+    private String readTokenFromFlash() {
         Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
-        return (String)flash.get("token");
+        return (String) flash.get("token");
     }
-    
 
     public Item getChosenItem() {
         return chosenItem;
@@ -101,10 +128,21 @@ public class votingBean implements Serializable {
     public void setChosenItem(Item chosenItem) {
         this.chosenItem = chosenItem;
     }
-    
-    
-    
-    
-    
-    
+
+    public List<Item> getAbstains() {
+        return abstains;
+    }
+
+    public void setAbstains(List<Item> abstains) {
+        this.abstains = abstains;
+    }
+
+    public void setChosenOptionToAbstain(Item item) {
+
+    }
+
+    public boolean isOptionTypeAbstain(OptionType optionType) {
+        return (optionType == OptionType.Abstain);
+    }
+
 }

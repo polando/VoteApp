@@ -388,6 +388,8 @@ public class PollLogicImpl implements PollLogic {
         }
         return polls;
     }
+    
+    
 
     @Override
     public Poll getPollByPollUUID(String pollUUID) {

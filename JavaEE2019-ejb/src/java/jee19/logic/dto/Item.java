@@ -30,8 +30,9 @@ public class Item extends Named {
     private List<Option> chosenOptions;
     
     private Option chosenOption;
-
-
+    
+    private boolean IsAbstainChosen;
+    
     public List<Option> getOptions() {
         return options;
     }
@@ -84,6 +85,15 @@ public class Item extends Named {
         this.chosenOption = chosenOption;
     }
 
+    public boolean isIsAbstainChosen() {
+        return IsAbstainChosen;
+    }
+
+    public void setIsAbstainChosen(boolean IsAbstainChosen) {
+        this.IsAbstainChosen = IsAbstainChosen;
+    }
+    
+    
     
     
 

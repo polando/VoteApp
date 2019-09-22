@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <ui:composition
     template="/WEB-INF/templates/page-template.xhtml"
     xmlns="http://www.w3.org/1999/xhtml"
@@ -9,14 +10,17 @@
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui">
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:define name="removeList">
+        <h:outputStylesheet name="css/removeDisabledList" />
+    </ui:define>
     <ui:define name="content">
         <h:form id="sendVoteForm">
-            
+
             <pr:outputLabel value="Choose your vote" />   
 
-             <ui:repeat var="item" value="#{votingBean.voteItems}" varStatus="status">
+            <ui:repeat var="item" value="#{votingBean.voteItems}" varStatus="status">
 
-                <pr:panelGrid columns="2" layout="grid">   
+                <pr:panelGrid columns="2" layout="grid" id="AItem">   
 
                     <pr:outputLabel value="Item Title"/> 
 
@@ -28,17 +32,22 @@
 
                     <pr:outputLabel value="Options"/>
 
-                    <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
-
+                    <pr:panelGrid  columns="2" layout="grid" id="itemOptions">
+                        
+                        <h:outputText value="Abstain " />
+                        <pr:toggleSwitch value="#{item.isAbstainChosen}">
+                            <pr:ajax update="itemOptions"/>
+                        </pr:toggleSwitch>
+                        <h:outputText value="vote " />
                         <pr:selectCheckboxMenu  value="#{item.chosenOption}" multiple="true"
-                                                filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" requiredMessage="This field cant be empty" rendered="#{item.NOfM}">
-                            <f:selectItems value="#{item.options}" var="opt" itemValue="#{opt}"  itemLabel="#{opt.shortName}" />
+                                                filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" requiredMessage="This field cant be empty" rendered="#{item.NOfM}" disabled="#{item.isAbstainChosen}" >
+                            <f:selectItems value="#{item.options}" var="opt" itemValue="#{opt}"  itemLabel="#{opt.shortName}"  itemDisabled="#{votingBean.isOptionTypeAbstain(opt.optionType)}" /> 
                             <f:ajax event="change" render="pollItemsMessage" />
                         </pr:selectCheckboxMenu> 
 
                         <pr:selectOneMenu  value="#{item.chosenOption}" 
-                                           converter="entityConverter" rendered="#{not item.NOfM}">
-                            <f:selectItems value="#{item.options}" var="opt" itemValue="#{opt}"  itemLabel="#{opt.shortName}" />
+                                           converter="entityConverter" rendered="#{not item.NOfM}" disabled="#{item.isAbstainChosen}" styleClass="removeList">
+                            <f:selectItems value="#{item.options}" var="opt" itemValue="#{opt}"  itemLabel="#{opt.shortName}" itemDisabled="#{votingBean.isOptionTypeAbstain(opt.optionType)}"/>
                         </pr:selectOneMenu> 
 
                     </pr:panelGrid>
@@ -46,12 +55,12 @@
                 </pr:panelGrid>
 
             </ui:repeat>
-            
-                <pr:commandButton id="sendVote"
-                                  value="${msg.submitButton}"
-                                  action="#{votingBean.submitVote()}"
-                                  ajax="false"
-                                  />
+
+            <pr:commandButton id="sendVote"
+                              value="${msg.submitButton}"
+                              action="#{votingBean.submitVote()}"
+                              ajax="false"
+                              />
         </h:form>
     </ui:define>
 </ui:composition>
