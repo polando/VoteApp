@@ -5,13 +5,10 @@
  */
 package jee19.logic.dto;
 
-import jee19.utilities.DateConvertor;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import javax.ejb.EJB;
-import javax.inject.Inject;
 import jee19.logic.ItemType;
 
 

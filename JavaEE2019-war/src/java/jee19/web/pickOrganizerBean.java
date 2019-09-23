@@ -28,15 +28,22 @@ public class pickOrganizerBean implements Serializable {
     
     @Inject
     private pollBean pollbean;
-
     
+    @Inject
+    private LoginBean loginBean;
+
     private DualListModel<Person> peronsDualList;
     
     private List<Person> target;
     
         @PostConstruct
         public void init() {
+        Person loggedInUser = loginBean.getUser();
+        
         List<Person> allParticipants = pollbean.getPersons();
+        
+        allParticipants.removeIf(e -> e.getUuid().equals(loggedInUser.getUuid()));
+        
         if(target == null){
         target = new ArrayList<>();
         }

@@ -31,6 +31,9 @@ public class changeOrganizerBean implements Serializable {
 
     @Inject
     private changePollBean changepoll;
+    
+    @Inject
+    private LoginBean loginBean;
 
     private DualListModel<Person> peronsDualList;
 
@@ -39,10 +42,13 @@ public class changeOrganizerBean implements Serializable {
     List<Person> allParticipants;
 
     @PostConstruct
-    public void init() {
-         allParticipants = pollbean.getPersons();
-         target = new ArrayList<>();
-         peronsDualList = new DualListModel<>(allParticipants, changepoll.getPoll().getOrganizers());
+    public void init() {  
+        Person loggedInUser = loginBean.getUser();
+        allParticipants = pollbean.getPersons();
+        allParticipants.removeIf(e -> e.getUuid().equals(loggedInUser.getUuid()));
+        target = changepoll.getPoll().getOrganizers();
+        target.removeIf(e -> e.getUuid().equals(loggedInUser.getUuid()));
+        peronsDualList = new DualListModel<>(allParticipants,target);
     }
 
     public DualListModel<Person> getPeronsDualList() {

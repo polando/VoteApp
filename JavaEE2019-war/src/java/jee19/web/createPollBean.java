@@ -70,6 +70,9 @@ public class createPollBean implements Serializable {
     private List<String> test;
 
     private Item currentEditItem;
+    
+    @Inject
+    private LoginBean loginBean;
 
     public List<String> getTest() {
         return test;
@@ -172,10 +175,12 @@ public class createPollBean implements Serializable {
     public void init() {
         participants = new ArrayList<>();
         items = new ArrayList<>();
+        organizers = new ArrayList<>();
     }
 
     public String createPoll() {
         setNowAsCurrentDate();
+        organizers.add(loginBean.getUser());
         polllogic.createPoll(title, description, endDate, createDateInstant, startDate, participants, organizers, items);
         return "pollCreatedSuccessfully";
     }
