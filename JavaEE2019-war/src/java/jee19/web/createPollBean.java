@@ -191,7 +191,7 @@ public class createPollBean implements Serializable {
         Instant t = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(date);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        formatter.setTimeZone(TimeZone.getDefault());
         try {
             Date d = formatter.parse(dateString);
             t = d.toInstant();

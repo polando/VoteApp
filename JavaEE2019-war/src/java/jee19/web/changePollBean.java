@@ -63,7 +63,7 @@ public class changePollBean  implements Serializable{
 
     public String editPoll() {
         polllogic.editPoll(poll);
-        return "pollCreatedSuccessfully";
+        return "pollEditedSuccessfully";
     }
     
     private Poll readSelectedPollFromFlash() {

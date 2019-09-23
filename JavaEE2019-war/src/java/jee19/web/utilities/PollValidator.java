@@ -27,7 +27,7 @@ import org.primefaces.PrimeFaces;
 @ViewScoped
 public class PollValidator  implements  Serializable  {
     
-        @Inject
+    @Inject
     private errorMessageUtility errorMessageUtility;
 
     private static final long serialVersionUID = 2484461611437080754L;
@@ -51,11 +51,12 @@ public class PollValidator  implements  Serializable  {
         if (startDate.after(endDate) || startDate.equals(endDate)) {
             problems.add("End Date must be later than start date");
         }
-
+        outerloop:
         for (Item i : items) {
             for (Item  p: items) {
                 if (i.getTitle().equalsIgnoreCase(p.getTitle()) && !i.getUuid().equals(p.getUuid())) {
-                    problems.add("Item title : "+i.getTitle()+ " already exist");
+                    problems.add("Duplicate item title");
+                    break outerloop;
                 } 
             }
         }
@@ -69,8 +70,9 @@ public class PollValidator  implements  Serializable  {
     public void validateItem(String title,List<Item> items) {
         ArrayList<String> problems = new ArrayList<>();
         for(Item i : items){
-        if (i.getTitle().equalsIgnoreCase(title)){
-            problems.add("Title already exist");
+            if (i.getTitle().equalsIgnoreCase(title)){
+                problems.add("Duplicate item title");
+                break;
             }
         }
 

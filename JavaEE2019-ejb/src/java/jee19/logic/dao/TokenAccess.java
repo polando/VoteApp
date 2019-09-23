@@ -5,6 +5,7 @@
  */
 package jee19.logic.dao;
 
+import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.NamedQuery;
@@ -51,5 +52,10 @@ public class TokenAccess extends AbstractAccess<TokenEntity> {
          return em.createNamedQuery("numberOfUsersDidntSubmit", Long.class)
                  .setParameter("pollId", pollId)
                  .getSingleResult();
+    }
+    
+    public List<String> getAllTokenPhrases(){
+             return em.createNamedQuery("getAllTokenPhrases", String.class)
+                 .getResultList();
     }
 }

@@ -8,6 +8,7 @@ package jee19.logic.impl;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,8 @@ import jee19.entities.PollEntity;
 import jee19.entities.ResultEntity;
 import jee19.entities.TokenEntity;
 import java.time.Instant;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
@@ -48,6 +51,8 @@ import jee19.logic.dto.Poll;
 import jee19.logic.dto.Token;
 import jee19.logic.dto.VoteResult;
 import jee19.utilities.BackgroundJobManager;
+import org.apache.commons.text.CharacterPredicates;
+import org.apache.commons.text.RandomStringGenerator;
 
 /**
  *
@@ -76,6 +81,9 @@ public class PollLogicImpl implements PollLogic {
 
     @EJB
     private OptionAccess optionAccess;
+    
+   /* @EJB
+    private HashString hashString;*/
 
     @Override
     public List<Person> getAllUsers() {
@@ -252,7 +260,12 @@ public class PollLogicImpl implements PollLogic {
         TokenEntity tokenEntity = tokenAccess.createEntity(name);
         tokenEntity.setPersonEntity(personEntity);
         tokenEntity.setPollEntity(pollEntity);
-        tokenEntity.setToken(hashAString(name));
+        String TokenPhrase = hashAString(name);
+        List<String> AllPhrases = tokenAccess.getAllTokenPhrases();
+        while(AllPhrases.contains(TokenPhrase)){
+            TokenPhrase = hashAString(name);
+        }
+        tokenEntity.setToken(TokenPhrase);
         tokenEntity.setUsed(false);
         return new Token(tokenEntity.getUuid(), tokenEntity.getJpaVersion(), tokenEntity.getName());
     }
@@ -280,6 +293,11 @@ public class PollLogicImpl implements PollLogic {
         String hashedString = null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
+            int byteLength = 20;
+            SecureRandom secureRandom = new SecureRandom();
+            byte[] randomString = new byte[byteLength];
+            secureRandom.nextBytes(randomString);
+            input = input.concat(Base64.getUrlEncoder().withoutPadding().encodeToString(randomString));
             byte[] hashInBytes = md.digest(input.getBytes(StandardCharsets.UTF_8));
 
             StringBuilder sb = new StringBuilder();
@@ -313,25 +331,6 @@ public class PollLogicImpl implements PollLogic {
         PollEntity pollEntity = pollAccess.getByUuid(tokenEntity.getPollEntity().getUuid());
         Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
         return pollEnityToPoll(pollEntity,poll);
-      /*  poll.setDescription(pollEntity.getDescription());
-        poll.setTitle(pollEntity.getTitle());
-        pollEntity.getItemEntities().forEach((e) -> {
-            Item item = new Item(e.getUuid(), e.getJpaVersion(), e.getName());
-            item.setTitle(e.getTitle());
-            item.setItemType(e.getItemType());
-            e.getOptionEntities().forEach((o) -> {
-                Option option = new Option(o.getUuid(), o.getJpaVersion(), o.getName());
-                option.setShortName(o.getShortName());
-                option.setDiscription(o.getDiscription());
-                option.setOptionType(o.getOptiontype());
-                options.add(option);
-            });
-            item.setOptions(options);
-            items.add(item);
-        });
-
-        poll.setItems(items);
-        return poll;*/
     }
 
     private Poll pollEnityToPoll(PollEntity pollEntity, Poll poll) {
@@ -452,7 +451,7 @@ public class PollLogicImpl implements PollLogic {
         Instant t = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateString = formatter.format(date);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        formatter.setTimeZone(TimeZone.getDefault());
         try {
             Date d = formatter.parse(dateString);
             t = d.toInstant();
@@ -466,7 +465,7 @@ public class PollLogicImpl implements PollLogic {
     public Date InstantToDate(Instant instant) {
         Date date = Date.from(instant);
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        formatter.setTimeZone(TimeZone.getDefault());
         String dateString = formatter.format(date);
         try {
             date = formatter.parse(dateString);

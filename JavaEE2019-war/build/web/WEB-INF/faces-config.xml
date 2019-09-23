@@ -122,4 +122,11 @@
             <to-view-id>/logged_in/voteSubmitResult.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/logged_in/changePoll.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>pollEditedSuccessfully</from-outcome>
+            <to-view-id>/logged_in/changePollResult.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
 </faces-config>
