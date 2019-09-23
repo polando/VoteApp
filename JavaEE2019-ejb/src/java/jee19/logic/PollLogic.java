@@ -69,6 +69,10 @@ public interface PollLogic {
 
     public Option createOption(String shortName, String disc, OptionType optionType);
 
+    public Set<Poll> getStartedOrVotingPollsIDListByOrganizer(String organizerUUID);
+
+    public void extendPoll(String pollUUID, Date endDate);
+
     
     
 }

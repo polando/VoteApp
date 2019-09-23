@@ -18,7 +18,7 @@ import jee19.logic.PollState;
  */
 @Stateless
 @LocalBean
-public class PollAccess extends AbstractAccess<PollEntity>{
+public class PollAccess extends AbstractAccess<PollEntity> {
 
     @Override
     protected Class<PollEntity> getEntityClass() {
@@ -34,33 +34,45 @@ public class PollAccess extends AbstractAccess<PollEntity>{
     public long getEntityCount() {
         return em.createNamedQuery("getPollCount", Long.class).getSingleResult();
     }
-    
-    public void updatePoll(PollEntity entity){
+
+    public void updatePoll(PollEntity entity) {
         em.merge(entity);
     }
-    
-    public List<PollEntity> getFinishedPollsIDListByOrganizer(String organizerUUID){
-         return em.createNamedQuery("getFinishedPollsIDListByOrganizer", PollEntity.class)
-                 .setParameter("organizerUUID", organizerUUID)
+
+    public List<PollEntity> getFinishedPollsIDListByOrganizer(String organizerUUID) {
+        return em.createNamedQuery("getFinishedPollsIDListByOrganizer", PollEntity.class)
+                .setParameter("organizerUUID", organizerUUID)
                 // .setParameter("state", PollState.FINISHED)
-                 .getResultList();
+                .getResultList();
     }
-    
-    public List<PollEntity> getPreparedPollsIDListByOrganizer(String organizerUUID){
-         return em.createNamedQuery("getPreparedPollsIDListByOrganizer", PollEntity.class)
-                 .setParameter("organizerUUID", organizerUUID)
-                 .setParameter("state", PollState.PREPARED)
-                 .getResultList();
+
+    public List<PollEntity> getPreparedPollsIDListByOrganizer(String organizerUUID) {
+        return em.createNamedQuery("getPreparedPollsIDListByOrganizer", PollEntity.class)
+                .setParameter("organizerUUID", organizerUUID)
+                .setParameter("state", PollState.PREPARED)
+                .getResultList();
     }
-    
-    public List<String> getAllPollTitles(){
+
+    public List<String> getAllPollTitles() {
         return em.createNamedQuery("getAllPollTitles", String.class).getResultList();
     }
-    
-    public PollEntity getPollByPollID(String pollUUID){
-         return em.createNamedQuery("getPollbyPollUUID", PollEntity.class)
-                 .setParameter("pollUUID", pollUUID)
-                 .getSingleResult();
+
+    public PollEntity getPollByPollID(String pollUUID) {
+        return em.createNamedQuery("getPollbyPollUUID", PollEntity.class)
+                .setParameter("pollUUID", pollUUID)
+                .getSingleResult();
+    }
+
+    public List<PollEntity> getStartedOrVotingPollsIDListByOrganizer(String organizerUUID) {
+        return em.createNamedQuery("getStartedOrVotingPollsIDListByOrganizer", PollEntity.class)
+                .setParameter("organizerUUID", organizerUUID)
+                .setParameter("stateOne", PollState.STARTED)
+                .setParameter("stateTwo", PollState.VOTING)
+                .getResultList();
     }
     
+   /* public int removePollByID(String pollUUID){
+         return em.createNamedQuery("").executeUpdate();
+    }*/
+
 }

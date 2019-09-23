@@ -62,6 +62,12 @@ private Map<String, ScheduledFuture<?>> eventDictionary = new HashMap<>();
         scheduleEvent(pollUUID,finsihedEventName,fromNowTillEnd.toMinutes(),PollState.FINISHED);
         
     }
+    
+    public void extendPollTime(String pollUUID,Instant endDate){
+        cancelEvent(pollUUID,finsihedEventName);
+        Duration fromNowTillEnd = Duration.between(Instant.now(),endDate);
+        scheduleEvent(pollUUID,finsihedEventName,fromNowTillEnd.toMinutes(),PollState.FINISHED);
+    }
 
 
 

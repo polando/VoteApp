@@ -480,5 +480,22 @@ public class PollLogicImpl implements PollLogic {
     public boolean checkAllVotesSubmitted(String pollUUID) {
         return !(Math.toIntExact(tokenAccess.numberOfUsersDidntSubmit(pollUUID)) > 0);
     }
+    
+    
+            
+    @Override
+    public Set<Poll> getStartedOrVotingPollsIDListByOrganizer(String organizerUUID) {
+        Set<Poll> polls = new HashSet<>();
+        for (PollEntity pollEntity : pollAccess.getStartedOrVotingPollsIDListByOrganizer(organizerUUID)) {
+            Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+            polls.add(pollEnityToPoll(pollEntity, poll));
+        }
+        return polls;
+    }
+    
+    @Override
+    public void extendPoll(String pollUUID,Date endDate){
+        backgroundJobManager.extendPollTime(pollUUID,DateToInstant(endDate));
+    }
 
 }

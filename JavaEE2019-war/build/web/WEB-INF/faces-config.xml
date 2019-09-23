@@ -88,7 +88,11 @@
         <navigation-case>
             <from-outcome>pollList</from-outcome>
             <to-view-id>/logged_in/pollList.xhtml?faces-redirect=true</to-view-id>
-        </navigation-case>    
+        </navigation-case> 
+        <navigation-case>
+            <from-outcome>extendPollList</from-outcome>
+            <to-view-id>/logged_in/pollExtendingList.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>     
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/logged_in/checkToken.xhtml</from-view-id>
@@ -127,6 +131,20 @@
         <navigation-case>
             <from-outcome>pollEditedSuccessfully</from-outcome>
             <to-view-id>/logged_in/changePollResult.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/logged_in/pollExtendingList.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>seePoll</from-outcome>
+            <to-view-id>/logged_in/extendPoll.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/logged_in/extendPoll.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>pollExtendedSuccessfully</from-outcome>
+            <to-view-id>/logged_in/extendPollResult.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

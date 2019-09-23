@@ -25,6 +25,8 @@
                     <b:navLink outcome="checkTokenPage" value="checkToken" icon="wrench" active="${view.viewId.endsWith('checkToken.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="resultList" value="resultList" icon="wrench" active="${view.viewId.endsWith('pollResultList.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="pollList" value="pollList" icon="wrench" active="${view.viewId.endsWith('pollList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="extendPollList" value="extend poll" icon="wrench" active="${view.viewId.endsWith('pollExtendingList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+
                 </b:navbarLinks>
 
                 <b:navbarLinks rendered="${loginBean.loggedIn}" pull="right">
