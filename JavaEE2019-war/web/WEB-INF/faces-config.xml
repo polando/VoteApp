@@ -92,6 +92,10 @@
         <navigation-case>
             <from-outcome>extendPollList</from-outcome>
             <to-view-id>/logged_in/pollExtendingList.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>removePollList</from-outcome>
+            <to-view-id>/admin/removePollList.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>     
     </navigation-rule>
     <navigation-rule>
@@ -145,6 +149,13 @@
         <navigation-case>
             <from-outcome>pollExtendedSuccessfully</from-outcome>
             <to-view-id>/logged_in/extendPollResult.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+    <from-view-id>/admin/removePollList.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>pollRemoveSuccess</from-outcome>
+            <to-view-id>/admin/removePollResult.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

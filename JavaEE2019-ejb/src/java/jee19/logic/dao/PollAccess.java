@@ -71,8 +71,13 @@ public class PollAccess extends AbstractAccess<PollEntity> {
                 .getResultList();
     }
     
-   /* public int removePollByID(String pollUUID){
-         return em.createNamedQuery("").executeUpdate();
-    }*/
+    public List<PollEntity> getAllPolls(){
+         return em.createNamedQuery("getAllPolls", PollEntity.class)
+                .getResultList();       
+    }
+    
+    public void removePollByID(String pollUUID){
+          em.remove(getPollByPollID(pollUUID));
+    }
 
 }

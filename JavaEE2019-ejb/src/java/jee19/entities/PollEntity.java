@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -35,8 +36,7 @@ import jee19.utilities.PollStateJpaConverter;
     @NamedQuery(name = "getPreparedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND p.pollState = :state"),
     @NamedQuery(name = "getPollbyPollUUID", query = "SELECT p FROM PollEntity p WHERE p.uuid = :pollUUID "),
     @NamedQuery(name = "getStartedOrVotingPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND (p.pollState = :stateOne OR p.pollState = :stateTwo)"),
-
-
+    @NamedQuery(name = "getAllPolls", query = "SELECT p FROM PollEntity p")
         
 })
 @Entity
@@ -60,15 +60,11 @@ public class PollEntity extends NamedEntity{
     private PollState pollState;
     
 
-   
-    
-    
     @ManyToMany
     private List<ItemEntity> itemEntities;
     
 
-    
-    @OneToMany(mappedBy = "pollEntity")
+    @OneToMany(mappedBy = "pollEntity", cascade = CascadeType.ALL)
     private Set<TokenEntity> tokens;
  
     
@@ -78,6 +74,7 @@ public class PollEntity extends NamedEntity{
         inverseJoinColumns = @JoinColumn(name = "organizer_id"))
     private List<PersonEntity> organizers;
     
+    
     @ManyToMany
     @JoinTable(name = "POLL_PARTICIPANTS",
         joinColumns = @JoinColumn(name = "poll_id"), 
@@ -85,7 +82,7 @@ public class PollEntity extends NamedEntity{
     private List<PersonEntity> participants;
     
    
-    @OneToMany(mappedBy = "poll")
+    @OneToMany(mappedBy = "poll",cascade = CascadeType.ALL)
     private Set<ResultEntity> resultEntities;
     
     

@@ -73,6 +73,10 @@ public interface PollLogic {
 
     public void extendPoll(String pollUUID, Date endDate);
 
+    public List<Poll> getAllPolls();
+
+    public void removePoll(String pollUUID);
+
     
     
 }

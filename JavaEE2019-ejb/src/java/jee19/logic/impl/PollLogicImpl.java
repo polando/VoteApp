@@ -497,5 +497,19 @@ public class PollLogicImpl implements PollLogic {
     public void extendPoll(String pollUUID,Date endDate){
         backgroundJobManager.extendPollTime(pollUUID,DateToInstant(endDate));
     }
+    
+    @Override
+    public List<Poll> getAllPolls(){
+        List<Poll> polls = new ArrayList<>();
+        for (PollEntity pollEntity : pollAccess.getAllPolls()) {
+            Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+            polls.add(pollEnityToPoll(pollEntity, poll));
+        }
+        return polls;
+    }
+    
+    public void removePoll(String pollUUID){
+        pollAccess.removePollByID(pollUUID);
+    }
 
 }
