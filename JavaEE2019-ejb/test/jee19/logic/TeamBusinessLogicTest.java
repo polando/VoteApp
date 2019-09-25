@@ -22,7 +22,7 @@ public class TeamBusinessLogicTest {
 
     private static EJBContainer container;
     private static Context ctx;
-    private TeamBusinessLogic teamBusinessLogic;
+    private PersonLogic teamBusinessLogic;
 
     @BeforeClass
     public static void setupClass() {
@@ -34,7 +34,7 @@ public class TeamBusinessLogicTest {
 
     @Before
     public void createEJB() throws NamingException {
-        teamBusinessLogic = (TeamBusinessLogic) ctx.lookup(
+        teamBusinessLogic = (PersonLogic) ctx.lookup(
                 "java:global/JavaEE2019/JavaEE2019-ejb/TeamBusinessLogicImpl");
         Assert.assertNotNull(teamBusinessLogic);
     }
@@ -122,7 +122,7 @@ public class TeamBusinessLogicTest {
     public void testStorePersonDetails() {
     }
 
-    public class TeamBusinessLogicImpl implements TeamBusinessLogic {
+    public class TeamBusinessLogicImpl implements PersonLogic {
 
         public List<Person> getPersonList() {
             return null;

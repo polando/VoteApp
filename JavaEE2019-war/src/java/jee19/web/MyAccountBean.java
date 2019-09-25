@@ -7,9 +7,9 @@ import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import jee19.logic.TeamBusinessLogic;
 import jee19.logic.dto.Person;
 import jee19.web.utilities.MessageUtilities;
+import jee19.logic.PersonLogic;
 
 /**
  * @author Dr. Volker Riediger <riediger@uni-koblenz.de>
@@ -21,7 +21,7 @@ public class MyAccountBean implements Serializable {
     private static final long serialVersionUID = -7619861512087870920L;
 
     @EJB
-    private TeamBusinessLogic teamBusinessLogic;
+    private PersonLogic teamBusinessLogic;
 
     @Inject
     private LoginBean loginBean;

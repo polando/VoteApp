@@ -27,12 +27,8 @@ public class PersonEntity extends NamedEntity {
         
     @ManyToMany(mappedBy = "organizers")
     private Set<PollEntity> pollsAsOrganizer;
-    
-    @ManyToMany
-    private Set<TeamEntity> teams;
 
-    @OneToMany(mappedBy = "teacher")
-    private Set<CourseEntity> courses;
+
 
     private String firstname;
     private String lastname;
@@ -45,8 +41,6 @@ public class PersonEntity extends NamedEntity {
     public PersonEntity(boolean isNew) {
         super(isNew);
         if (isNew) {
-            teams = new HashSet<>();
-            courses = new HashSet<>();
             pollsAsOrganizer = new HashSet<>();
             pollsAsParticipant = new HashSet<>();
         }
@@ -69,15 +63,6 @@ public class PersonEntity extends NamedEntity {
         this.pollsAsOrganizer = pollsAsOrganizer;
     }
 
-
-
-    public Set<TeamEntity> getTeams() {
-        return teams;
-    }
-
-    public Set<CourseEntity> getCourses() {
-        return courses;
-    }
 
     public String getFirstname() {
         return firstname;

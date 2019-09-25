@@ -11,8 +11,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import jee19.logic.TeamBusinessLogic;
 import jee19.logic.dto.Person;
+import jee19.logic.PersonLogic;
 
 /**
  * @author Dr. Volker Riediger <riediger@uni-koblenz.de>
@@ -24,7 +24,7 @@ public class LoginBean implements Serializable {
     private static final long serialVersionUID = -3525598371957295227L;
 
     @EJB
-    private TeamBusinessLogic teamBusinessLogic;
+    private PersonLogic teamBusinessLogic;
     
 
     private String principalName;

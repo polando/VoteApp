@@ -20,7 +20,6 @@
                       fixed="top" fluid="true">
                 <b:navbarLinks>
                     <b:navLink outcome="index" value="${msg.homeNavItem}" icon="home" active="${view.viewId.endsWith('index.xhtml')}"/>
-                    <b:navLink rendered="${request.isUserInRole('ADMIN')}" outcome="administration" value="${msg.adminNavItem}" icon="wrench" active="${view.viewId.endsWith('administration.xhtml')}"/>
                     <b:navLink outcome="createPollPage" value="createPoll" icon="wrench" active="${view.viewId.endsWith('createPoll.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="checkTokenPage" value="checkToken" icon="wrench" active="${view.viewId.endsWith('checkToken.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="resultList" value="resultList" icon="wrench" active="${view.viewId.endsWith('pollResultList.xhtml')}" rendered="${loginBean.loggedIn}"/>
