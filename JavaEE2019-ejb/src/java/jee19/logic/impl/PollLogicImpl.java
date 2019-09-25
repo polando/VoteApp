@@ -51,8 +51,6 @@ import jee19.logic.dto.Poll;
 import jee19.logic.dto.Token;
 import jee19.logic.dto.VoteResult;
 import jee19.utilities.BackgroundJobManager;
-import org.apache.commons.text.CharacterPredicates;
-import org.apache.commons.text.RandomStringGenerator;
 
 /**
  *

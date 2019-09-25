@@ -163,18 +163,6 @@ public class PersonLogicImpl implements PersonLogic {
             "cseel@uni-koblenz.de"
         };
 
-        final String[] COURSES = {"Math", "Physics", "Chemistry", "Biology",
-            "Computer Science", "English", "History", "Ethics", "Sports",
-            "Cooking", "Accounting"};
-
-        final String[] TEAMS = {"alpha", "bravo", "charlie", "delta", "echo",
-            "foxtrot", "golf", "hotel", "india", "juliet", "kilo", "lima",
-            "mike", "november", "oscar", "papa", "quebec", "romeo", "sierra",
-            "tango", "uniform", "victor", "whiskey", "xray", "yankee", "zulu"};
-        
-        
-
-
         Random rnd = new Random();
 
         List<PersonEntity> persons = new ArrayList<>();
