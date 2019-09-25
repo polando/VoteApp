@@ -25,6 +25,7 @@
                     <b:navLink outcome="resultList" value="resultList" icon="wrench" active="${view.viewId.endsWith('pollResultList.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="pollList" value="pollList" icon="wrench" active="${view.viewId.endsWith('pollList.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="extendPollList" value="extend poll" icon="wrench" active="${view.viewId.endsWith('pollExtendingList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="pollReviewList" value="review poll" icon="wrench" active="${view.viewId.endsWith('pollExtendingList.xhtml')}" rendered="${loginBean.loggedIn}"/>                    
                     <b:navLink rendered="${request.isUserInRole('ADMIN')}" outcome="removePollList" value="remove poll" icon="wrench" active="${view.viewId.endsWith('removePollList.xhtml')}"/>
 
                 </b:navbarLinks>

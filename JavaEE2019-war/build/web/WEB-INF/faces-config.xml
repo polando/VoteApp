@@ -96,7 +96,11 @@
         <navigation-case>
             <from-outcome>removePollList</from-outcome>
             <to-view-id>/admin/removePollList.xhtml?faces-redirect=true</to-view-id>
-        </navigation-case>     
+        </navigation-case>    
+        <navigation-case>
+            <from-outcome>pollReviewList</from-outcome>
+            <to-view-id>/logged_in/pollReviewList.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>   
     </navigation-rule>
     <navigation-rule>
         <from-view-id>/logged_in/checkToken.xhtml</from-view-id>
@@ -156,6 +160,13 @@
         <navigation-case>
             <from-outcome>pollRemoveSuccess</from-outcome>
             <to-view-id>/admin/removePollResult.xhtml?faces-redirect=true</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+    <from-view-id>/logged_in/pollReviewList.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>reviewVote</from-outcome>
+            <to-view-id>/logged_in/reviewVote.xhtml?faces-redirect=true</to-view-id>
         </navigation-case>
     </navigation-rule>
 </faces-config>

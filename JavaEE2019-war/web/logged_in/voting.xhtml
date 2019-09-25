@@ -48,7 +48,7 @@
                         </pr:selectOneMenu> 
                         
                         <pr:selectCheckboxMenu value="#{item.chosenOptions}" converter="entityConverter" rendered="#{item.NOfM}" 
-                              multiple="true" filter="true" filterMatchMode="startsWith"                  disabled="#{item.isAbstainChosen}" styleClass="removeList">
+                              multiple="true" filter="true" filterMatchMode="startsWith"   disabled="#{item.isAbstainChosen}" styleClass="removeList">
                             <c:forEach items="#{item.options}" var="option">
                                 <c:if test="#{!votingBean.isOptionTypeAbstain(option.optionType)}">
                                     <f:selectItem itemValue="#{option}" itemLabel="#{option.shortName}"  itemDisabled="#{votingBean.isOptionTypeAbstain(option.optionType)}" />

@@ -30,7 +30,6 @@ public class itemBean implements Serializable {
     @EJB
     private PollLogic polllogic;
     
-    
     private List<Option> options;
     
     private String Title;

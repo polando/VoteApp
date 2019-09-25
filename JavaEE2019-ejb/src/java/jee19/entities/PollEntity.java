@@ -33,7 +33,7 @@ import jee19.utilities.PollStateJpaConverter;
     @NamedQuery(name = "getPollList", query = "SELECT p FROM PollEntity p ORDER BY p.name, p.uuid"),
     @NamedQuery(name = "getFinishedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p,ResultEntity r INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND (SELECT SUM (s.numberOfVotes) FROM ResultEntity s WHERE s.poll.uuid = p.uuid) > 0"),
     @NamedQuery(name = "getAllPollTitles", query = "SELECT p.title FROM PollEntity p"),
-    @NamedQuery(name = "getPreparedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND p.pollState = :state"),
+    @NamedQuery(name = "getPollsIDListByOrganizerAndState", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND p.pollState = :state"),
     @NamedQuery(name = "getPollbyPollUUID", query = "SELECT p FROM PollEntity p WHERE p.uuid = :pollUUID "),
     @NamedQuery(name = "getStartedOrVotingPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND (p.pollState = :stateOne OR p.pollState = :stateTwo)"),
     @NamedQuery(name = "getAllPolls", query = "SELECT p FROM PollEntity p")

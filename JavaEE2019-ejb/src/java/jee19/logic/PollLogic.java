@@ -47,10 +47,7 @@ public interface PollLogic {
     public boolean tokenExistAndNotUsed(String token);
     
     public Set<Poll> getFinishedPollsIDListByOrganizer(String organizerUUID);
-    
-    public Set<Poll> getPreparedPollsIDListByOrganizer(String organizerUUID);
-
-    
+      
     public List<VoteResult> getPollResultByPollid(String pollUUID);
 
     public List<String> getAllPollTitles();
@@ -76,6 +73,8 @@ public interface PollLogic {
     public List<Poll> getAllPolls();
 
     public void removePoll(String pollUUID);
+
+    public Set<Poll> getPollsIDListByOrganizerAndState(String organizerUUID, PollState pollState);
 
     
     

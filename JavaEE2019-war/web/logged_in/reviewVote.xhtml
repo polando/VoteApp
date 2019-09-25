@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+    template="/WEB-INF/templates/page-template.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:pr="http://primefaces.org/ui"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:define name="content">
+        <h:form id="reviewForm">
+
+            <pr:outputLabel value="Choose your vote" />   
+            
+            <c:forEach items="#{reviewBean.voteItems}" var="item">
+                  
+                <pr:panelGrid columns="2" layout="grid" id="AItem">   
+
+                    <pr:outputLabel value="Item Title"/> 
+
+                    <pr:outputLabel id="itemtitle" value="#{item.title}"/>
+
+                    <pr:outputLabel value="Item Type"/>
+
+                    <pr:outputLabel value="#{item.itemType}"/>
+
+                    <pr:outputLabel value="Options"/>
+
+                    <pr:panelGrid  columns="2" layout="grid" id="itemOptions">
+
+                        <h:outputText value="Abstain " />
+                        <pr:toggleSwitch value="#{item.isAbstainChosen}">
+                            <pr:ajax update="itemOptions"/>
+                        </pr:toggleSwitch>
+                        <h:outputText value="Vote " />
+                        
+                        <pr:selectOneMenu  value="#{item.chosenOption}" 
+                                           converter="entityConverter" rendered="#{not item.NOfM}" disabled="#{item.isAbstainChosen}" styleClass="removeList">
+                            <c:forEach items="#{item.options}" var="option">
+                                <c:if test="#{!reviewBean.isOptionTypeAbstain(option.optionType)}">
+                                    <f:selectItem itemValue="#{option}" itemLabel="#{option.shortName}"  itemDisabled="#{reviewBean.isOptionTypeAbstain(option.optionType)}" />
+                                </c:if>
+                            </c:forEach>
+                        </pr:selectOneMenu> 
+                        
+                        <pr:selectCheckboxMenu value="#{item.chosenOptions}" converter="entityConverter" rendered="#{item.NOfM}" 
+                              multiple="true" filter="true" filterMatchMode="startsWith"   disabled="#{item.isAbstainChosen}" styleClass="removeList">
+                            <c:forEach items="#{item.options}" var="option">
+                                <c:if test="#{!reviewBean.isOptionTypeAbstain(option.optionType)}">
+                                    <f:selectItem itemValue="#{option}" itemLabel="#{option.shortName}"  itemDisabled="#{reviewBean.isOptionTypeAbstain(option.optionType)}" />
+                                </c:if>
+                            </c:forEach>
+                        </pr:selectCheckboxMenu>
+
+                    </pr:panelGrid>
+
+                </pr:panelGrid>
+
+            </c:forEach>
+            
+        </h:form>
+    </ui:define>
+</ui:composition>

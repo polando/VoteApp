@@ -16,6 +16,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import jee19.logic.PollLogic;
+import jee19.logic.PollState;
 import jee19.logic.dto.Person;
 import jee19.logic.dto.Poll;
 
@@ -46,7 +47,7 @@ public class preparedPollsListBean implements Serializable {
 
     private Set<Poll> getPreparedPollsByOrganizer(){
             Person loggedInUser = loginBean.getUser();
-            Set<Poll> poll = polllogic.getPreparedPollsIDListByOrganizer(loggedInUser.getUuid()); 
+            Set<Poll> poll = polllogic.getPollsIDListByOrganizerAndState(loggedInUser.getUuid(),PollState.PREPARED); 
         return poll;
     } 
 
