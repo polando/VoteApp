@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pr="http://primefaces.org/ui"
+      >
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/resetBSToPF.css" />
+<!--    <f:view locale="${request.locale}"/>-->    
+    <h:head>
+        <title>JEE19 - ${pagetitle}</title>
+    </h:head>
+    <h:body style="padding-top: 60px">
+        <h:form id="navForm">
+
+            <b:navBar brand="${msg.applicationName}"
+                      brandHref="${request.contextPath}/"
+                      fixed="top" fluid="true">
+                <b:navbarLinks>
+                    <b:navLink outcome="index" value="${msg.homeNavItem}" icon="home" active="${view.viewId.endsWith('index.xhtml')}"/>
+                    <b:navLink outcome="publishedPolls" value="publishedPolls" icon="wrench" active="${view.viewId.endsWith('publishedResultsList.xhtml')}"/>                    
+                    <b:navLink outcome="createPollPage" value="createPoll" icon="wrench" active="${view.viewId.endsWith('createPoll.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="checkTokenPage" value="checkToken" icon="wrench" active="${view.viewId.endsWith('checkToken.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="resultList" value="resultList" icon="wrench" active="${view.viewId.endsWith('pollResultList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="pollList" value="pollList" icon="wrench" active="${view.viewId.endsWith('pollList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="extendPollList" value="extend poll" icon="wrench" active="${view.viewId.endsWith('pollExtendingList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="pollReviewList" value="review poll" icon="wrench" active="${view.viewId.endsWith('pollExtendingList.xhtml')}" rendered="${loginBean.loggedIn}"/>                    
+                    <b:navLink rendered="${request.isUserInRole('ADMIN')}" outcome="removePollList" value="remove poll" icon="wrench" active="${view.viewId.endsWith('removePollList.xhtml')}"/>
+
+                </b:navbarLinks>
+
+                <b:navbarLinks rendered="${loginBean.loggedIn}" pull="right">
+                    <b:navLink outcome="myaccount" value="${msg.myAccountNavItem}" icon="cog"/>
+                    <b:navCommandLink  value="${msg.logoutNavItem}" icon="log-out" action="#{loginBean.logout}"/>
+                </b:navbarLinks>
+                <b:navbarLinks rendered="${not loginBean.loggedIn}" pull="right">
+                    <b:navLink outcome="login" value="${msg.loginNavItem}" icon="log-in"/>
+                </b:navbarLinks>
+            </b:navBar>
+            
+
+        </h:form>
+        
+
+
+
+        <b:container fluid="true">
+            <b:row>
+                <b:column span="12">
+                    <h1>${pagetitle}</h1>
+                    <ui:insert name="content"/>
+                </b:column>
+            </b:row>
+            <b:row style="margin-top: 4ex;">
+                <b:column>
+                    <b:well size="sm">
+                        <samp>
+                            <strong><u>Debug info</u></strong><br/>
+                            Current user: ${loginBean.loggedIn ?  loginBean.user.name : '(not logged in)'}<br/>
+                            AUTHENTICATED: ${request.isUserInRole('AUTHENTICATED')}<br/>
+                            STAFF: ${request.isUserInRole('STAFF')}<br/>
+                            ADMIN: ${request.isUserInRole('ADMIN')}<br/>
+                        </samp>
+                    </b:well>
+                </b:column>
+            </b:row>
+        </b:container>
+        <b:panel>
+        <h:form>
+        <pr:selectOneMenu value="#{changeLanguageBean.localeCode}" valueChangeListener="#{changeLanguageBean.processValueChange}" onchange="submit()">
+            <f:selectItems value="#{changeLanguageBean.allLocales}"/> 
+        </pr:selectOneMenu>
+        </h:form>
+        </b:panel>
+    </h:body>
+</html>
+
