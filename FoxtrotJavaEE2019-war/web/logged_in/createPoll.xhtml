@@ -49,7 +49,7 @@
                 </b:dateTimePicker>
 
                 <pr:message id="endDateMessage" for="endDateInput" />
-
+                  
                 <pr:outputLabel value="Participants"/>
 
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%">
@@ -76,12 +76,19 @@
                     <pr:commandButton value="Edit List" type="button" onclick="PF('orgModal').show();" />
                 </pr:panelGrid> 
 
-
                 <pr:message id="organizersTableMessage" for="organizersTable" />
-
-                <pr:commandButton value="add item" type="button" onclick="PF('itemModal').show();" />
-
+                
+                <pr:outputLabel value="Participation Tracking"/>
+                
+                <pr:toggleSwitch value="#{createPollBean.participationTracking}" id="tracking" />
+                
+                <pr:message id="trackingMessage" for="tracking" />    
+                
+            
             </pr:panelGrid>
+            <pr:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-12" id="itemsPanel">  
+                
+            <pr:commandButton value="add item" type="button" onclick="PF('itemModal').show();" />
 
 
             <ui:repeat var="item" value="#{createPollBean.items}" varStatus="status" id="listOfItems">
@@ -120,7 +127,8 @@
                 </pr:panelGrid>
 
             </ui:repeat>
-
+            
+            
 
 
             <pr:commandButton id="createPollButton"
@@ -128,6 +136,9 @@
                               value="Create Poll"
                               action="#{createPollBean.createPoll}"
                               ajax="false"/>
+            
+            </pr:panelGrid>
+            
         </h:form>
 
         <pr:dialog id="itemModal" modal="true" header="Modal Dialog" widgetVar="itemModal"  width="700" height="300">
@@ -168,7 +179,7 @@
                     
                 </pr:panelGrid>
 
-                <pr:commandButton value="Save"   actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm"/>
+                <pr:commandButton value="Save"   actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm:itemsPanel"/>
 
             </h:form>
 

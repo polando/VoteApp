@@ -37,7 +37,9 @@ import foxtrot.jee19.utilities.PollStateJpaConverter;
     @NamedQuery(name = "getPollbyPollUUID", query = "SELECT p FROM PollEntity p WHERE p.uuid = :pollUUID "),
     @NamedQuery(name = "getStartedOrVotingPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND (p.pollState = :stateOne OR p.pollState = :stateTwo)"),
     @NamedQuery(name = "getAllPolls", query = "SELECT p FROM PollEntity p"), 
-    @NamedQuery(name = "getAllPublishedPolls", query = "SELECT p FROM PollEntity p WHERE p.resultPublished = TRUE")    
+    @NamedQuery(name = "getAllPublishedPolls", query = "SELECT p FROM PollEntity p WHERE p.resultPublished = TRUE"),
+    @NamedQuery(name = "getAllPollsWithStateAndTrackingByOrganizer", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND p.resultPublished = :tracking AND p.pollState = :state")
+    
 })
 @Entity
 @Table(name="POLL")
@@ -57,6 +59,8 @@ public class PollEntity extends NamedEntity{
     private Instant createDate;
     
     private boolean resultPublished;
+    
+    private boolean participationTracking;
     
     @Convert(converter = PollStateJpaConverter.class)
     private PollState pollState;
@@ -198,6 +202,14 @@ public class PollEntity extends NamedEntity{
 
     public void setParticipants(List<PersonEntity> participants) {
         this.participants = participants;
+    }
+
+    public boolean isParticipationTracking() {
+        return participationTracking;
+    }
+
+    public void setParticipationTracking(boolean participationTracking) {
+        this.participationTracking = participationTracking;
     }
 
    

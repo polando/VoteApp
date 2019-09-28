@@ -151,20 +151,21 @@ public class PollLogicImpl implements PollLogic {
     }
 
     @Override
-    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items) {
+    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items,boolean participationTracking) {
         PollEntity pollEntity = pollAccess.createEntity(title);
-        setPollProperties(pollEntity, title, description, endDate, createDateInstant, startDate, participants, organizers, items , false);
+        setPollProperties(pollEntity, title, description, endDate, createDateInstant, startDate, participants, organizers, items , false,participationTracking);
         return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
 
     @Override
     public Poll editPoll(Poll poll) {
         PollEntity pollEntity = pollAccess.getByUuid(poll.getUuid());
-        setPollProperties(pollEntity, poll.getTitle(), poll.getDescription(), poll.getEndDate(), poll.getCreateDate(), poll.getStartDate(), poll.getParticipants(), poll.getOrganizers(), poll.getItems(),false);
+        setPollProperties(pollEntity, poll.getTitle(), poll.getDescription(), poll.getEndDate(), poll.getCreateDate(), poll.getStartDate(), poll.getParticipants(), poll.getOrganizers(), poll.getItems(),false,poll.isParticipationTracking());
         return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
 
-    private void setPollProperties(PollEntity pollEntity, String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items, Boolean resultPublished) {
+    private void setPollProperties(PollEntity pollEntity, String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items, Boolean resultPublished,boolean participationTracking) {
+        System.out.println("participationTracking"+participationTracking);
         List<PersonEntity> organizerEntity = new ArrayList<>();
         List<PersonEntity> participantEntity = new ArrayList<>();
         List<ItemEntity> itemEntities = new ArrayList<>();
@@ -185,6 +186,7 @@ public class PollLogicImpl implements PollLogic {
         pollEntity.setEndDate(DateToInstant(endDate));
         pollEntity.setCreateDate(createDateInstant);
         pollEntity.setResultPublished(resultPublished);
+        pollEntity.setParticipationTracking(participationTracking);
 
         items.forEach((i) -> {
             ItemEntity itemEntity = itemAccess.getByUuid(i.getUuid());
@@ -530,6 +532,32 @@ public class PollLogicImpl implements PollLogic {
         return polls;
     } 
     
+    @Override
+    public List<Token> getAllParticipantsAndStates(String pollUUID){
+        List<Token> tokens = new ArrayList<>();
+        tokenAccess.getAllTokenRowsForPoll(pollUUID).forEach((tokenEntity) -> {
+            tokens.add(TokenEntityToToken(tokenEntity));
+        });
+         return tokens;
+    }
     
-
+    Token TokenEntityToToken(TokenEntity tokenEntity){
+        Token token = new Token(tokenEntity.getUuid(),tokenEntity.getJpaVersion(),tokenEntity.getName());
+        token.setPersonEntity(tokenEntity.getPersonEntity());
+        token.setUsed(tokenEntity.getUsed());
+        return token;
+    }
+    
+    
+    @Override
+    public List<Poll> getAllPollsbyTrackingAndOrganizer(String organizerUUID,boolean tracking){
+        List<Poll> polls = new ArrayList<>();
+        for (PollEntity pollEntity : pollAccess.getStartedOrVotingPollsIDListByOrganizer(organizerUUID)) {
+            if(pollEntity.isParticipationTracking() == tracking){
+                Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
+                polls.add(pollEnityToPoll(pollEntity, poll));}
+        }
+         return polls;
+    }
+       
 }

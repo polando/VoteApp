@@ -86,5 +86,6 @@ public class PollAccess extends AbstractAccess<PollEntity> {
         return em.createNamedQuery("getAllPublishedPolls", PollEntity.class)
                 .getResultList();
     }
+    
 
 }

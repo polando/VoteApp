@@ -22,13 +22,15 @@
                     <b:navLink outcome="index" value="${msg.homeNavItem}" icon="home" active="${view.viewId.endsWith('index.xhtml')}"/>
                     <b:navLink outcome="publishedPolls" value="publishedPolls" icon="wrench" active="${view.viewId.endsWith('publishedResultsList.xhtml')}"/>                    
                     <b:navLink outcome="createPollPage" value="createPoll" icon="wrench" active="${view.viewId.endsWith('createPoll.xhtml')}" rendered="${loginBean.loggedIn}"/>
-                    <b:navLink outcome="checkTokenPage" value="checkToken" icon="wrench" active="${view.viewId.endsWith('checkToken.xhtml')}" rendered="${loginBean.loggedIn}"/>
-                    <b:navLink outcome="resultList" value="resultList" icon="wrench" active="${view.viewId.endsWith('pollResultList.xhtml')}" rendered="${loginBean.loggedIn}"/>
-                    <b:navLink outcome="pollList" value="pollList" icon="wrench" active="${view.viewId.endsWith('pollList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="checkTokenPage" value="Vote" icon="wrench" active="${view.viewId.endsWith('checkToken.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="resultList" value="result" icon="wrench" active="${view.viewId.endsWith('pollResultList.xhtml')}" rendered="${loginBean.loggedIn}"/>
+                    <b:navLink outcome="pollList" value="polls" icon="wrench" active="${view.viewId.endsWith('pollList.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="extendPollList" value="extend poll" icon="wrench" active="${view.viewId.endsWith('pollExtendingList.xhtml')}" rendered="${loginBean.loggedIn}"/>
                     <b:navLink outcome="pollReviewList" value="review poll" icon="wrench" active="${view.viewId.endsWith('pollExtendingList.xhtml')}" rendered="${loginBean.loggedIn}"/>                    
                     <b:navLink rendered="${request.isUserInRole('ADMIN')}" outcome="removePollList" value="remove poll" icon="wrench" active="${view.viewId.endsWith('removePollList.xhtml')}"/>
+                    <b:navLink outcome="participationTrackList" value="Track" icon="wrench" active="${view.viewId.endsWith('participationTrackList.xhtml')}" rendered="${loginBean.loggedIn}"/>
 
+                    
                 </b:navbarLinks>
 
                 <b:navbarLinks rendered="${loginBean.loggedIn}" pull="right">

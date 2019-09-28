@@ -71,6 +71,8 @@ public class createPollBean implements Serializable {
 
     private Item currentEditItem;
     
+    private boolean participationTracking;
+    
     @Inject
     private LoginBean loginBean;
 
@@ -170,6 +172,14 @@ public class createPollBean implements Serializable {
         this.currentEditItem = currentEditItem;
     }
 
+    public boolean isParticipationTracking() {
+        return participationTracking;
+    }
+
+    public void setParticipationTracking(boolean participationTracking) {
+        this.participationTracking = participationTracking;
+    }
+
 
     @PostConstruct
     public void init() {
@@ -179,9 +189,10 @@ public class createPollBean implements Serializable {
     }
 
     public String createPoll() {
+        System.out.println("cr poll"+participationTracking );
         setNowAsCurrentDate();
         organizers.add(loginBean.getUser());
-        polllogic.createPoll(title, description, endDate, createDateInstant, startDate, participants, organizers, items);
+        polllogic.createPoll(title, description, endDate, createDateInstant, startDate, participants, organizers, items, participationTracking);
         return "pollCreatedSuccessfully";
     }
 

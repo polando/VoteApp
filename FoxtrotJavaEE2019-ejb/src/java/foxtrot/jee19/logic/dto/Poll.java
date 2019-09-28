@@ -48,6 +48,8 @@ public class Poll extends Named{
     private Date endDate;
     
     private boolean resultPublished;
+    
+    private boolean participationTracking;
 
     public boolean isResultPublished() {
         return resultPublished;
@@ -145,5 +147,14 @@ public class Poll extends Named{
         this.endDate = endDate;
     }
 
+    public boolean isParticipationTracking() {
+        return participationTracking;
+    }
+
+    public void setParticipationTracking(boolean participationTracking) {
+        this.participationTracking = participationTracking;
+    }
+
+    
     
 }

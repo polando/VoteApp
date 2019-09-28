@@ -15,6 +15,7 @@ import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Option;
 import foxtrot.jee19.logic.dto.Person;
 import foxtrot.jee19.logic.dto.Poll;
+import foxtrot.jee19.logic.dto.Token;
 import foxtrot.jee19.logic.dto.VoteResult;
 
 /**
@@ -52,7 +53,7 @@ public interface PollLogic {
 
     public List<String> getAllPollTitles();
 
-    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items);
+    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items, boolean participationTracking);
 
     public Poll editPoll(Poll poll);
 
@@ -79,6 +80,11 @@ public interface PollLogic {
     public void setPollPublished(String pollUUID, boolean published);
 
     public Set<Poll> getPublishedPolls();
+
+    public List<Token> getAllParticipantsAndStates(String pollUUID);
+
+
+    public List<Poll> getAllPollsbyTrackingAndOrganizer(String organizerUUID, boolean tracking);
 
 
     

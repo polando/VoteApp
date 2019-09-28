@@ -22,6 +22,8 @@ public class Token extends Named{
     private PersonEntity personEntity;
     
     private String token;
+    
+    private boolean used;
 
     public PersonEntity getPersonEntity() {
         return personEntity;
@@ -38,6 +40,15 @@ public class Token extends Named{
     public void setToken(String token) {
         this.token = token;
     }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+    
     
     
     
