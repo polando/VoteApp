@@ -5,6 +5,7 @@
  */
 package foxtrot.jee19.logic.impl;
 
+import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +32,11 @@ import java.util.Date;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import foxtrot.jee19.entities.OptEntity;
+import java.util.HashMap;
+import foxtrot.jee19.entities.NamedEntity;
+import foxtrot.jee19.utilities.MailBean;
+import foxtrot.jee19.utilities.Notification;
+
 
 //import jee19.entities.TokenEntity;
 import foxtrot.jee19.logic.PollLogic;
@@ -51,6 +57,7 @@ import foxtrot.jee19.logic.dto.Poll;
 import foxtrot.jee19.logic.dto.Token;
 import foxtrot.jee19.logic.dto.VoteResult;
 import foxtrot.jee19.utilities.BackgroundJobManager;
+import java.util.Map;
 
 /**
  *
@@ -79,6 +86,9 @@ public class PollLogicImpl implements PollLogic {
 
     @EJB
     private OptionAccess optionAccess;
+    
+    @EJB
+    private Notification notification;
     
    /* @EJB
     private HashString hashString;*/
@@ -213,6 +223,16 @@ public class PollLogicImpl implements PollLogic {
 
     }
 
+     
+    private HashMap getPollInfo(PollEntity pollEntity)
+    {
+        HashMap<String, String> emailInfo = new HashMap<String, String>();
+        emailInfo.put("title", pollEntity.getTitle());
+        emailInfo.put("start_date", pollEntity.getStartDate().toString());
+        emailInfo.put("end_date", pollEntity.getEndDate().toString());
+        emailInfo.put("number_of_participants", Integer.toString(pollEntity.getParticipants().size()));
+        return emailInfo;
+    }
     @Override
     public void startPoll(String pollUUID) {
 
@@ -220,9 +240,16 @@ public class PollLogicImpl implements PollLogic {
 
         PollEntity pollEntity = pollAccess.getByUuid(pollUUID);
 
-        pollEntity.getParticipants().forEach((p) -> {
-            tokenEntity.add(tokenAccess.getByUuid(createToken(p.getName() + pollEntity.getName(), p, pollEntity).getUuid()));
-        });
+        HashMap<String, String> emailInfo = new HashMap<String, String>();
+        emailInfo = getPollInfo(pollEntity);
+               
+        for (PersonEntity p: pollEntity.getParticipants()) {
+            Token token = createToken(p.getName() + pollEntity.getName(), p, pollEntity);
+            tokenEntity.add(tokenAccess.getByUuid(token.getUuid()));
+            emailInfo.put("token", token.getToken());
+            emailInfo.put("email", p.getName());
+            notification.sendNotificationToParticioants(emailInfo);
+        }
         
         pollEntity.getItemEntities().forEach((i) -> {
             i.getOptionEntities().add(optionAccess.getByUuid(createOption("Abstain", "abstainDisc", OptionType.Abstain).getUuid())); 
@@ -268,7 +295,9 @@ public class PollLogicImpl implements PollLogic {
         }
         tokenEntity.setToken(TokenPhrase);
         tokenEntity.setUsed(false);
-        return new Token(tokenEntity.getUuid(), tokenEntity.getJpaVersion(), tokenEntity.getName());
+        Token token = new Token(tokenEntity.getUuid(), tokenEntity.getJpaVersion(), tokenEntity.getName());
+        token.setToken(tokenEntity.getToken());
+        return token;
     }
 
     @Override
