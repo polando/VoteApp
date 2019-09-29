@@ -43,6 +43,9 @@ public class PersonLogicImpl implements PersonLogic {
 //        parameters[0] = param;
 //        ctx.setParameters(parameters);
         try {
+
+
+
             Method m = ctx.getMethod();
             System.err.println("Call to " + ctx.getMethod().getName());
             Object result = ctx.proceed();
