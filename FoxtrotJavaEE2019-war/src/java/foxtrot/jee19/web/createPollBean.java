@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import foxtrot.jee19.logic.PollLogic;
 import foxtrot.jee19.logic.ItemType;
+import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Person;
 import foxtrot.jee19.logic.dto.PollState;
@@ -72,6 +73,8 @@ public class createPollBean implements Serializable {
     private Item currentEditItem;
     
     private boolean participationTracking;
+    
+    private DefinedPersonList definedPersonList;
     
     @Inject
     private LoginBean loginBean;
@@ -180,6 +183,15 @@ public class createPollBean implements Serializable {
         this.participationTracking = participationTracking;
     }
 
+    public DefinedPersonList getDefinedPersonList() {
+        return definedPersonList;
+    }
+
+    public void setDefinedPersonList(DefinedPersonList definedPersonList) {
+        this.definedPersonList = definedPersonList;
+    }
+
+    
 
     @PostConstruct
     public void init() {
@@ -191,6 +203,7 @@ public class createPollBean implements Serializable {
     public String createPoll() {
         System.out.println("cr poll"+participationTracking );
         setNowAsCurrentDate();
+        participants = definedPersonList.getPersons();
         organizers.add(loginBean.getUser());
         polllogic.createPoll(title, description, endDate, createDateInstant, startDate, participants, organizers, items, participationTracking);
         return "pollCreatedSuccessfully";
@@ -221,5 +234,7 @@ public class createPollBean implements Serializable {
     void setNowAsCurrentDate() {
         setCreateDate(new Date());
     }
+    
+
 
 }

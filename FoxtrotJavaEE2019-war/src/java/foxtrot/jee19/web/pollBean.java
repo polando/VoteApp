@@ -14,9 +14,11 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import foxtrot.jee19.logic.PollLogic;
 import foxtrot.jee19.logic.ItemType;
+import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Option;
 import foxtrot.jee19.logic.dto.Person;
+import javax.inject.Inject;
 
 /**
  *
@@ -31,6 +33,9 @@ public class pollBean implements Serializable {
     
     @EJB
     private PollLogic polllogic;
+    
+    @Inject
+    private LoginBean loginBean;
     
     private List<ItemType> itemTypes;
 
@@ -60,6 +65,11 @@ public class pollBean implements Serializable {
 
     public void setPersons(List<Person> persons) {
         this.persons = persons;
+    }
+    
+    public List<DefinedPersonList> getAllPredifinedListByPerson(){
+        Person loggedInUser = loginBean.getUser();;
+        return polllogic.getAllPredifinedListByPerson(loggedInUser.getUuid());
     }
     
 

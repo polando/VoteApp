@@ -184,10 +184,10 @@
 
         <pr:dialog id="amodal" modal="true" header="Modal Dialog" widgetVar="amodal">
             <h:form>
-                <pr:pickList id="PojoPickList" value="#{changeParticipantbean.peronsDualList}" var="person" showSourceControls="true" showTargetControls="true" 
+                <pr:pickList id="PojoPickList" value="#{changeParticipantListBean.peronsDualList}" var="person" showSourceControls="true" showTargetControls="true" 
                              showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" 
                              itemValue="#{person}" itemLabel="#{person.name}"  converter="entityConverter" />
-                <pr:commandButton value="Save" actionListener="#{changePollBean.poll.setParticipants(changeParticipantbean.peronsDualList.target)}" oncomplete="PF('amodal').hide();"  update=":changePollForm:personTable" />
+                <pr:commandButton value="Save" actionListener="#{changePollBean.poll.setParticipants(changeParticipantListBean.peronsDualList.target)}" oncomplete="PF('amodal').hide();"  update=":changePollForm:personTable" />
             </h:form>
         </pr:dialog>
 

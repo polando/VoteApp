@@ -6,6 +6,7 @@
 package foxtrot.jee19.logic.impl;
 
 import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
+import foxtrot.jee19.entities.DefinedPersonListEntity;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -46,9 +47,11 @@ import foxtrot.jee19.logic.OptionType;
 import foxtrot.jee19.logic.dao.ItemAccess;
 import foxtrot.jee19.logic.dao.OptionAccess;
 import foxtrot.jee19.logic.dao.PersonAccess;
+import foxtrot.jee19.logic.dao.PersonListAccess;
 import foxtrot.jee19.logic.dao.PollAccess;
 import foxtrot.jee19.logic.dao.ResultAccess;
 import foxtrot.jee19.logic.dao.TokenAccess;
+import foxtrot.jee19.logic.dto.DefinedPersonList;
 //import jee19.logic.dao.TokenAccess;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Option;
@@ -89,6 +92,9 @@ public class PollLogicImpl implements PollLogic {
     
     @EJB
     private Notification notification;
+    
+    @EJB
+    private PersonListAccess personListAccess;
     
    /* @EJB
     private HashString hashString;*/
@@ -588,5 +594,52 @@ public class PollLogicImpl implements PollLogic {
         }
          return polls;
     }
+
+    @Override
+    public List<DefinedPersonList> getAllPredifinedListByPerson(String uuid) {
+        List<DefinedPersonList> personList= new ArrayList<>();
+            for(DefinedPersonListEntity dpe : personListAccess.getAllPredifinedListByPerson(uuid)){
+                DefinedPersonList definedPersonList = new DefinedPersonList(dpe.getUuid(),dpe.getJpaVersion(),dpe.getName());
+                List<Person> persons = new ArrayList<>();
+                for(PersonEntity pe : dpe.getPersons()){
+                    Person person = new Person(pe.getUuid(),pe.getJpaVersion(),pe.getName());
+                    persons.add(person);
+                }
+                definedPersonList.setPersons(persons);
+                definedPersonList.setTitle(dpe.getTitle());
+                personList.add(definedPersonList);
+            }
+            return personList;       
+    }
+    
+    @Override
+    public void createDefinedPersonList(String title,String ownerId,List<Person> personsInList){
+        DefinedPersonListEntity definedPersonListEntity = personListAccess.createEntity(title+ownerId);
+        definedPersonListEntity.setOwnerPerson(personAccess.getByUuid(ownerId));
+        personListObjectToEntity(definedPersonListEntity,title,personsInList);
+    } 
+    
+    @Override
+    public void editPersonList(DefinedPersonList definedPersonList){
+        DefinedPersonListEntity definedPersonListEntity = personListAccess.getByUuid(definedPersonList.getUuid());
+        definedPersonListEntity = personListObjectToEntity(definedPersonListEntity,definedPersonList.getTitle(),definedPersonList.getPersons());
+        personListAccess.updatePoll(definedPersonListEntity);
+    }
+    
+    private DefinedPersonListEntity personListObjectToEntity(DefinedPersonListEntity definedPersonListEntity,String title,List<Person> personsInList){
+        definedPersonListEntity.setTitle(title);
+        List<PersonEntity> persons = new ArrayList<>();
+        for(Person p: personsInList){
+            persons.add(personAccess.getByUuid(p.getUuid()));
+        }
+        definedPersonListEntity.setPersons(persons); 
+        return definedPersonListEntity;
+    }
+    
+    
+    
+    
+    
+    
        
 }

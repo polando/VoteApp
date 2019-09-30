@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.Remote;
 import foxtrot.jee19.entities.PollEntity;
+import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Option;
 import foxtrot.jee19.logic.dto.Person;
@@ -86,6 +87,13 @@ public interface PollLogic {
 
     public List<Poll> getAllPollsbyTrackingAndOrganizer(String organizerUUID, boolean tracking);
 
+    public List<DefinedPersonList> getAllPredifinedListByPerson(String uuid);
+
+    public void createDefinedPersonList(String title, String ownerId, List<Person> personsInList);
+
+    public void editPersonList(DefinedPersonList definedPersonList);
+    
+    
 
     
     

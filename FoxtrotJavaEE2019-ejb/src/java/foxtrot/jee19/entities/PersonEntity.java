@@ -2,6 +2,7 @@ package foxtrot.jee19.entities;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -27,6 +28,10 @@ public class PersonEntity extends NamedEntity {
         
     @ManyToMany(mappedBy = "organizers")
     private Set<PollEntity> pollsAsOrganizer;
+    
+
+    @OneToMany(mappedBy = "ownerPerson")
+    private List<DefinedPersonListEntity> definedPersonList;
 
 
 
