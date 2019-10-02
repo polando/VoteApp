@@ -51,8 +51,12 @@ public class changeParticipantListBean implements Serializable {
     }
     
     public void setValues(DefinedPersonList definedPersonList){
+        allParticipants = pollbean.getPersons();
         selectedDefinedPersonList = definedPersonList;
         peronsDualList.setTarget(selectedDefinedPersonList.getPersons());
+        allParticipants.removeAll(new ArrayList<>(selectedDefinedPersonList.getPersons()));
+        peronsDualList.setSource(allParticipants);
+
     }
     
     public DualListModel<Person> getPeronsDualList() {

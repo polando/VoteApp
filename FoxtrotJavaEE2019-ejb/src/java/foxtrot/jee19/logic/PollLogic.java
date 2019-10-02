@@ -92,6 +92,8 @@ public interface PollLogic {
     public void createDefinedPersonList(String title, String ownerId, List<Person> personsInList);
 
     public void editPersonList(DefinedPersonList definedPersonList);
+
+    public List<String> getAllPersonListTitlesByCreatorId(String creatorId);
     
     
 

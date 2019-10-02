@@ -24,6 +24,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import foxtrot.jee19.logic.PollLogic;
+import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Poll;
 import foxtrot.jee19.web.utilities.errorMessageUtility;
@@ -44,6 +45,8 @@ public class changePollBean  implements Serializable{
     
         @Inject
     private errorMessageUtility  errorMessageUtility;
+        
+    private DefinedPersonList definedPersonList;   
 
     private Poll poll;
 
@@ -62,6 +65,7 @@ public class changePollBean  implements Serializable{
     }
 
     public String editPoll() {
+        poll.setParticipants(definedPersonList.getPersons());
         polllogic.editPoll(poll);
         return "pollEditedSuccessfully";
     }
@@ -74,5 +78,17 @@ public class changePollBean  implements Serializable{
     public void addItem(Item item){
         poll.getItems().add(item);
     }
+
+    public DefinedPersonList getDefinedPersonList() { 
+        return definedPersonList;
+    }
+
+    public void setDefinedPersonList(DefinedPersonList definedPersonList) {
+        if(definedPersonList != null){
+            poll.setParticipants(definedPersonList.getPersons());
+        }  
+        this.definedPersonList = definedPersonList;
+    }
+    
     
 }

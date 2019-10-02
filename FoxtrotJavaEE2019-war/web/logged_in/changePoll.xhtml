@@ -50,27 +50,6 @@
                 
                 <pr:message id="endDateMessage" for="endDateInput" />
                 
-                <pr:outputLabel value="Participation Tracking"/>
-                
-                <pr:toggleSwitch value="#{changePollBean.poll.participationTracking}" id="ParticipationTracking"/>
-                
-                <pr:message id="ParticipationTrackingmMessage" for="ParticipationTracking" />
-
-                <pr:outputLabel value="Participants"/>
-
-                <pr:panelGrid columns="1" layout="grid" style="width: 100%">
-                    <pr:dataTable id="personTable" value="#{changePollBean.poll.participants}"  var="person">
-                        <pr:column headerText="Email">
-                            <h:outputText value="#{person.name}"/>
-                        </pr:column>
-                    </pr:dataTable>
-                    <pr:commandButton value="Edit List" type="button"  onclick="PF('amodal').show();" />
-
-
-                </pr:panelGrid>
-                
-                <pr:message id="personTableMessage" for="personTable" />
-
                 <pr:outputLabel value="Organizers" />
 
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%">
@@ -85,6 +64,43 @@
                 <f:event type="postValidate" listener="#{pollValidator.validatePoll(changePollBean.poll)}"/>
                 
                 <pr:message id="organizersTableMessage" for="organizersTable" />
+                
+                                                  
+                <pr:outputLabel value="Participants"/>
+                
+                <pr:panelGrid columns="1" >
+                    
+                <pr:selectOneMenu value="#{changePollBean.definedPersonList}" class="pf" converter="entityConverter"  id="listOfParticipants">
+                    <f:selectItem itemLabel="Select One" itemValue=""/>
+                    <f:selectItems value="${pollBean.allPredifinedListByPerson}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes.title}" />
+                    <pr:ajax event="valueChange" update=":changePollForm:participantsTable :changePollForm:listOfParticipantsEditButton"/>
+                </pr:selectOneMenu>
+                
+                <pr:commandButton value="Edit List" action="#{changeParticipantListBean.setValues(changePollBean.definedPersonList)}" oncomplete="PF('emodal').show()" update=":editListParticipantModal"  process="@this"  disabled="#{empty changePollBean.definedPersonList}"  id="listOfParticipantsEditButton"/>
+
+                <pr:commandButton value="Create new List" type="button" onclick="PF('amodal').show();" />
+
+                </pr:panelGrid>
+                
+                <pr:message id="listOfParticipantsMessage" for="listOfParticipants" />
+                
+                <pr:outputLabel value="Participants List"/>
+                 
+                <pr:panelGrid columns="1" layout="grid" style="width: 100%">
+                    <pr:dataTable id="participantsTable" value="#{changePollBean.definedPersonList.persons}"  var="person">
+                        <pr:column headerText="Email">
+                            <h:outputText value="#{person.name}"/>
+                        </pr:column>
+                    </pr:dataTable>
+                </pr:panelGrid>
+                
+                <pr:message id="ListMessage" for="participantsTable"/>
+                
+                <pr:outputLabel value="Participation Tracking"/>
+                
+                <pr:toggleSwitch value="#{changePollBean.poll.participationTracking}" id="ParticipationTracking"/>
+                
+                <pr:message id="ParticipationTrackingmMessage" for="ParticipationTracking" />
                  
             </pr:panelGrid>
             
@@ -181,13 +197,24 @@
             </h:form>
             
         </pr:dialog>
-
-        <pr:dialog id="amodal" modal="true" header="Modal Dialog" widgetVar="amodal">
+        
+        <pr:dialog id="amodal" modal="true" header="Create participant list" widgetVar="amodal">
             <h:form>
+                <pr:inputText  id="discInput" placeholder="Type description here..." value="#{createPersonListBean.title}" required="true" requiredMessage="This field cant be empty" style="width: 100%"/>
+                <pr:pickList id="PojoPickList" value="#{pickParticipantBean.peronsDualList}" var="person" showSourceControls="true" showTargetControls="true" 
+                             showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" 
+                             itemValue="#{person}" itemLabel="#{person.name}"  converter="entityConverter" />
+                <pr:commandButton value="Save" actionListener="#{createPersonListBean.createListParticipants(pickParticipantBean.peronsDualList.target)}" oncomplete="PF('amodal').hide();"  update=":changePollForm:listOfParticipants" />
+            </h:form>
+        </pr:dialog>
+        
+        <pr:dialog id="editListParticipantModal" modal="true" header="Edit participant list" widgetVar="emodal">
+            <h:form>
+                <pr:inputText  id="titleInput" placeholder="Type description here..." value="#{changePollBean.definedPersonList.title}" required="true" requiredMessage="This field cant be empty" style="width: 100%"/>
                 <pr:pickList id="PojoPickList" value="#{changeParticipantListBean.peronsDualList}" var="person" showSourceControls="true" showTargetControls="true" 
                              showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" 
                              itemValue="#{person}" itemLabel="#{person.name}"  converter="entityConverter" />
-                <pr:commandButton value="Save" actionListener="#{changePollBean.poll.setParticipants(changeParticipantListBean.peronsDualList.target)}" oncomplete="PF('amodal').hide();"  update=":changePollForm:personTable" />
+                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}" oncomplete="PF('emodal').hide();"  update=":changePollForm:listOfParticipants" />
             </h:form>
         </pr:dialog>
 

@@ -42,4 +42,10 @@ public class PersonListAccess extends AbstractAccess<DefinedPersonListEntity> {
     public void updatePoll(DefinedPersonListEntity entity) {
         em.merge(entity);
     }
+    
+    public List<String> getAllPersonListTitlesByCreatorId(String creatorUUID){
+        return em.createNamedQuery("getAllPersonListTitlesByCreatorId", String.class)
+                .setParameter("creatorUUID", creatorUUID)
+                .getResultList();        
+    }
 }

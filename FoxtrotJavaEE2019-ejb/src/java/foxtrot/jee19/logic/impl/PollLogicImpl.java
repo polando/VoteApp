@@ -636,6 +636,11 @@ public class PollLogicImpl implements PollLogic {
         return definedPersonListEntity;
     }
     
+    @Override
+    public List<String> getAllPersonListTitlesByCreatorId(String creatorId){
+            return personListAccess.getAllPersonListTitlesByCreatorId(creatorId);
+    }
+    
     
     
     

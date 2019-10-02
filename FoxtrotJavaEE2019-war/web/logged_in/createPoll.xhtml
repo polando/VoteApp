@@ -86,7 +86,7 @@
                 
                 <pr:outputLabel value="Participants List"/>
                  
-                <pr:panelGrid columns="1" layout="grid" style="width: 100%" id="participantsList">
+                <pr:panelGrid columns="1" layout="grid" style="width: 100%" >
                     <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person">
                         <pr:column headerText="Email">
                             <h:outputText value="#{person.name}"/>
@@ -94,7 +94,7 @@
                     </pr:dataTable>
                 </pr:panelGrid>
                 
-                <pr:message id="ListMessage" for="participantsList"/>
+                <pr:message id="ListMessage" for="participantsTable"/>
                 
                 <pr:outputLabel value="Participation Tracking"/>
                 
@@ -196,7 +196,7 @@
                     
                 </pr:panelGrid>
 
-                <pr:commandButton value="Save"    actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm:itemsPanel"/>
+                <pr:commandButton value="Save"  actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm:itemsPanel"/>
 
             </h:form>
 
@@ -205,21 +205,37 @@
 
         <pr:dialog id="amodal" modal="true" header="Create participant list" widgetVar="amodal">
             <h:form>
-                <pr:inputText  id="discInput" placeholder="Type description here..." value="#{createPersonListBean.title}" required="true" requiredMessage="This field cant be empty" style="width: 100%"/>
+                <pr:panelGrid  columns="3"  layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3" styleClass="ui-noborder">
+                <pr:outputLabel value="Title: "/>
+                <pr:inputText  id="TitleList" placeholder="Type description here..." value="#{createPersonListBean.title}" required="true" style="width: 100%"  requiredMessage="This field cant be empty" validator="#{personListValidator.validate}">
+                    <f:ajax event="blur" render="TitleListMessage" /> 
+                  
+                </pr:inputText>
+                <pr:message id="TitleListMessage" for="TitleList" />
+                </pr:panelGrid>
                 <pr:pickList id="PojoPickList" value="#{pickParticipantBean.peronsDualList}" var="person" showSourceControls="true" showTargetControls="true" 
                              showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" 
                              itemValue="#{person}" itemLabel="#{person.name}"  converter="entityConverter" />
-                <pr:commandButton value="Save" actionListener="#{createPersonListBean.createListParticipants(pickParticipantBean.peronsDualList.target)}" oncomplete="PF('amodal').hide();"  update=":pollForm:listOfParticipants" />
+
+                <pr:commandButton value="Save" actionListener="#{createPersonListBean.createListParticipants(pickParticipantBean.peronsDualList.target)}" oncomplete="if (!args.validationFailed){PF('amodal').hide();}"
+                update=":pollForm:listOfParticipants"  />
             </h:form>
         </pr:dialog>
         
         <pr:dialog id="editListParticipantModal" modal="true" header="Edit participant list" widgetVar="emodal">
             <h:form>
-                <pr:inputText  id="titleInput" placeholder="Type description here..." value="#{createPollBean.definedPersonList.title}" required="true" requiredMessage="This field cant be empty" style="width: 100%"/>
+                <pr:panelGrid  columns="3"  layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3" styleClass="ui-noborder">
+                <pr:outputLabel value="Title: "/>
+                <pr:inputText  id="titleInput" placeholder="Type description here..." value="#{changeParticipantListBean.selectedDefinedPersonList.title}" required="true" requiredMessage="This field cant be empty" style="width: 100%" validator="#{personListValidator.validate}">
+                        <f:ajax event="blur" render="titleInputMessage" />
+                        <f:attribute name="personListId" value="#{changeParticipantListBean.selectedDefinedPersonList.uuid}" />
+                </pr:inputText>
+                <pr:message id="titleInputMessage" for="titleInput" />
+                </pr:panelGrid>
                 <pr:pickList id="PojoPickList" value="#{changeParticipantListBean.peronsDualList}" var="person" showSourceControls="true" showTargetControls="true" 
                              showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true" 
                              itemValue="#{person}" itemLabel="#{person.name}"  converter="entityConverter" />
-                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}" oncomplete="PF('emodal').hide();"  update=":pollForm:listOfParticipants" />
+                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}" oncomplete="if (!args.validationFailed){PF('emodal').hide();}" update=":pollForm:listOfParticipants" />
             </h:form>
         </pr:dialog>
         

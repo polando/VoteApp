@@ -34,8 +34,7 @@ public class TitleValidator implements Validator , Serializable {
     private PollLogic polllogic;
     
     @Override
-    public void validate(FacesContext fc, UIComponent uic, Object o) throws ValidatorException {
-        System.out.println("pl"+polllogic);
+    public void validate(FacesContext fc, UIComponent uic, Object o) throws ValidatorException {   
         List<String> titleList =  polllogic.getAllPollTitles();
                 System.out.println("tll"+titleList);
         if(titleList != null && !titleList.isEmpty()){
@@ -47,9 +46,7 @@ public class TitleValidator implements Validator , Serializable {
             fm.setSeverity(FacesMessage.SEVERITY_ERROR);
             throw new ValidatorException(fm);
             }
-        }
-        
-        
+        }  
     }
 
 }

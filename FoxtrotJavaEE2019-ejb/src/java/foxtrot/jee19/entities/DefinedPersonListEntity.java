@@ -20,7 +20,8 @@ import javax.persistence.Table;
  */
 
 @NamedQueries({
-    @NamedQuery(name = "getAllPredifinedListByPerson", query = "SELECT p FROM DefinedPersonListEntity p WHERE p.ownerPerson.uuid = :personUUID")
+    @NamedQuery(name = "getAllPredifinedListByPerson", query = "SELECT p FROM DefinedPersonListEntity p WHERE p.ownerPerson.uuid = :personUUID"),
+    @NamedQuery(name = "getAllPersonListTitlesByCreatorId", query = "SELECT p.Title FROM DefinedPersonListEntity p WHERE p.ownerPerson.uuid = :creatorUUID")
 })
 @Entity
 @Table(name = "DEFINEDPERSONLIST")
