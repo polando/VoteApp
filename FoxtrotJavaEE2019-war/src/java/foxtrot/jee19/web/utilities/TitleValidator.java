@@ -37,21 +37,20 @@ public class TitleValidator implements Validator, Serializable {
     public void validate(FacesContext fc, UIComponent uic, Object o) throws ValidatorException {
         List<String> titleList = polllogic.getAllPollTitles();
         if (titleList != null) {
-            String personListId = (String) uic.getAttributes().get("pollID");
-            if (personListId != null) {
-            String thisPollTitle = polllogic.getPollByPollUUID(NOT_IN_RANGE_MESSAGE_ID).getTitle();
+            String pollID = (String) uic.getAttributes().get("pollID");
+            if (pollID != null) {
+                String thisPollTitle = polllogic.getPollByPollUUID(pollID).getTitle();
                 titleList.removeIf(n -> n.equalsIgnoreCase(thisPollTitle));
-                if (!titleList.isEmpty()) {
-                    boolean exist = titleList.stream().anyMatch(o.toString()::equalsIgnoreCase);
-                    if (exist) {
-                        FacesMessage fm = new FacesMessage("This title already exist");
-                        FacesContext.getCurrentInstance().addMessage(null, fm);
-                        fm.setSeverity(FacesMessage.SEVERITY_ERROR);
-                        throw new ValidatorException(fm);
-                    }
+            }
+            if (!titleList.isEmpty()) {
+                boolean exist = titleList.stream().anyMatch(o.toString()::equalsIgnoreCase);
+                if (exist) {
+                    FacesMessage fm = new FacesMessage("This title already exist");
+                    FacesContext.getCurrentInstance().addMessage(null, fm);
+                    fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+                    throw new ValidatorException(fm);
                 }
             }
         }
     }
-
 }

@@ -39,7 +39,7 @@
                         <h:outputText value="Vote " />
                         
                         <pr:selectOneMenu  value="#{item.chosenOption}" 
-                                           converter="entityConverter" rendered="#{not item.NOfM}" disabled="#{item.isAbstainChosen}" styleClass="removeList">
+                                           converter="omnifaces.SelectItemsConverter"  rendered="#{not item.NOfM}" disabled="#{item.isAbstainChosen}" styleClass="removeList">
                             <c:forEach items="#{item.options}" var="option">
                                 <c:if test="#{!votingBean.isOptionTypeAbstain(option.optionType)}">
                                     <f:selectItem itemValue="#{option}" itemLabel="#{option.shortName}"  itemDisabled="#{votingBean.isOptionTypeAbstain(option.optionType)}" />

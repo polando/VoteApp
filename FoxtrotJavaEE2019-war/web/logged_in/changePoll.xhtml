@@ -24,7 +24,6 @@
                 <pr:inputText  id="titleInput" value="#{changePollBean.poll.title}"  required="true" class="pf" requiredMessage="This field cant be empty" style="width: 100%" validator="#{titleValidator.validate}" >
                     <f:ajax event="blur" render="titleInputMessage" />
                     <f:attribute name="pollId" value="#{changePollBean.poll.uuid}" />
-
                 </pr:inputText>
 
                 <pr:message id="titleInputMessage" for="titleInput" />

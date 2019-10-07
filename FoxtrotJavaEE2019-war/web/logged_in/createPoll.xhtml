@@ -136,7 +136,7 @@
 
                         <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
                             <pr:selectCheckboxMenu  value="#{item.options}" multiple="true"
-                                                    filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" disabled="#{item.yesNo}" requiredMessage="This field cant be empty" >
+                                                    filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="omnifaces.SelectItemsConverter"  required="true" class="pf" disabled="#{item.yesNo}" requiredMessage="This field cant be empty" >
                                 <f:selectItems value="#{pollBean.nonPermanentOptions}" var="opts" itemValue="#{opts}"  itemLabel="#{opts.shortName}" />
                                 <f:ajax event="change" render="pollItemsMessage" />
                             </pr:selectCheckboxMenu> 
