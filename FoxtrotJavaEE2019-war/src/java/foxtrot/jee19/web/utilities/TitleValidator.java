@@ -38,8 +38,10 @@ public class TitleValidator implements Validator, Serializable {
         List<String> titleList = polllogic.getAllPollTitles();
         if (titleList != null) {
             String pollID = (String) uic.getAttributes().get("pollID");
+            System.out.println("pollID"+pollID);
             if (pollID != null) {
                 String thisPollTitle = polllogic.getPollByPollUUID(pollID).getTitle();
+                System.out.println("thisPollTitle"+thisPollTitle);
                 titleList.removeIf(n -> n.equalsIgnoreCase(thisPollTitle));
             }
             if (!titleList.isEmpty()) {

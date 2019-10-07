@@ -68,22 +68,10 @@
                 <pr:message id="organizersTableMessage" for="organizersTable" />
 
                 <pr:outputLabel value="Participants"/>
+                
+                <pr:commandButton value="Change particpants" type="button" onclick="PF('participantModal').show();"  id="Changeparticpants"/>
 
-                <pr:panelGrid columns="1" >
-
-                    <pr:selectOneMenu value="#{createPollBean.definedPersonList}" class="pf" converter="omnifaces.SelectItemsConverter"  id="listOfParticipants">
-                        <f:selectItem itemLabel="Select One" itemValue=""/>
-                        <f:selectItems value="${pollBean.allPredifinedListByPerson}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes.title}" />
-                        <pr:ajax event="valueChange" update=":pollForm:participantsTable :pollForm:listOfParticipantsEditButton"/>
-                    </pr:selectOneMenu>
-
-                    <pr:commandButton value="Edit List" action="#{changeParticipantListBean.setValues(createPollBean.definedPersonList)}" oncomplete="PF('emodal').show()" update=":editListParticipantModal"  process="@this"  disabled="#{empty createPollBean.definedPersonList}"  id="listOfParticipantsEditButton"/>
-
-                    <pr:commandButton value="Create new List" type="button" onclick="PF('amodal').show();" />
-
-                </pr:panelGrid>
-
-                <pr:message id="listOfParticipantsMessage" for="listOfParticipants" />
+                <pr:message id="ChangeparticpantsMessage" for="Changeparticpants" />               
 
                 <pr:outputLabel value="Participants List"/>
 
@@ -158,6 +146,35 @@
             </pr:panelGrid>
 
         </h:form>
+        
+        <pr:dialog modal="true" header="Change participants" widgetVar="participantModal" height="auto"  width="600" minWidth="600">
+            <h:form id="changeParticipantsForm">
+                <pr:outputLabel value="Participants"/>
+                <pr:panelGrid columns="3" styleClass="ui-noborder" >
+                    <pr:selectOneMenu value="#{createPollBean.definedPersonList}" class="pf" converter="entityConverter"  id="listOfParticipants">
+                        <f:selectItem itemLabel="Select One" itemValue=""/>
+                        <f:selectItems value="${pollBean.allPredifinedListByPerson}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes.title}" />
+                        <pr:ajax event="valueChange" update="participantsTable listOfParticipantsEditButton"/>
+                    </pr:selectOneMenu>
+                    
+                    <pr:commandButton value="Edit List" action="#{changeParticipantListBean.setValues(createPollBean.definedPersonList)}" oncomplete="PF('emodal').show()" update=":editListParticipantModal"  process="@this"  disabled="#{empty createPollBean.definedPersonList}"  id="listOfParticipantsEditButton"/>
+
+                    <pr:commandButton value="Create new List" type="button" onclick="PF('amodal').show();" />
+
+                </pr:panelGrid>  
+                <pr:panelGrid columns="1">
+                    <pr:outputLabel value="Participants List"/>
+                    <pr:panelGrid columns="1" layout="grid">
+                        <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person">
+                            <pr:column headerText="Email">
+                                <h:outputText value="#{person.name}"/>
+                            </pr:column>
+                        </pr:dataTable>
+                    </pr:panelGrid>
+                    <pr:commandButton value="Save" actionListener="#{createPollBean.setParticipants(createPollBean.definedPersonList.persons)}" oncomplete="if (!args.validationFailed){PF('participantModal').hide();}" update=":pollForm:participantsTable" />
+                </pr:panelGrid>
+            </h:form>
+        </pr:dialog>
 
         <pr:dialog id="itemModal" modal="true" header="Modal Dialog" widgetVar="itemModal"  width="700" height="300">
             <h:form id="itemForm">
@@ -220,7 +237,7 @@
                 <o:converter converterId="omnifaces.ListIndexConverter" list="#{pickParticipantBean.allParticipants}"/>  
                 </pr:pickList>
                 <pr:commandButton value="Save" actionListener="#{createPersonListBean.createListParticipants(pickParticipantBean.peronsDualList.target)}" oncomplete="if (!args.validationFailed){PF('amodal').hide();}"
-                                  update=":pollForm:listOfParticipants :pollForm:participantsTable" />
+                                  update=":changeParticipantsForm:listOfParticipants :changeParticipantsForm:participantsTable"  />
             </h:form>
         </pr:dialog>
 
@@ -239,7 +256,7 @@
                              itemValue="#{person}" itemLabel="#{person.name}">
                     <o:converter converterId="omnifaces.ListIndexConverter" list="#{changeParticipantListBean.allParticipants}"/>  
                 </pr:pickList>
-                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}"  oncomplete="if (!args.validationFailed){PF('emodal').hide();}" update=":pollForm:listOfParticipants :pollForm:participantsTable" />
+                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}"  oncomplete="if (!args.validationFailed){PF('emodal').hide();}" update=":changeParticipantsForm:listOfParticipants :changeParticipantsForm:participantsTable"  />
             </h:form>
         </pr:dialog>
 
