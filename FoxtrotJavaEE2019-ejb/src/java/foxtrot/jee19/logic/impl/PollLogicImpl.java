@@ -254,7 +254,7 @@ public class PollLogicImpl implements PollLogic {
             tokenEntity.add(tokenAccess.getByUuid(token.getUuid()));
             emailInfo.put("token", token.getToken());
             emailInfo.put("email", p.getName());
-            notification.sendNotificationToParticioants(emailInfo);
+            //notification.sendNotificationToParticioants(emailInfo);
         }
         
         pollEntity.getItemEntities().forEach((i) -> {
@@ -534,6 +534,7 @@ public class PollLogicImpl implements PollLogic {
     @Override
     public void extendPoll(String pollUUID,Date endDate){
         backgroundJobManager.extendPollTime(pollUUID,DateToInstant(endDate));
+        pollAccess.getPollByPollID(pollUUID).setEndDate(DateToInstant(endDate));
     }
     
     @Override
