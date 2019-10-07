@@ -26,27 +26,32 @@ import foxtrot.jee19.logic.PollLogic;
  */
 @Named
 @ViewScoped
-public class TitleValidator implements Validator , Serializable {
+public class TitleValidator implements Validator, Serializable {
 
     private static final long serialVersionUID = 5793355967891360652L;
 
     @EJB
     private PollLogic polllogic;
-    
+
     @Override
-    public void validate(FacesContext fc, UIComponent uic, Object o) throws ValidatorException {   
-        List<String> titleList =  polllogic.getAllPollTitles();
-                System.out.println("tll"+titleList);
-        if(titleList != null && !titleList.isEmpty()){
-            Set<String> pollTitles = new HashSet<>(titleList); 
-            boolean exist = pollTitles.stream().anyMatch(o.toString()::equalsIgnoreCase);
-            if(exist){
-            FacesMessage fm = new FacesMessage("This title already exist");
-            FacesContext.getCurrentInstance().addMessage(null,fm);
-            fm.setSeverity(FacesMessage.SEVERITY_ERROR);
-            throw new ValidatorException(fm);
+    public void validate(FacesContext fc, UIComponent uic, Object o) throws ValidatorException {
+        List<String> titleList = polllogic.getAllPollTitles();
+        if (titleList != null) {
+            String personListId = (String) uic.getAttributes().get("pollID");
+            if (personListId != null) {
+            String thisPollTitle = polllogic.getPollByPollUUID(NOT_IN_RANGE_MESSAGE_ID).getTitle();
+                titleList.removeIf(n -> n.equalsIgnoreCase(thisPollTitle));
+                if (!titleList.isEmpty()) {
+                    boolean exist = titleList.stream().anyMatch(o.toString()::equalsIgnoreCase);
+                    if (exist) {
+                        FacesMessage fm = new FacesMessage("This title already exist");
+                        FacesContext.getCurrentInstance().addMessage(null, fm);
+                        fm.setSeverity(FacesMessage.SEVERITY_ERROR);
+                        throw new ValidatorException(fm);
+                    }
+                }
             }
-        }  
+        }
     }
 
 }

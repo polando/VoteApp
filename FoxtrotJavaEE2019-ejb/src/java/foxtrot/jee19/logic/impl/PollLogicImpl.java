@@ -442,6 +442,7 @@ public class PollLogicImpl implements PollLogic {
     public Set<Poll> getPollsIDListByOrganizerAndState(String organizerUUID,PollState pollState ) {
         Set<Poll> polls = new HashSet<>();
         for (PollEntity pollEntity : pollAccess.getPollsIDListByOrganizerAndState(organizerUUID,pollState)) {
+            System.out.println("poll title ccccc"+pollEntity.getTitle());
             Poll poll = new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
             polls.add(pollEnityToPoll(pollEntity, poll));
         }

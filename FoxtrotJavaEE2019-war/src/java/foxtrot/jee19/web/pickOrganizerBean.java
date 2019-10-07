@@ -19,46 +19,48 @@ import org.primefaces.model.DualListModel;
  *
  * @author ussocom
  */
-
 @ViewScoped
 @Named
 public class pickOrganizerBean implements Serializable {
 
     private static final long serialVersionUID = -4283759819209517087L;
-    
+
     @Inject
     private pollBean pollbean;
-    
+
     @Inject
     private LoginBean loginBean;
 
-    private DualListModel<Person> peronsDualList;
-    
-    private List<Person> target;
-    
-        @PostConstruct
-        public void init() {
+    private DualListModel<Person> model;
+
+    private List<Person> fullList;
+
+
+    @PostConstruct
+    public void init() {
+
         Person loggedInUser = loginBean.getUser();
-        
-        List<Person> allParticipants = pollbean.getPersons();
-        
-        allParticipants.removeIf(e -> e.getUuid().equals(loggedInUser.getUuid()));
-        
-        if(target == null){
-        target = new ArrayList<>();
-        }
-        
-        peronsDualList = new DualListModel<Person>(allParticipants, target);     
-        
-        }
-
-    public DualListModel<Person> getPeronsDualList() {
-        return peronsDualList;
+        fullList = pollbean.getPersons();
+        //  allParticipants.removeIf(e -> e.getUuid().equals(loggedInUser.getUuid()));
+        model = new DualListModel<>(new ArrayList<>(fullList), new ArrayList<>());
+            
+            model = new DualListModel<>(
+            new ArrayList<>(fullList),
+            new ArrayList<>()
+        );
     }
-
-    public void setPeronsDualList(DualListModel<Person> peronsDualList) {
-        this.peronsDualList = peronsDualList;
-    }
-     
     
+    
+    public List<Person> getFullList() {
+        return fullList;
+    }
+
+    public DualListModel<Person> getModel() {
+        return model;
+    }
+
+    public void setModel(DualListModel<Person> model) {
+        this.model = model;
+    }
+
 }

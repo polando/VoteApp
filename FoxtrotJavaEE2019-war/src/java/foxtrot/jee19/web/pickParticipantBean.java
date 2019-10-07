@@ -31,12 +31,14 @@ public class pickParticipantBean implements Serializable {
     
     private DualListModel<Person> peronsDualList;
     
+    private List<Person> allParticipants; 
+    
     
     private List<Person> target;
     
         @PostConstruct
         public void init() {
-        List<Person> allParticipants = pollbean.getPersons();
+        allParticipants = pollbean.getPersons();
         if(target == null){
         target = new ArrayList<>();
         }
@@ -53,8 +55,12 @@ public class pickParticipantBean implements Serializable {
     public void setPeronsDualList(DualListModel<Person> peronsDualList) {
         this.peronsDualList = peronsDualList;
     }
-    
 
+    public List<Person> getAllParticipants() {
+        return allParticipants;
+    }
+    
+    
      
         
 }

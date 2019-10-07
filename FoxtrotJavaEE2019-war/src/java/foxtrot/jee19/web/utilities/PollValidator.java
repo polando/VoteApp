@@ -38,7 +38,7 @@ public class PollValidator  implements  Serializable  {
     
     public void validatePoll(List<Person> participants,List<Person> organizers,List<Item> items,Date startDate,Date endDate) throws ValidatorException {
         ArrayList<String> problems = new ArrayList<>();
-
+        System.out.println(participants.size());
         if (participants == null || participants.size() < 3) {
             problems.add("There must be at least 3 participants");
         }

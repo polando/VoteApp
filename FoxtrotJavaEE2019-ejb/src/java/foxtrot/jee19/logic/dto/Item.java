@@ -92,13 +92,5 @@ public class Item extends Named {
     public void setIsAbstainChosen(boolean IsAbstainChosen) {
         this.IsAbstainChosen = IsAbstainChosen;
     }
-    
-    
-    
-    
-
-    
-    
-    
-    
+   
 }

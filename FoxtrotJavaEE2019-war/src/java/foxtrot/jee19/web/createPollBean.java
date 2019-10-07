@@ -189,9 +189,6 @@ public class createPollBean implements Serializable {
 
     public void setDefinedPersonList(DefinedPersonList definedPersonList) {
         this.definedPersonList = definedPersonList;
-        if(definedPersonList != null){
-        participants = definedPersonList.getPersons();
-        }
     }
 
     
@@ -204,9 +201,8 @@ public class createPollBean implements Serializable {
     }
 
     public String createPoll() {
-        System.out.println("cr poll"+participationTracking );
         setNowAsCurrentDate();
-        //participants = definedPersonList.getPersons();
+        participants = definedPersonList.getPersons();
         organizers.add(loginBean.getUser());
         polllogic.createPoll(title, description, endDate, createDateInstant, startDate, participants, organizers, items, participationTracking);
         return "pollCreatedSuccessfully";

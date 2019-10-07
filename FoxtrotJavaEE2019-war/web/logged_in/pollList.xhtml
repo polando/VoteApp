@@ -13,7 +13,7 @@
         <h:form id="sendVoteForm">
             <pr:panelGrid columns="4" layout="grid">
                 <pr:outputLabel value="Choose the poll" />
-                <pr:selectOneMenu value="#{preparedPollsListBean.selectedPoll}" converter="entityConverter">
+                <pr:selectOneMenu value="#{preparedPollsListBean.selectedPoll}"  converter="omnifaces.SelectItemsConverter">
                     <f:selectItems value="${preparedPollsListBean.preparedPollsByOrganaizer}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.title}" />
                 </pr:selectOneMenu> 
                 <pr:commandButton id="getResult"

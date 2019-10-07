@@ -211,13 +211,6 @@ public class PollEntity extends NamedEntity{
     public void setParticipationTracking(boolean participationTracking) {
         this.participationTracking = participationTracking;
     }
-
-   
-    
-    
-    
-    
-
-    
+ 
     
 }

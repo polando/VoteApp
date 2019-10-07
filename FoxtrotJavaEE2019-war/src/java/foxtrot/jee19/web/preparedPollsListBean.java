@@ -42,10 +42,13 @@ public class preparedPollsListBean implements Serializable {
     
     @PostConstruct
     void init(){
-        preparedPollsByOrganaizer = getPreparedPollsByOrganizer();
+        preparedPollsByOrganaizer = pollsByOrganizerFromDb();
+             for(Poll p :preparedPollsByOrganaizer){
+                System.out.println("poll title in init is : "+p.getTitle());
+            }
     }
 
-    private Set<Poll> getPreparedPollsByOrganizer(){
+    public Set<Poll> pollsByOrganizerFromDb(){
             Person loggedInUser = loginBean.getUser();
             Set<Poll> poll = polllogic.getPollsIDListByOrganizerAndState(loggedInUser.getUuid(),PollState.PREPARED); 
         return poll;
@@ -56,11 +59,14 @@ public class preparedPollsListBean implements Serializable {
     }
 
     public void setSelectedPoll(Poll selectedPoll) {
+        if(selectedPoll != null)
+            System.out.println("poll title in selected poll is : "+selectedPoll.getTitle());
         this.selectedPoll = selectedPoll;
     }
     
     public String seePoll(){
-            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();
+            Flash flash = FacesContext.getCurrentInstance().getExternalContext().getFlash();   
+            System.out.println("poll title in seepoll is : "+selectedPoll.getTitle());
             flash.put("selectedPoll", selectedPoll);
             return "showPoll";
         }
@@ -71,6 +77,9 @@ public class preparedPollsListBean implements Serializable {
         }
 
     public Set<Poll> getPreparedPollsByOrganaizer() {
+             for(Poll p :preparedPollsByOrganaizer){
+                System.out.println("poll title in prepared is : "+p.getTitle());
+            }
         return preparedPollsByOrganaizer;
     }
 

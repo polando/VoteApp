@@ -59,4 +59,10 @@ public class changeOrganizerBean implements Serializable {
         this.peronsDualList = peronsDualList;
     }
 
+    public List<Person> getAllParticipants() {
+        return allParticipants;
+    }
+    
+    
+
 }

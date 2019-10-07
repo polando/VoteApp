@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.RequestScoped;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -41,22 +40,24 @@ public class changeParticipantListBean implements Serializable {
     
     private List<Person> target;
     
+    private List<Person> source;
+    
     List<Person> allParticipants;
     
     @PostConstruct
     public void init() {
          allParticipants = pollbean.getPersons();
+         source = new ArrayList<>(allParticipants);
          target = new ArrayList<>();
-         peronsDualList = new DualListModel<>(allParticipants,target);
+         peronsDualList = new DualListModel<>(source,target);
     }
     
     public void setValues(DefinedPersonList definedPersonList){
-        allParticipants = pollbean.getPersons();
+        source = pollbean.getPersons();
         selectedDefinedPersonList = definedPersonList;
         peronsDualList.setTarget(selectedDefinedPersonList.getPersons());
-        allParticipants.removeAll(new ArrayList<>(selectedDefinedPersonList.getPersons()));
-        peronsDualList.setSource(allParticipants);
-
+        source.removeAll(new ArrayList<>(selectedDefinedPersonList.getPersons()));
+        peronsDualList.setSource(source);
     }
     
     public DualListModel<Person> getPeronsDualList() {
@@ -75,9 +76,14 @@ public class changeParticipantListBean implements Serializable {
         this.selectedDefinedPersonList = selectedDefinedPersonList;
     }
     
-    public void editList(){
+    public DefinedPersonList editList(){
         selectedDefinedPersonList.setPersons(peronsDualList.getTarget());
         pollLogic.editPersonList(selectedDefinedPersonList);
+        return selectedDefinedPersonList;
+    }
+
+    public List<Person> getAllParticipants() {
+        return allParticipants;
     }
     
     

@@ -28,6 +28,7 @@ import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Poll;
 import foxtrot.jee19.web.utilities.errorMessageUtility;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
@@ -61,7 +62,6 @@ public class changePollBean  implements Serializable{
     @PostConstruct
     public void init() {
         poll = readSelectedPollFromFlash();
-       // poll = polllogic.getPollByPollUUID(poll.getUuid());
     }
 
     public String editPoll() {
@@ -84,9 +84,6 @@ public class changePollBean  implements Serializable{
     }
 
     public void setDefinedPersonList(DefinedPersonList definedPersonList) {
-        if(definedPersonList != null){
-            poll.setParticipants(definedPersonList.getPersons());
-        }  
         this.definedPersonList = definedPersonList;
     }
     
