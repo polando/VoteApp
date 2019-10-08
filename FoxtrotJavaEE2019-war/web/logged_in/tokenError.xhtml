@@ -8,8 +8,8 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui">
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:param name="pagetitle" value="${msg.error}"/>
     <ui:define name="content">
-        <pr:staticMessage severity="error" summary="Error" detail="The token is either wrong or used"/>
+        <pr:staticMessage severity="error" summary="${msg.error}" detail="${msg.tokenError}"/>
     </ui:define>
 </ui:composition>

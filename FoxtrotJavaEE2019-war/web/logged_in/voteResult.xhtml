@@ -9,22 +9,22 @@
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:param name="pagetitle" value="${msg.votingResult}"/>
 
     <ui:define name="content">
 
         <b:form id="voteResultPage">
             <pr:dataTable var="res" value="#{pollResult.voteResults}">
-                <pr:column headerText="poll" groupRow="true">
+                <pr:column headerText="${msg.poll}" groupRow="true">
                     <h:outputText value="#{res.poll.title}" />
                 </pr:column>
-                <pr:column headerText="item" groupRow="true">
+                <pr:column headerText="${msg.item}" groupRow="true">
                     <h:outputText value="#{res.item.title}" />
                 </pr:column>
-                <pr:column headerText="option">
+                <pr:column headerText="${msg.option}">
                     <h:outputText value="#{res.option.shortName}" />
                 </pr:column>
-                <pr:column headerText="numberOfVotes">
+                <pr:column headerText="${msg.numberOfVotes}">
                     <h:outputText value="#{res.numberOfVotes}" />
                 </pr:column>
             </pr:dataTable>
@@ -39,7 +39,7 @@
                 <pr:autoUpdate/>
             </pr:messages>
             <pr:panelGrid columns="3" layout="grid">
-            <h:outputText value="publish result " />
+                <h:outputText value="${msg.publishResult}" />
             <pr:toggleSwitch value="#{pollResult.poll.resultPublished}"/>
             <pr:commandButton id="save"
                               value="${msg.submitButton}"

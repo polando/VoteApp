@@ -8,11 +8,11 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui">
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:param name="pagetitle" value="${msg.extendingPoll}"/>
     <ui:define name="content">
         <h:form id="extendPollPage">
             <pr:panelGrid columns="3" layout="grid">
-                <pr:outputLabel value="End Date"/>
+                <pr:outputLabel value="${msg.endDate}"/>
 
                 <b:dateTimePicker id="endDateInput"  value="#{extendPollBean.poll.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
                     <f:ajax event="blur" render="endDateMessage" /> 
@@ -22,7 +22,7 @@
                 
                             <pr:commandButton id="createPollButton"
                              icon="pi pi-check"
-                             value="Save Changes"
+                             value="${msg.saveButtonLabel}"
                              action="#{extendPollBean.extendPoll()}"
                              ajax="false"/>
                             

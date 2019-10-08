@@ -8,16 +8,16 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui">
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:param name="pagetitle" value="${msg.pollReview}"/>
     <ui:define name="content">
         <h:form id="sendVoteForm">
             <pr:panelGrid columns="4" layout="grid">
-                <pr:outputLabel value="Choose the poll" />
+                <pr:outputLabel value="${msg.choosePoll}" />
                 <pr:selectOneMenu value="#{pollReviewListBean.selectedPoll}" converter="omnifaces.SelectItemsConverter">
                     <f:selectItems value="${pollReviewListBean.startedPollsByOrganaizer}" var="poll" itemValue="#{poll}"  itemLabel="#{poll.title}" />
                 </pr:selectOneMenu> 
                 <pr:commandButton id="getResult"
-                                  value="View"
+                                  value="${msg.view}"
                                   action="#{pollReviewListBean.seePoll()}"
                                   ajax="false"
                                   disabled="#{empty pollReviewListBean.startedPollsByOrganaizer}"/>

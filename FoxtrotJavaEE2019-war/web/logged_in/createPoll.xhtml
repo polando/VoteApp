@@ -13,39 +13,39 @@
     >
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/resetBSToPF.css" />
 
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/> 
+    <ui:param name="pagetitle" value="${msg.createPoll}"/> 
 
     <ui:define name="content">
         <h:form id="pollForm">
             <pr:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3">
 
-                <pr:outputLabel value="Title" class="pf"/>
+                <pr:outputLabel value="${msg.title}" class="pf"/>
 
-                <pr:inputText  id="titleInput" placeholder="Type Title here..." value="#{createPollBean.title}"  required="true" class="pf" validator="#{titleValidator.validate}" requiredMessage="This field cant be empty" style="width: 100%">
+                <pr:inputText  id="titleInput" placeholder="${msg.titlePlaceholder}" value="#{createPollBean.title}"  required="true" class="pf" validator="#{titleValidator.validate}" requiredMessage="This field cant be empty" style="width: 100%">
                     <f:ajax event="blur" render="titleInputMessage" /> 
                 </pr:inputText>
 
                 <pr:message id="titleInputMessage" for="titleInput" />
 
-                <pr:outputLabel value="Description"/>
+                <pr:outputLabel value="${msg.description}"/>
 
-                <pr:inputText  id="discInput" placeholder="Type description here..." value="#{createPollBean.description}" required="true" requiredMessage="This field cant be empty" style="width: 100%">
+                <pr:inputText  id="discInput" placeholder="${msg.discPlaceholder}" value="#{createPollBean.description}" required="true" requiredMessage="This field cant be empty" style="width: 100%">
                     <f:ajax event="blur" render="discInputMessage" /> 
                 </pr:inputText>
 
                 <pr:message id="discInputMessage" for="discInput" />
 
-                <pr:outputLabel value="Start Date"/>
+                <pr:outputLabel value="${msg.startDate}"/>
 
-                <b:dateTimePicker   id="startDateInput" placeholder="Select start date" value="#{createPollBean.startDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
+                <b:dateTimePicker   id="startDateInput" placeholder="${msg.startDatePlaceHolder}" value="#{createPollBean.startDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
                     <f:ajax event="blur" render="startDateMessage" /> 
                 </b:dateTimePicker>
 
                 <pr:message id="startDateMessage" for="startDateInput" />
 
-                <pr:outputLabel value="End Date"/>
+                <pr:outputLabel value="${msg.endDate}"/>
 
-                <b:dateTimePicker id="endDateInput"  placeholder="Select end date" value="#{createPollBean.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
+                <b:dateTimePicker id="endDateInput"  placeholder="${msg.endDatePlaceHolder}" value="#{createPollBean.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
                     <f:ajax event="blur" render="endDateMessage" /> 
                 </b:dateTimePicker>
 
@@ -54,7 +54,7 @@
 
                 <f:event type="postValidate" listener="#{pollValidator.validatePoll(createPollBean.definedPersonList.persons, createPollBean.organizers, createPollBean.items, createPollBean.startDate, createPollBean.endDate)}"/>
 
-                <pr:outputLabel value="Organizers" />
+                <pr:outputLabel value="${msg.organizers}" />
 
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%">
                     <pr:dataTable id="organizersTable" value="#{createPollBean.organizers}" var="person">
@@ -62,18 +62,18 @@
                             <h:outputText value="#{person.name}"/>
                         </pr:column>
                     </pr:dataTable>
-                    <pr:commandButton value="Edit List" type="button" onclick="PF('orgModal').show();" />
+                    <pr:commandButton value="${msg.editList}" type="button" onclick="PF('orgModal').show();" />
                 </pr:panelGrid> 
 
                 <pr:message id="organizersTableMessage" for="organizersTable" />
 
-                <pr:outputLabel value="Participants"/>
+                <pr:outputLabel value="${msg.participants}"/>
                 
-                <pr:commandButton value="Change particpants" type="button" onclick="PF('participantModal').show();"  id="Changeparticpants"/>
+                <pr:commandButton value="${msg.changeParticpants}" icon="pi pi-pencil" type="button" onclick="PF('participantModal').show();"  id="Changeparticpants"/>
 
                 <pr:message id="ChangeparticpantsMessage" for="Changeparticpants" />               
 
-                <pr:outputLabel value="Participants List"/>
+                <pr:outputLabel value="${msg.participantsList}"/>
 
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%" >
                     <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person">
@@ -85,7 +85,7 @@
 
                 <pr:message id="ListMessage" for="participantsTable"/>
 
-                <pr:outputLabel value="Participation Tracking"/>
+                <pr:outputLabel value="${msg.participationtrack}"/>
 
                 <pr:toggleSwitch value="#{createPollBean.participationTracking}" id="tracking" />
 
@@ -96,22 +96,22 @@
 
             <pr:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-12" id="itemsPanel">  
 
-                <pr:commandButton value="add item" type="button" onclick="PF('itemModal').show();" />
+                <pr:commandButton value="${msg.addItem}" icon="pi pi-plus-circle" type="button" onclick="PF('itemModal').show();" />
 
 
                 <ui:repeat var="item" value="#{createPollBean.items}" varStatus="status" id="listOfItems">
 
                     <pr:panelGrid columns="3" layout="grid">   
 
-                        <pr:outputLabel value="Item Title"/> 
+                        <pr:outputLabel value="${msg.itemTitle}"/> 
 
-                        <pr:inputText  id="itemtitleInput"  placeholder="Type Title here..." value="#{item.title}"  required="true" class="pf"  requiredMessage="This field cant be empty" style="width: 100%">
+                        <pr:inputText  id="itemtitleInput"  placeholder="${msg.titlePlaceholder}" value="#{item.title}"  required="true" class="pf"  requiredMessage="This field cant be empty" style="width: 100%">
                             <f:ajax event="blur" render="titleInputMessage" /> 
                         </pr:inputText>
 
                         <pr:message id="itemtitleInputMessage" for="itemtitleInput" />
 
-                        <pr:outputLabel value="Item Type"/>
+                        <pr:outputLabel value="${msg.itemType}"/>
 
                         <pr:selectOneMenu id="itemTypes" value="#{item.itemType}"  required="true" class="pf">
                             <f:selectItems value="${pollBean.itemTypes}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes}" />
@@ -120,7 +120,7 @@
 
                         <pr:message id="itemTypesMessage" for="itemTypes" />
 
-                        <pr:outputLabel value="Options"/>
+                        <pr:outputLabel value="${msg.options}"/>
 
                         <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
                             <pr:selectCheckboxMenu value="#{item.options}" multiple="true" 
@@ -138,8 +138,8 @@
 
 
                 <pr:commandButton id="createPollButton"
-                                  icon="pi pi-check"
-                                  value="Create Poll"
+                                  icon="pi pi-check-circle"
+                                  value="${msg.createPoll}"
                                   action="#{createPollBean.createPoll}"
                                   ajax="false"/>
 
@@ -147,9 +147,9 @@
 
         </h:form>
         
-        <pr:dialog modal="true" header="Change participants" widgetVar="participantModal" height="auto"  width="600" minWidth="600">
+        <pr:dialog modal="true" header="${msg.changeParticpants}" widgetVar="participantModal" height="auto"  width="600" minWidth="600">
             <h:form id="changeParticipantsForm">
-                <pr:outputLabel value="Participants"/>
+                <pr:outputLabel value="${msg.participants}"/>
                 <pr:panelGrid columns="3" styleClass="ui-noborder" >
                     <pr:selectOneMenu value="#{createPollBean.definedPersonList}" class="pf" converter="entityConverter"  id="listOfParticipants">
                         <f:selectItem itemLabel="Select One" itemValue=""/>
@@ -157,13 +157,13 @@
                         <pr:ajax event="valueChange" update="participantsTable listOfParticipantsEditButton"/>
                     </pr:selectOneMenu>
                     
-                    <pr:commandButton value="Edit List" action="#{changeParticipantListBean.setValues(createPollBean.definedPersonList)}" oncomplete="PF('emodal').show()" update=":editListParticipantModal"  process="@this"  disabled="#{empty createPollBean.definedPersonList}"  id="listOfParticipantsEditButton"/>
+                    <pr:commandButton value="${msg.editList}" action="#{changeParticipantListBean.setValues(createPollBean.definedPersonList)}" oncomplete="PF('emodal').show()" update=":editListParticipantModal"  process="@this"  disabled="#{empty createPollBean.definedPersonList}"  id="listOfParticipantsEditButton"/>
 
-                    <pr:commandButton value="Create new List" type="button" onclick="PF('amodal').show();" />
+                    <pr:commandButton value="${msg.createNewList}" type="button" onclick="PF('amodal').show();" />
 
                 </pr:panelGrid>  
                 <pr:panelGrid columns="1">
-                    <pr:outputLabel value="Participants List"/>
+                    <pr:outputLabel value="${msg.participantsList}"/>
                     <pr:panelGrid columns="1" layout="grid">
                         <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person">
                             <pr:column headerText="Email">
@@ -171,23 +171,23 @@
                             </pr:column>
                         </pr:dataTable>
                     </pr:panelGrid>
-                    <pr:commandButton value="Save" actionListener="#{createPollBean.setParticipants(createPollBean.definedPersonList.persons)}" oncomplete="if (!args.validationFailed){PF('participantModal').hide();}" update=":pollForm:participantsTable" />
+                    <pr:commandButton value="${msg.save}" actionListener="#{createPollBean.setParticipants(createPollBean.definedPersonList.persons)}" oncomplete="if (!args.validationFailed){PF('participantModal').hide();}" update=":pollForm:participantsTable" />
                 </pr:panelGrid>
             </h:form>
         </pr:dialog>
 
-        <pr:dialog id="itemModal" modal="true" header="Modal Dialog" widgetVar="itemModal"  width="700" height="300">
+        <pr:dialog id="itemModal" modal="true" header="${msg.createItem}" widgetVar="itemModal"  width="700" height="300">
             <h:form id="itemForm">
-                <pr:panelGrid columns="3" layout="grid">   
+                <pr:panelGrid columns="3" layout="grid" >   
                     
-                    <pr:outputLabel value="Item Title" class="pf"/>
+                    <pr:outputLabel value="${msg.itemTitle}" class="pf"/>
                     
-                    <pr:inputText  id="itemtitleInput"  placeholder="Type Title here..." value="#{itemBean.title}"  required="true" class="pf"  requiredMessage="This field cant be empty" style="width: 100%">
+                    <pr:inputText  id="itemtitleInput"  placeholder="${msg.titlePlaceholder}" value="#{itemBean.title}"  required="true" class="pf"  requiredMessage="This field cant be empty" style="width: 100%">
                         <f:ajax event="blur" render="itemtitleInputMessage" /> 
                     </pr:inputText>
                     
                     <pr:message id="itemtitleInputMessage" for="itemtitleInput" />
-                    <pr:outputLabel value="Item Type"/>
+                    <pr:outputLabel value="${msg.itemType}"/>
                     
                     <pr:selectOneMenu id="itemTypes" value="#{itemBean.itemType}"  required="true" class="pf">
                         <f:selectItems value="${pollBean.itemTypes}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes}" />
@@ -196,7 +196,7 @@
                     
                     <pr:message id="itemTypesMessage" for="itemTypes" />
                     
-                    <pr:outputLabel value="Options"/>
+                    <pr:outputLabel value="${msg.options}"/>
                     
                     <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
                         
@@ -206,7 +206,7 @@
                             <f:ajax event="change" render="pollItemsMessage" />
                         </pr:selectCheckboxMenu> 
                         
-                        <pr:commandButton  value="Option" type="button" onclick="PF('addOptionModal').show();" icon="pi pi-plus" disabled="#{itemBean.yesNo}"/>
+                        <pr:commandButton  value="${msg.option}" type="button" onclick="PF('addOptionModal').show();" icon="pi pi-plus" disabled="#{itemBean.yesNo}"/>
                     
                     </pr:panelGrid>
                     
@@ -216,18 +216,18 @@
                 
                 </pr:panelGrid>
             
-                <pr:commandButton value="Save"  actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm:itemsPanel"/>
+                <pr:commandButton value="${msg.save}"  actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm:itemsPanel"/>
             
             </h:form>
             
         </pr:dialog>
 
 
-        <pr:dialog id="amodal" modal="true" header="Create participant list" widgetVar="amodal">
+        <pr:dialog id="amodal" modal="true" header="${msg.createParticipantList}" widgetVar="amodal">
             <h:form>
                 <pr:panelGrid  columns="3"  layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3" styleClass="ui-noborder">
-                    <pr:outputLabel value="Title: "/>
-                    <pr:inputText  id="TitleList" placeholder="Type description here..." value="#{createPersonListBean.title}" required="true" style="width: 100%"  requiredMessage="This field cant be empty" validator="#{personListValidator.validate}">
+                    <pr:outputLabel value="${msg.title}"/>
+                    <pr:inputText  id="TitleList" placeholder="${msg.titlePlaceholder}" value="#{createPersonListBean.title}" required="true" style="width: 100%"  requiredMessage="This field cant be empty" validator="#{personListValidator.validate}">
                         <f:ajax event="blur" render="TitleListMessage" /> 
 
                     </pr:inputText>
@@ -238,16 +238,16 @@
                              itemValue="#{person}" itemLabel="#{person.name}">
                 <o:converter converterId="omnifaces.ListIndexConverter" list="#{pickParticipantBean.allParticipants}"/>  
                 </pr:pickList>
-                <pr:commandButton value="Save" actionListener="#{createPersonListBean.createListParticipants(pickParticipantBean.peronsDualList.target)}" oncomplete="if (!args.validationFailed){PF('amodal').hide();}"
+                <pr:commandButton value="${msg.save}" actionListener="#{createPersonListBean.createListParticipants(pickParticipantBean.peronsDualList.target)}" oncomplete="if (!args.validationFailed){PF('amodal').hide();}"
                                   update=":changeParticipantsForm:listOfParticipants :changeParticipantsForm:participantsTable"  />
             </h:form>
         </pr:dialog>
 
-        <pr:dialog id="editListParticipantModal" modal="true" header="Edit participant list" widgetVar="emodal">
+        <pr:dialog id="editListParticipantModal" modal="true" header="${msg.editParticipantlist}" widgetVar="emodal">
             <h:form>
                 <pr:panelGrid  columns="3"  layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3" styleClass="ui-noborder">
-                    <pr:outputLabel value="Title: "/>
-                    <pr:inputText  id="titleInput" placeholder="Type description here..." value="#{changeParticipantListBean.selectedDefinedPersonList.title}" required="true" requiredMessage="This field cant be empty" style="width: 100%" validator="#{personListValidator.validate}">
+                    <pr:outputLabel value="${msg.title}"/>
+                    <pr:inputText  id="titleInput" placeholder="${msg.discPlaceholder}" value="#{changeParticipantListBean.selectedDefinedPersonList.title}" required="true" requiredMessage="This field cant be empty" style="width: 100%" validator="#{personListValidator.validate}">
                         <f:ajax event="blur" render="titleInputMessage" />
                         <f:attribute name="personListId" value="#{changeParticipantListBean.selectedDefinedPersonList.uuid}" />
                     </pr:inputText>
@@ -258,27 +258,31 @@
                              itemValue="#{person}" itemLabel="#{person.name}">
                     <o:converter converterId="omnifaces.ListIndexConverter" list="#{changeParticipantListBean.allParticipants}"/>  
                 </pr:pickList>
-                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}"  oncomplete="if (!args.validationFailed){PF('emodal').hide();}" update=":changeParticipantsForm:listOfParticipants :changeParticipantsForm:participantsTable" />
+                <pr:commandButton value="${msg.save}" actionListener="#{changeParticipantListBean.editList()}"  oncomplete="if (!args.validationFailed){PF('emodal').hide();}" update=":changeParticipantsForm:listOfParticipants :changeParticipantsForm:participantsTable" />
             </h:form>
         </pr:dialog>
 
 
-        <pr:dialog id="orgModal" modal="true" header="Change organizers" widgetVar="orgModal">
+        <pr:dialog id="orgModal" modal="true" header="${msg.changeOrganizers}" widgetVar="orgModal">
             <h:form>
                 <pr:pickList id="orgPickList" value="#{pickOrganizerBean.model}" var="person" showSourceControls="true" showTargetControls="true" 
                              showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" responsive="true"  
                              itemValue="#{person}" itemLabel="#{person.name}">
                     <o:converter converterId="omnifaces.ListIndexConverter" list="#{pickOrganizerBean.fullList}"/>
                 </pr:pickList>
-                <pr:commandButton value="Select" actionListener="#{createPollBean.setOrganizers(pickOrganizerBean.model.target)}" update=":pollForm:organizersTable" oncomplete="if (!args.validationFailed){PF('orgModal').hide();}"/>
+                <pr:commandButton value="${msg.select}" actionListener="#{createPollBean.setOrganizers(pickOrganizerBean.model.target)}" update=":pollForm:organizersTable" oncomplete="if (!args.validationFailed){PF('orgModal').hide();}"/>
             </h:form>
         </pr:dialog>
 
-        <pr:dialog id="addOptionModal" modal="true" header="Modal Dialog" widgetVar="addOptionModal">
+        <pr:dialog id="addOptionModal" modal="true" header="${msg.addOption}" widgetVar="addOptionModal">
             <h:form>
-                <pr:inputText placeholder="Type Name here..." value="#{optionBean.shortName}"/>
-                <pr:inputText placeholder="Type Discription here..." value="#{optionBean.discription}"/>
-                <pr:commandButton value="Save"  actionListener="#{optionBean.createOption}" oncomplete="PF('addOptionModal').hide();"  update="itemForm:itemOptions"/>
+                <pr:panelGrid columns="2"  styleClass="ui-noborder">
+                <pr:outputLabel value="${msg.name}"/>
+                <pr:inputText placeholder="${msg.namePlaceHolder}" value="#{optionBean.shortName}"/>
+                <pr:outputLabel value="${msg.description}"/>
+                <pr:inputText placeholder="${msg.discPlaceholder}" value="#{optionBean.discription}"/>
+                <pr:commandButton value="${msg.save}"  actionListener="#{optionBean.createOption}" oncomplete="PF('addOptionModal').hide();"  update="itemForm:itemOptions"/>
+                </pr:panelGrid>
             </h:form>
         </pr:dialog>
 

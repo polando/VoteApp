@@ -8,8 +8,8 @@
     xmlns:f="http://xmlns.jcp.org/jsf/core"
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui">
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:param name="pagetitle" value="${msg.polls}"/>
     <ui:define name="content">
-        <pr:staticMessage severity="info" summary="Successful" detail="Poll was successfully started"/>
+        <pr:staticMessage severity="info" summary="${msg.successful}" detail="${msg.pollStartSuccess}"/>
     </ui:define>
 </ui:composition>

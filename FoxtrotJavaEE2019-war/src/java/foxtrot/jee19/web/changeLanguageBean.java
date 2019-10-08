@@ -31,6 +31,7 @@ public class changeLanguageBean implements Serializable  {
     private static final Map<String, Object> locales;
     private static final long serialVersionUID = -5127899606637781663L;
     private String localeCode;
+    private Locale locale; 
 
     public String getLocaleCode() {
         return localeCode;
@@ -49,12 +50,19 @@ public class changeLanguageBean implements Serializable  {
     public Set<String> getAllLocales() {
         return locales.keySet();
     }
+
+    public Locale getLocale() {
+        return locale;
+    }
+    
+    
     
     public void processValueChange(ValueChangeEvent e){
         String newLocaleValue = e.getNewValue().toString();
         for (Map.Entry<String, Object> entry : locales.entrySet()) {
             if (entry.getKey().equals(newLocaleValue)) {
-                FacesContext.getCurrentInstance().getViewRoot().setLocale((Locale) entry.getValue());
+                locale = (Locale) entry.getValue();
+                //FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
             }
         }
     }

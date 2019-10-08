@@ -10,33 +10,33 @@
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:pr="http://primefaces.org/ui"
     xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:param name="pagetitle" value="${msg.pollReview}"/>
     <ui:define name="content">
         <h:form id="reviewForm">
 
-            <pr:outputLabel value="Choose your vote" />   
+            <pr:outputLabel value="${msg.chooseVote}" />   
             
             <c:forEach items="#{reviewBean.voteItems}" var="item">
                   
                 <pr:panelGrid columns="2" layout="grid" id="AItem">   
 
-                    <pr:outputLabel value="Item Title"/> 
+                    <pr:outputLabel value="${msg.itemTitle}"/> 
 
                     <pr:outputLabel id="itemtitle" value="#{item.title}"/>
 
-                    <pr:outputLabel value="Item Type"/>
+                    <pr:outputLabel value="${msg.itemType}"/>
 
                     <pr:outputLabel value="#{item.itemType}"/>
 
-                    <pr:outputLabel value="Options"/>
+                    <pr:outputLabel value="${msg.options}"/>
 
                     <pr:panelGrid  columns="2" layout="grid" id="itemOptions">
 
-                        <h:outputText value="Abstain " />
+                        <h:outputText value="${msg.abstain}" />
                         <pr:toggleSwitch value="#{item.isAbstainChosen}">
                             <pr:ajax update="itemOptions"/>
                         </pr:toggleSwitch>
-                        <h:outputText value="Vote " />
+                        <h:outputText value="${msg.vote} " />
                         
                         <pr:selectOneMenu  value="#{item.chosenOption}" 
                                            converter="omnifaces.SelectItemsConverter"  rendered="#{not item.NOfM}" disabled="#{item.isAbstainChosen}" styleClass="removeList">

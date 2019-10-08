@@ -9,11 +9,11 @@
     xmlns:b="http://bootsfaces.net/ui"
     xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
     xmlns:pr="http://primefaces.org/ui">
-    <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
+    <ui:param name="pagetitle" value="${msg.vote}"/>
     <ui:define name="content">
         <h:form id="checktokenform">
             <pr:panelGrid  columns="1" layout="grid" >
-            <pr:outputLabel value="Token" />    
+                <pr:outputLabel value="${msg.token}" />    
             <pr:inputText id="token"
                          value="#{tokenCheckBean.token}"
                          required="true"/>
