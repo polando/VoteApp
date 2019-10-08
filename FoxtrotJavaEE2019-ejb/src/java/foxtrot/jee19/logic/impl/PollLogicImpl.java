@@ -144,7 +144,7 @@ public class PollLogicImpl implements PollLogic {
         List<OptEntity> optionEntities = new ArrayList<>();
         List<Option> ops = new ArrayList<>();
         if (itemType.equals(ItemType.YesNo)) {
-            optionEntities.addAll(optionAccess.getOptionByType(OptionType.YesNo));
+          //  optionEntities.addAll(optionAccess.getOptionByType(OptionType.YesNo));
         } else {
             options.forEach((option) -> {
                 optionEntities.add(optionAccess.getByUuid(option.getUuid()));

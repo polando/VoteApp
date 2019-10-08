@@ -123,7 +123,7 @@
                         <pr:outputLabel value="Options"/>
 
                         <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
-                            <pr:selectCheckboxMenu  value="#{item.options}" multiple="true"
+                            <pr:selectCheckboxMenu value="#{item.options}" multiple="true" 
                                                     filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="omnifaces.SelectItemsConverter"  required="true" class="pf" disabled="#{item.yesNo}" requiredMessage="This field cant be empty" >
                                 <f:selectItems value="#{pollBean.nonPermanentOptions}" var="opts" itemValue="#{opts}"  itemLabel="#{opts.shortName}" />
                                 <f:ajax event="change" render="pollItemsMessage" />
@@ -179,45 +179,47 @@
         <pr:dialog id="itemModal" modal="true" header="Modal Dialog" widgetVar="itemModal"  width="700" height="300">
             <h:form id="itemForm">
                 <pr:panelGrid columns="3" layout="grid">   
-
+                    
                     <pr:outputLabel value="Item Title" class="pf"/>
-
+                    
                     <pr:inputText  id="itemtitleInput"  placeholder="Type Title here..." value="#{itemBean.title}"  required="true" class="pf"  requiredMessage="This field cant be empty" style="width: 100%">
                         <f:ajax event="blur" render="itemtitleInputMessage" /> 
                     </pr:inputText>
-
+                    
                     <pr:message id="itemtitleInputMessage" for="itemtitleInput" />
-
                     <pr:outputLabel value="Item Type"/>
-
+                    
                     <pr:selectOneMenu id="itemTypes" value="#{itemBean.itemType}"  required="true" class="pf">
                         <f:selectItems value="${pollBean.itemTypes}" var="itypes" itemValue="#{itypes}"  itemLabel="#{itypes}" />
                         <f:ajax event="change" render="itemOptions"  />
                     </pr:selectOneMenu>
-
+                    
                     <pr:message id="itemTypesMessage" for="itemTypes" />
-
+                    
                     <pr:outputLabel value="Options"/>
-
+                    
                     <pr:panelGrid  columns="1" layout="grid" id="itemOptions">
+                        
                         <pr:selectCheckboxMenu  value="#{itemBean.options}" multiple="true"
                                                 filter="true" filterMatchMode="startsWith" panelStyle="width:250px" converter="entityConverter" required="true" class="pf" disabled="#{itemBean.yesNo}" requiredMessage="This field cant be empty" >
                             <f:selectItems value="#{pollBean.nonPermanentOptions}" var="opts" itemValue="#{opts}"  itemLabel="#{opts.shortName}" />
                             <f:ajax event="change" render="pollItemsMessage" />
                         </pr:selectCheckboxMenu> 
+                        
                         <pr:commandButton  value="Option" type="button" onclick="PF('addOptionModal').show();" icon="pi pi-plus" disabled="#{itemBean.yesNo}"/>
+                    
                     </pr:panelGrid>
-
+                    
                     <pr:message id="pollItemsMessage" for="itemOptions" />
 
                     <f:event type="postValidate" listener="#{pollValidator.validateItem(itemBean.title, createPollBean.items)}"/>
-
+                
                 </pr:panelGrid>
-
+            
                 <pr:commandButton value="Save"  actionListener="#{createPollBean.addItem(itemBean.createItem())}"  update=":pollForm:itemsPanel"/>
-
+            
             </h:form>
-
+            
         </pr:dialog>
 
 
@@ -256,7 +258,7 @@
                              itemValue="#{person}" itemLabel="#{person.name}">
                     <o:converter converterId="omnifaces.ListIndexConverter" list="#{changeParticipantListBean.allParticipants}"/>  
                 </pr:pickList>
-                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}"  oncomplete="if (!args.validationFailed){PF('emodal').hide();}" update=":changeParticipantsForm:listOfParticipants :changeParticipantsForm:participantsTable"  />
+                <pr:commandButton value="Save" actionListener="#{changeParticipantListBean.editList()}"  oncomplete="if (!args.validationFailed){PF('emodal').hide();}" update=":changeParticipantsForm:listOfParticipants :changeParticipantsForm:participantsTable" />
             </h:form>
         </pr:dialog>
 
@@ -279,8 +281,6 @@
                 <pr:commandButton value="Save"  actionListener="#{optionBean.createOption}" oncomplete="PF('addOptionModal').hide();"  update="itemForm:itemOptions"/>
             </h:form>
         </pr:dialog>
-
-
 
     </ui:define>
 </ui:composition>
