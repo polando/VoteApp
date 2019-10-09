@@ -251,7 +251,7 @@ public class PollLogicImpl implements PollLogic {
             tokenEntity.add(tokenAccess.getByUuid(token.getUuid()));
             emailInfo.put("token", token.getToken());
             emailInfo.put("email", p.getName());
-            //notification.sendNotificationToParticioants(emailInfo);
+            notification.sendNotificationToParticioants(emailInfo);
         }
         
         pollEntity.getItemEntities().forEach((i) -> {
