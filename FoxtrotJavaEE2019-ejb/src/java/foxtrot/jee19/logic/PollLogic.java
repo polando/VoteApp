@@ -94,6 +94,8 @@ public interface PollLogic {
     public void editPersonList(DefinedPersonList definedPersonList);
 
     public List<String> getAllPersonListTitlesByCreatorId(String creatorId);
+
+    public void removeItem(Item item);
     
     
 

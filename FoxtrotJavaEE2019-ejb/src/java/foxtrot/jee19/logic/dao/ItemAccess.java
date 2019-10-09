@@ -43,6 +43,16 @@ public class ItemAccess extends AbstractAccess<ItemEntity>{
         ).getResultList();
     }
     
+    public void removeItemByID(String itemUUID){
+          em.remove(getItemByID(itemUUID));
+    }
+    
+    public ItemEntity getItemByID(String itemUUID) {
+        return em.createNamedQuery("getItemByID", ItemEntity.class)
+                .setParameter("itemUUID", itemUUID)
+                .getSingleResult();
+    }
+    
 
     
     

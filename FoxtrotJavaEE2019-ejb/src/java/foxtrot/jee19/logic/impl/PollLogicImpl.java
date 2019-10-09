@@ -5,7 +5,6 @@
  */
 package foxtrot.jee19.logic.impl;
 
-import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import foxtrot.jee19.entities.DefinedPersonListEntity;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.ConsoleHandler;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import foxtrot.jee19.entities.ItemEntity;
@@ -28,18 +26,11 @@ import foxtrot.jee19.entities.ResultEntity;
 import foxtrot.jee19.entities.TokenEntity;
 import java.time.Instant;
 import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.TimeZone;
-import javax.annotation.PostConstruct;
 import foxtrot.jee19.entities.OptEntity;
 import java.util.HashMap;
-import foxtrot.jee19.entities.NamedEntity;
-import foxtrot.jee19.utilities.MailBean;
 import foxtrot.jee19.utilities.Notification;
-
-
-//import jee19.entities.TokenEntity;
 import foxtrot.jee19.logic.PollLogic;
 import foxtrot.jee19.logic.PollState;
 import foxtrot.jee19.logic.ItemType;
@@ -52,7 +43,6 @@ import foxtrot.jee19.logic.dao.PollAccess;
 import foxtrot.jee19.logic.dao.ResultAccess;
 import foxtrot.jee19.logic.dao.TokenAccess;
 import foxtrot.jee19.logic.dto.DefinedPersonList;
-//import jee19.logic.dao.TokenAccess;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Option;
 import foxtrot.jee19.logic.dto.Person;
@@ -60,7 +50,7 @@ import foxtrot.jee19.logic.dto.Poll;
 import foxtrot.jee19.logic.dto.Token;
 import foxtrot.jee19.logic.dto.VoteResult;
 import foxtrot.jee19.utilities.BackgroundJobManager;
-import java.util.Map;
+import javax.annotation.security.RolesAllowed;
 
 /**
  *
@@ -96,12 +86,10 @@ public class PollLogicImpl implements PollLogic {
     @EJB
     private PersonListAccess personListAccess;
     
-   /* @EJB
-    private HashString hashString;*/
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<Person> getAllUsers() {
-        ConsoleHandler ch = new ConsoleHandler();
         List<PersonEntity> l = personAccess.getPersonList();
         List<Person> result = new ArrayList<>(l.size());
         for (PersonEntity pe : l) {
@@ -114,6 +102,7 @@ public class PollLogicImpl implements PollLogic {
         return result;
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<ItemType> getAllItemTypes() {
         List<ItemType> result = new ArrayList<>();
@@ -123,6 +112,7 @@ public class PollLogicImpl implements PollLogic {
         return result;
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<Item> getAllPollItems() {
         List<ItemEntity> l = itemAccess.getPollItemsList();
@@ -136,6 +126,7 @@ public class PollLogicImpl implements PollLogic {
 
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Item createItem(String title, ItemType itemType, List<Option> options) {
         ItemEntity p = itemAccess.createEntity(title);
@@ -165,14 +156,16 @@ public class PollLogicImpl implements PollLogic {
 
         return item;
     }
-
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items,boolean participationTracking) {
         PollEntity pollEntity = pollAccess.createEntity(title);
         setPollProperties(pollEntity, title, description, endDate, createDateInstant, startDate, participants, organizers, items , false,participationTracking);
         return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
-
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Poll editPoll(Poll poll) {
         PollEntity pollEntity = pollAccess.getByUuid(poll.getUuid());
@@ -188,6 +181,7 @@ public class PollLogicImpl implements PollLogic {
 
         organizers.forEach((p) -> {
             organizerEntity.add(personAccess.getByUuid(p.getUuid()));
+            System.out.println("org : "+p.getName());
         });
 
         participants.forEach((p) -> {
@@ -239,6 +233,8 @@ public class PollLogicImpl implements PollLogic {
         emailInfo.put("number_of_participants", Integer.toString(pollEntity.getParticipants().size()));
         return emailInfo;
     }
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public void startPoll(String pollUUID) {
 
@@ -246,6 +242,7 @@ public class PollLogicImpl implements PollLogic {
 
         PollEntity pollEntity = pollAccess.getByUuid(pollUUID);
 
+        
         HashMap<String, String> emailInfo = new HashMap<String, String>();
         emailInfo = getPollInfo(pollEntity);
                
@@ -282,6 +279,7 @@ public class PollLogicImpl implements PollLogic {
         return resultEntity;
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public void addToVotes(String token, String pollUUID, String ItemUUID, String OptionUUID) {
         ResultEntity resultEntity = resultAccess.getEntityByPollAndItemIDAndOptID(pollUUID, ItemUUID, OptionUUID);
@@ -306,6 +304,7 @@ public class PollLogicImpl implements PollLogic {
         return token;
     }
 
+    
     @Override
     public Option createOption(String shortName, String disc, OptionType optionType) {
         OptEntity optEntity = optionAccess.createEntity(shortName);
@@ -315,6 +314,7 @@ public class PollLogicImpl implements PollLogic {
         return new Option(optEntity.getUuid(), optEntity.getJpaVersion(), optEntity.getName());
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public boolean tokenExistAndNotUsed(String token) {
         TokenEntity tokenEntity = getTokenByTokenString(token);
@@ -347,6 +347,7 @@ public class PollLogicImpl implements PollLogic {
         return hashedString;
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public boolean checkToken(String personUUID, String token) {
         Object result = tokenAccess.getTokenObjectByTokenString(token);
@@ -360,7 +361,9 @@ public class PollLogicImpl implements PollLogic {
         }
         return tokenEntity.getPersonEntity().equals(personEntity);
     }
-
+    
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Poll getPollByToken(String token) {
         TokenEntity tokenEntity = tokenAccess.getTokenObjectByTokenString(token);
@@ -411,7 +414,8 @@ public class PollLogicImpl implements PollLogic {
     private TokenEntity getTokenByTokenString(String token) {
         return tokenAccess.getTokenObjectByTokenString(token);
     }
-
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Set<Poll> getFinishedPollsIDListByOrganizer(String organizerUUID) {
         Set<Poll> polls = new HashSet<>();
@@ -424,7 +428,7 @@ public class PollLogicImpl implements PollLogic {
     }
     
     
-
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Poll getPollByPollUUID(String pollUUID) {
         PollEntity pollEntity = pollAccess.getPollByPollID(pollUUID);
@@ -432,12 +436,14 @@ public class PollLogicImpl implements PollLogic {
         return pollEnityToPoll(pollEntity, poll);
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public void setPollStateByPollUUID(String pollUUID) {
         PollEntity pollEntity = pollAccess.getPollByPollID(pollUUID);
         pollEntity.setPollState(PollState.FINISHED);
     }
-
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Set<Poll> getPollsIDListByOrganizerAndState(String organizerUUID,PollState pollState ) {
         Set<Poll> polls = new HashSet<>();
@@ -449,6 +455,7 @@ public class PollLogicImpl implements PollLogic {
         return polls;
     }
 
+  
     @Override
     public List<VoteResult> getPollResultByPollid(String pollUUID) {
         List<VoteResult> results = new ArrayList<>();
@@ -464,6 +471,7 @@ public class PollLogicImpl implements PollLogic {
         return results;
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<Option> getNonPermanentOptions() {
         List<OptEntity> optEntities = optionAccess.getOptionByType(OptionType.NonPermanent);
@@ -479,7 +487,8 @@ public class PollLogicImpl implements PollLogic {
         });
         return result;
     }
-
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<String> getAllPollTitles() {
         return pollAccess.getAllPollTitles();
@@ -514,13 +523,14 @@ public class PollLogicImpl implements PollLogic {
         return date;
     }
 
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public boolean checkAllVotesSubmitted(String pollUUID) {
         return !(Math.toIntExact(tokenAccess.numberOfUsersDidntSubmit(pollUUID)) > 0);
     }
     
     
-            
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public Set<Poll> getStartedOrVotingPollsIDListByOrganizer(String organizerUUID) {
         Set<Poll> polls = new HashSet<>();
@@ -531,12 +541,14 @@ public class PollLogicImpl implements PollLogic {
         return polls;
     }
     
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public void extendPoll(String pollUUID,Date endDate){
         backgroundJobManager.extendPollTime(pollUUID,DateToInstant(endDate));
         pollAccess.getPollByPollID(pollUUID).setEndDate(DateToInstant(endDate));
     }
     
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<Poll> getAllPolls(){
         List<Poll> polls = new ArrayList<>();
@@ -547,11 +559,13 @@ public class PollLogicImpl implements PollLogic {
         return polls;
     }
     
+    @RolesAllowed("ADMIN")
     @Override
     public void removePoll(String pollUUID){
         pollAccess.removePollByID(pollUUID);
     }
     
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public void setPollPublished(String pollUUID,boolean published){
         pollAccess.getPollByPollID(pollUUID).setResultPublished(published);
@@ -569,6 +583,7 @@ public class PollLogicImpl implements PollLogic {
         return polls;
     } 
     
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<Token> getAllParticipantsAndStates(String pollUUID){
         List<Token> tokens = new ArrayList<>();
@@ -578,14 +593,14 @@ public class PollLogicImpl implements PollLogic {
          return tokens;
     }
     
-    Token TokenEntityToToken(TokenEntity tokenEntity){
+    private Token TokenEntityToToken(TokenEntity tokenEntity){
         Token token = new Token(tokenEntity.getUuid(),tokenEntity.getJpaVersion(),tokenEntity.getName());
         token.setPersonEntity(tokenEntity.getPersonEntity());
         token.setUsed(tokenEntity.getUsed());
         return token;
     }
     
-    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<Poll> getAllPollsbyTrackingAndOrganizer(String organizerUUID,boolean tracking){
         List<Poll> polls = new ArrayList<>();
@@ -596,7 +611,8 @@ public class PollLogicImpl implements PollLogic {
         }
          return polls;
     }
-
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<DefinedPersonList> getAllPredifinedListByPerson(String uuid) {
         List<DefinedPersonList> personList= new ArrayList<>();
@@ -614,6 +630,7 @@ public class PollLogicImpl implements PollLogic {
             return personList;       
     }
     
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public void createDefinedPersonList(String title,String ownerId,List<Person> personsInList){
         DefinedPersonListEntity definedPersonListEntity = personListAccess.createEntity(title+ownerId);
@@ -621,6 +638,7 @@ public class PollLogicImpl implements PollLogic {
         personListObjectToEntity(definedPersonListEntity,title,personsInList);
     } 
     
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public void editPersonList(DefinedPersonList definedPersonList){
         DefinedPersonListEntity definedPersonListEntity = personListAccess.getByUuid(definedPersonList.getUuid());
@@ -638,9 +656,17 @@ public class PollLogicImpl implements PollLogic {
         return definedPersonListEntity;
     }
     
+    
+    @RolesAllowed("AUTHENTICATED")
     @Override
     public List<String> getAllPersonListTitlesByCreatorId(String creatorId){
             return personListAccess.getAllPersonListTitlesByCreatorId(creatorId);
+    }
+    
+    @RolesAllowed("AUTHENTICATED")
+    @Override
+    public void removeItem(Item item){
+        itemAccess.removeItemByID(item.getUuid());
     }
     
     

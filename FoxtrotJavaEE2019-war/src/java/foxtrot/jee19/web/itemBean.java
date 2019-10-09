@@ -73,5 +73,10 @@ public class itemBean implements Serializable {
         return polllogic.createItem(Title, itemType, options);
     }
     
+    public void resetOptions(){
+        options.clear();
+    }
+    
+    
     
 }

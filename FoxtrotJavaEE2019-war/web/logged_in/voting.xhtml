@@ -16,7 +16,7 @@
 
             <pr:outputLabel value="${msg.chooseVote}" />   
             
-            <c:forEach items="#{votingBean.voteItems}" var="item">
+            <c:forEach items="#{votingBean.voteItems}" var="item" varStatus="loop">
                   
                 <pr:panelGrid columns="2" layout="grid" id="AItem">   
 
@@ -30,16 +30,20 @@
 
                     <pr:outputLabel value="${msg.options}"/>
 
-                    <pr:panelGrid  columns="2" layout="grid" id="itemOptions">
+                    
 
                         <h:outputText value="${msg.abstain} " />
                         <pr:toggleSwitch value="#{item.isAbstainChosen}">
-                            <pr:ajax update="itemOptions"/>
+                            <pr:ajax update="itemOptions_#{loop.index}" />
                         </pr:toggleSwitch>
+                        
+                        
+                    <pr:panelGrid  columns="2" layout="grid" id="itemOptions_#{loop.index}"> 
+                        
                         <h:outputText value="${msg.vote} " />
                         
                         <pr:selectOneMenu  value="#{item.chosenOption}" 
-                                           converter="omnifaces.SelectItemsConverter"  rendered="#{not item.NOfM}" disabled="#{item.isAbstainChosen}" styleClass="removeList">
+                                           converter="omnifaces.SelectItemsConverter"  rendered="#{not item.NOfM}" disabled="#{item.isAbstainChosen}">
                             <c:forEach items="#{item.options}" var="option">
                                 <c:if test="#{!votingBean.isOptionTypeAbstain(option.optionType)}">
                                     <f:selectItem itemValue="#{option}" itemLabel="#{option.shortName}"  itemDisabled="#{votingBean.isOptionTypeAbstain(option.optionType)}" />
@@ -48,7 +52,8 @@
                         </pr:selectOneMenu> 
                         
                         <pr:selectCheckboxMenu value="#{item.chosenOptions}" converter="entityConverter" rendered="#{item.NOfM}" 
-                              multiple="true" filter="true" filterMatchMode="startsWith"   disabled="#{item.isAbstainChosen}" styleClass="removeList">
+                              multiple="true" filter="true" filterMatchMode="startsWith" 
+                              disabled="#{item.isAbstainChosen}">
                             <c:forEach items="#{item.options}" var="option">
                                 <c:if test="#{!votingBean.isOptionTypeAbstain(option.optionType)}">
                                     <f:selectItem itemValue="#{option}" itemLabel="#{option.shortName}"  itemDisabled="#{votingBean.isOptionTypeAbstain(option.optionType)}" />

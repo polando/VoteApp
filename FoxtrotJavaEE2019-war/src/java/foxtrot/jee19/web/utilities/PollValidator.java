@@ -5,6 +5,7 @@
  */
 package foxtrot.jee19.web.utilities;
 
+import foxtrot.jee19.logic.dao.ItemAccess;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,9 @@ public class PollValidator  implements  Serializable  {
     
     @Inject
     private errorMessageUtility errorMessageUtility;
+    
+    @Inject
+    private ItemAccess itemAccess;
 
     private static final long serialVersionUID = 2484461611437080754L;
     
@@ -38,13 +42,20 @@ public class PollValidator  implements  Serializable  {
     
     public void validatePoll(List<Person> participants,List<Person> organizers,List<Item> items,Date startDate,Date endDate) throws ValidatorException {
         ArrayList<String> problems = new ArrayList<>();
+  
         if (participants == null || participants.size() < 3) {
             problems.add("There must be at least 3 participants");
         }
         if (errorMessageUtility.isNullOrEmpty(items)) {
             problems.add("There must be at least one item");
         }
-        if (startDate.after(endDate) || startDate.equals(endDate)) {
+        if(startDate == null){
+             problems.add("Start date is not set");
+        }
+        else if(endDate == null){
+             problems.add("End date is not set");
+        }
+        else if (startDate.after(endDate) || startDate.equals(endDate)) {
             problems.add("End Date must be later than start date");
         }
         outerloop:
@@ -61,10 +72,14 @@ public class PollValidator  implements  Serializable  {
             errorMessageUtility.errorCall(problems);
         }
     }
-
-
+    
+    public void validateItem(Item item,List<Item> items){
+        items.removeIf(n -> n.getUuid().equalsIgnoreCase(item.getUuid()));
+        validateItem(item.getTitle(),items);
+    }
     public void validateItem(String title,List<Item> items) {
         ArrayList<String> problems = new ArrayList<>();
+
         for(Item i : items){
             if (i.getTitle().equalsIgnoreCase(title)){
                 problems.add("Duplicate item title");

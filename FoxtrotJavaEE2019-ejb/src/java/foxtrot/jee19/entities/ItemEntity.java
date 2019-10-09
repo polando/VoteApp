@@ -22,7 +22,8 @@ import foxtrot.jee19.utilities.ItemTypeJpaConverter;
  *
  * @author ussocom
  */
-@NamedQueries({
+@NamedQueries({    
+    @NamedQuery(name = "getItemByID", query = "SELECT p FROM ItemEntity p WHERE p.uuid = :itemUUID "),
     @NamedQuery(name = "getPollItemCount", query = "SELECT COUNT(p) FROM ItemEntity p"),
     @NamedQuery(name = "getPollItemList", query = "SELECT p FROM ItemEntity p ORDER BY p.name, p.uuid"),
 })

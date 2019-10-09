@@ -45,12 +45,16 @@ public class changePollBean  implements Serializable{
     @EJB
     private PollLogic polllogic;
     
-        @Inject
+    @Inject
+    private LoginBean loginBean;
+    
+    @Inject
     private errorMessageUtility  errorMessageUtility;
         
-    private DefinedPersonList definedPersonList;   
+    private DefinedPersonList definedPersonList; 
     
-
+    private Item selectedItem;
+    
     private Poll poll;
 
     public Poll getPoll() {
@@ -64,9 +68,12 @@ public class changePollBean  implements Serializable{
     @PostConstruct
     public void init() {
         poll = readSelectedPollFromFlash();
+        System.out.println("pols orgs "+poll.getOrganizers().size());
+        
     }
 
     public String editPoll() {
+        poll.getOrganizers().add(loginBean.getUser());
         polllogic.editPoll(poll);
         return "pollEditedSuccessfully";
     }
@@ -79,6 +86,11 @@ public class changePollBean  implements Serializable{
     public void addItem(Item item){
         poll.getItems().add(item);
     }
+    
+    public void modifyItem(Item item){
+        poll.getItems().removeIf(s -> s.getUuid().equals(item.getUuid()));
+        addItem(item);
+    }
 
     public DefinedPersonList getDefinedPersonList() { 
         return definedPersonList;
@@ -87,6 +99,21 @@ public class changePollBean  implements Serializable{
     public void setDefinedPersonList(DefinedPersonList definedPersonList) {
         this.definedPersonList = definedPersonList;
     }
+
+    public Item getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(Item selectedItem) {
+        this.selectedItem = selectedItem;
+    }
+    
+    public void removeItem(Item item){
+        poll.getItems().removeIf(e->e.getUuid().equals(item.getUuid()));
+        polllogic.removeItem(item);   
+    }
+    
+
 
     
     

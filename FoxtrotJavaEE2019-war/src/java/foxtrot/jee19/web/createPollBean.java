@@ -76,6 +76,8 @@ public class createPollBean implements Serializable {
     
     private DefinedPersonList definedPersonList;
     
+    private Item selectedItem;
+    
     @Inject
     private LoginBean loginBean;
 
@@ -210,9 +212,6 @@ public class createPollBean implements Serializable {
 
     public void addItem(Item e) {
         items.add(e);
-        items.forEach((i) -> {
-            System.out.println("i" + i);
-        });
     }
 
     Instant DateToInstant(Date date) {
@@ -233,7 +232,24 @@ public class createPollBean implements Serializable {
     void setNowAsCurrentDate() {
         setCreateDate(new Date());
     }
+
+    public Item getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(Item selectedItem) {
+        this.selectedItem = selectedItem;
+    }
     
+    public void modifyItem(Item item){
+        items.removeIf(s -> s.getUuid().equals(item.getUuid()));
+        addItem(item);
+    }
+    
+    public void removeItem(Item item){
+        items.removeIf(e->e.getUuid().equals(item.getUuid()));
+        polllogic.removeItem(item);   
+    }
 
 
 }

@@ -31,7 +31,7 @@ import foxtrot.jee19.utilities.PollStateJpaConverter;
 @NamedQueries({
     @NamedQuery(name = "getPollCount", query = "SELECT COUNT(p) FROM PollEntity p"),
     @NamedQuery(name = "getPollList", query = "SELECT p FROM PollEntity p ORDER BY p.name, p.uuid"),
-    @NamedQuery(name = "getFinishedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p,ResultEntity r INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND (SELECT SUM (s.numberOfVotes) FROM ResultEntity s WHERE s.poll.uuid = p.uuid) > 0"),
+    @NamedQuery(name = "getFinishedPollsIDListByOrganizer", query = "SELECT p FROM PollEntity p,ResultEntity r INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND p.pollState = :state AND (SELECT SUM (s.numberOfVotes) FROM ResultEntity s WHERE s.poll.uuid = p.uuid) > 2"),
     @NamedQuery(name = "getAllPollTitles", query = "SELECT p.title FROM PollEntity p"),
     @NamedQuery(name = "getPollsIDListByOrganizerAndState", query = "SELECT p FROM PollEntity p INNER JOIN p.organizers org WHERE org.uuid = :organizerUUID AND p.pollState = :state"),
     @NamedQuery(name = "getPollbyPollUUID", query = "SELECT p FROM PollEntity p WHERE p.uuid = :pollUUID "),

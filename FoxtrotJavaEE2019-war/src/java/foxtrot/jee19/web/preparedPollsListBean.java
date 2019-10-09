@@ -43,9 +43,6 @@ public class preparedPollsListBean implements Serializable {
     @PostConstruct
     void init(){
         preparedPollsByOrganaizer = pollsByOrganizerFromDb();
-             for(Poll p :preparedPollsByOrganaizer){
-                System.out.println("poll title in init is : "+p.getTitle());
-            }
     }
 
     public Set<Poll> pollsByOrganizerFromDb(){
@@ -72,14 +69,12 @@ public class preparedPollsListBean implements Serializable {
         }
     
     public String startPoll(){
+            selectedPoll.getOrganizers().add(loginBean.getUser());
             polllogic.startPoll(selectedPoll.getUuid());
             return "pollStarted";
         }
 
     public Set<Poll> getPreparedPollsByOrganaizer() {
-             for(Poll p :preparedPollsByOrganaizer){
-                System.out.println("poll title in prepared is : "+p.getTitle());
-            }
         return preparedPollsByOrganaizer;
     }
 
