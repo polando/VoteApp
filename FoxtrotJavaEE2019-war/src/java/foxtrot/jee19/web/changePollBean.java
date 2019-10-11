@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,8 +27,12 @@ import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Person;
 import foxtrot.jee19.logic.dto.Poll;
+import foxtrot.jee19.web.utilities.TimeUtility;
 import foxtrot.jee19.web.utilities.errorMessageUtility;
+import java.time.Instant;
+import java.util.Map;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 
 /**
  *
@@ -50,12 +53,21 @@ public class changePollBean  implements Serializable{
     
     @Inject
     private errorMessageUtility  errorMessageUtility;
+    
+    @Inject
+    private TimeUtility timeUtility;
         
     private DefinedPersonList definedPersonList; 
     
     private Item selectedItem;
     
     private Poll poll;
+    
+    private Date startDate;
+    
+    private Date endDate;
+    
+    private String timeOffest;
 
     public Poll getPoll() {
         return poll;
@@ -68,12 +80,18 @@ public class changePollBean  implements Serializable{
     @PostConstruct
     public void init() {
         poll = readSelectedPollFromFlash();
-        System.out.println("pols orgs "+poll.getOrganizers().size());
-        
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = externalContext.getSessionMap();
+        timeOffest = (String) sessionMap.get("timeOffest");
+        System.out.println("offset is"+timeOffest);
+        startDate = timeUtility.InstantToDate(poll.getStartDate(), timeOffest);
+        endDate = timeUtility.InstantToDate(poll.getEndDate(), timeOffest);
     }
 
     public String editPoll() {
         poll.getOrganizers().add(loginBean.getUser());
+        poll.setStartDate(timeUtility.DateToInstant(startDate, timeOffest));
+        poll.setEndDate(timeUtility.DateToInstant(endDate, timeOffest));
         polllogic.editPoll(poll);
         return "pollEditedSuccessfully";
     }
@@ -112,8 +130,33 @@ public class changePollBean  implements Serializable{
         poll.getItems().removeIf(e->e.getUuid().equals(item.getUuid()));
         polllogic.removeItem(item);   
     }
-    
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getTimeOffest() {
+        return timeOffest;
+    }
+
+    public void setTimeOffest(String timeOffest) {
+        this.timeOffest = timeOffest;
+    }
+    
+    
+    
 
     
     

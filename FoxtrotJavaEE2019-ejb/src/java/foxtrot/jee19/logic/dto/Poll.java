@@ -43,9 +43,9 @@ public class Poll extends Named{
  
     private List<Person> organizers;
     
-    private Date startDate;
+    private Instant startDate;
     
-    private Date endDate;
+    private Instant endDate;
     
     private boolean resultPublished;
     
@@ -131,22 +131,6 @@ public class Poll extends Named{
         this.createDate = createDate;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
     public boolean isParticipationTracking() {
         return participationTracking;
     }
@@ -154,6 +138,24 @@ public class Poll extends Named{
     public void setParticipationTracking(boolean participationTracking) {
         this.participationTracking = participationTracking;
     }
+
+    public Instant getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Instant startDate) {
+        this.startDate = startDate;
+    }
+
+    public Instant getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Instant endDate) {
+        this.endDate = endDate;
+    }
+    
+    
 
     
     

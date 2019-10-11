@@ -54,8 +54,6 @@ public interface PollLogic {
 
     public List<String> getAllPollTitles();
 
-    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items, boolean participationTracking);
-
     public Poll editPoll(Poll poll);
 
     public Poll getPollByPollUUID(String pollUUID);
@@ -70,7 +68,6 @@ public interface PollLogic {
 
     public Set<Poll> getStartedOrVotingPollsIDListByOrganizer(String organizerUUID);
 
-    public void extendPoll(String pollUUID, Date endDate);
 
     public List<Poll> getAllPolls();
 
@@ -96,6 +93,10 @@ public interface PollLogic {
     public List<String> getAllPersonListTitlesByCreatorId(String creatorId);
 
     public void removeItem(Item item);
+
+    public void extendPoll(String pollUUID, Instant endDate);
+
+    public Poll createPoll(String title, String description, Instant endDate, Instant createDateInstant, Instant startDate, List<Person> participants, List<Person> organizers, List<Item> items, boolean participationTracking);
     
     
 

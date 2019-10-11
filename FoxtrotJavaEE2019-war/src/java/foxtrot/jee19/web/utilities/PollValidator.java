@@ -36,8 +36,8 @@ public class PollValidator  implements  Serializable  {
 
     private static final long serialVersionUID = 2484461611437080754L;
     
-    public void validatePoll(Poll poll){
-        validatePoll(poll.getParticipants(),poll.getOrganizers(),poll.getItems(),poll.getStartDate(),poll.getEndDate());
+    public void validatePoll(Poll poll,Date startDate,Date endDate){
+        validatePoll(poll.getParticipants(),poll.getOrganizers(),poll.getItems(),startDate,endDate);
     }
     
     public void validatePoll(List<Person> participants,List<Person> organizers,List<Item> items,Date startDate,Date endDate) throws ValidatorException {

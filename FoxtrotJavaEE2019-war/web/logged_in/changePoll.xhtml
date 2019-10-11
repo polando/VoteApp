@@ -14,6 +14,8 @@
     <ui:param name="pagetitle" value="${msg.editPoll}"/>
 
     <ui:define name="content">
+
+
         <h:form id="pollForm">
             <pr:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3">
 
@@ -36,7 +38,7 @@
 
                 <pr:outputLabel value="${msg.startDate}"/>
 
-                <b:dateTimePicker   id="startDateInput" value="#{changePollBean.poll.startDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty"  >
+                <b:dateTimePicker   id="startDateInput" value="#{changePollBean.startDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty"  >
                     <f:ajax event="blur" render="startDateMessage" /> 
                 </b:dateTimePicker>
 
@@ -44,7 +46,7 @@
 
                 <pr:outputLabel value="${msg.endDate}"/>
 
-                <b:dateTimePicker id="endDateInput"   value="#{changePollBean.poll.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
+                <b:dateTimePicker id="endDateInput"   value="#{changePollBean.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
                     <f:ajax event="blur" render="endDateMessage" /> 
                 </b:dateTimePicker>
 
@@ -61,7 +63,7 @@
                     <pr:commandButton value="${msg.editList}" type="button" onclick="PF('orgModal').show();" />
                 </pr:panelGrid> 
 
-                <f:event type="postValidate" listener="#{pollValidator.validatePoll(changePollBean.poll)}"/>
+                <f:event type="postValidate" listener="#{pollValidator.validatePoll(changePollBean.poll,changePollBean.startDate,changePollBean.endDate)}"/>
 
                 <pr:message id="organizersTableMessage" for="organizersTable" />
 

@@ -50,6 +50,11 @@ import foxtrot.jee19.logic.dto.Poll;
 import foxtrot.jee19.logic.dto.Token;
 import foxtrot.jee19.logic.dto.VoteResult;
 import foxtrot.jee19.utilities.BackgroundJobManager;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import javax.annotation.security.RolesAllowed;
 
 /**
@@ -159,7 +164,7 @@ public class PollLogicImpl implements PollLogic {
     
     @RolesAllowed("AUTHENTICATED")
     @Override
-    public Poll createPoll(String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items,boolean participationTracking) {
+    public Poll createPoll(String title, String description, Instant endDate, Instant createDateInstant, Instant startDate, List<Person> participants, List<Person> organizers, List<Item> items,boolean participationTracking) {
         PollEntity pollEntity = pollAccess.createEntity(title);
         setPollProperties(pollEntity, title, description, endDate, createDateInstant, startDate, participants, organizers, items , false,participationTracking);
         return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
@@ -173,7 +178,7 @@ public class PollLogicImpl implements PollLogic {
         return new Poll(pollEntity.getUuid(), pollEntity.getJpaVersion(), pollEntity.getName());
     }
 
-    private void setPollProperties(PollEntity pollEntity, String title, String description, Date endDate, Instant createDateInstant, Date startDate, List<Person> participants, List<Person> organizers, List<Item> items, Boolean resultPublished,boolean participationTracking) {
+    private void setPollProperties(PollEntity pollEntity, String title, String description, Instant endDate, Instant createDateInstant, Instant startDate, List<Person> participants, List<Person> organizers, List<Item> items, Boolean resultPublished,boolean participationTracking) {
         System.out.println("participationTracking"+participationTracking);
         List<PersonEntity> organizerEntity = new ArrayList<>();
         List<PersonEntity> participantEntity = new ArrayList<>();
@@ -192,8 +197,8 @@ public class PollLogicImpl implements PollLogic {
         pollEntity.setDescription(description);
         pollEntity.setOrganizers(organizerEntity);
         pollEntity.setParticipants(participantEntity);
-        pollEntity.setStartDate(DateToInstant(startDate));
-        pollEntity.setEndDate(DateToInstant(endDate));
+        pollEntity.setStartDate(startDate);
+        pollEntity.setEndDate(endDate);
         pollEntity.setCreateDate(createDateInstant);
         pollEntity.setResultPublished(resultPublished);
         pollEntity.setParticipationTracking(participationTracking);
@@ -379,8 +384,8 @@ public class PollLogicImpl implements PollLogic {
         poll.setDescription(pollEntity.getDescription());
         poll.setTitle(pollEntity.getTitle());
         poll.setCreateDate(pollEntity.getCreateDate());
-        poll.setStartDate(InstantToDate(pollEntity.getStartDate()));
-        poll.setEndDate(InstantToDate(pollEntity.getEndDate()));
+        poll.setStartDate(pollEntity.getStartDate());
+        poll.setEndDate(pollEntity.getEndDate());
         poll.setResultPublished(pollEntity.isResultPublished());
         pollEntity.getParticipants().forEach((p) -> {
             Person person = new Person(p.getUuid(), p.getJpaVersion(), p.getName());
@@ -494,20 +499,19 @@ public class PollLogicImpl implements PollLogic {
         return pollAccess.getAllPollTitles();
     }
 
-    public Instant DateToInstant(Date date) {
-        Instant t = null;
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = formatter.format(date);
-        formatter.setTimeZone(TimeZone.getDefault());
-        try {
-            Date d = formatter.parse(dateString);
-            t = d.toInstant();
-        } catch (ParseException e) {
-            System.err.println("Error parsing date to instant " + e.getMessage());
-        }
 
-        return t;
+     public Instant DateToInstant(Date date, String zone) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        LocalDate localDate = LocalDate.of(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+        LocalTime localTime = LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDate, localTime, ZoneId.of(zone));
+        return zonedDateTime.toInstant();
     }
+
+    
+    
 
     public Date InstantToDate(Instant instant) {
         Date date = Date.from(instant);
@@ -543,9 +547,9 @@ public class PollLogicImpl implements PollLogic {
     
     @RolesAllowed("AUTHENTICATED")
     @Override
-    public void extendPoll(String pollUUID,Date endDate){
-        backgroundJobManager.extendPollTime(pollUUID,DateToInstant(endDate));
-        pollAccess.getPollByPollID(pollUUID).setEndDate(DateToInstant(endDate));
+    public void extendPoll(String pollUUID,Instant endDate){
+        backgroundJobManager.extendPollTime(pollUUID,endDate);
+        pollAccess.getPollByPollID(pollUUID).setEndDate(endDate);
     }
     
     @RolesAllowed("AUTHENTICATED")

@@ -7,11 +7,13 @@ package foxtrot.jee19.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -32,6 +34,8 @@ public class changeLanguageBean implements Serializable  {
     private static final long serialVersionUID = -5127899606637781663L;
     private String localeCode;
     private Locale locale; 
+
+    
 
     public String getLocaleCode() {
         return localeCode;
@@ -62,8 +66,9 @@ public class changeLanguageBean implements Serializable  {
         for (Map.Entry<String, Object> entry : locales.entrySet()) {
             if (entry.getKey().equals(newLocaleValue)) {
                 locale = (Locale) entry.getValue();
-                //FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
             }
         }
     }
+    
+    
 }

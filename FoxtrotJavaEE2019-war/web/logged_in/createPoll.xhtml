@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <ui:composition
     template="/WEB-INF/templates/page-template.xhtml"
     xmlns="http://www.w3.org/1999/xhtml"
@@ -11,12 +12,13 @@
     xmlns:pr="http://primefaces.org/ui"
     xmlns:o="http://omnifaces.org/ui"
     >
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/resetBSToPF.css" />
 
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/styles/resetBSToPF.css" />
+ 
     <ui:param name="pagetitle" value="${msg.createPoll}"/> 
 
     <ui:define name="content">
-        <h:form id="pollForm">
+        <h:form id="pollForm">            
             <pr:panelGrid columns="3" layout="grid" columnClasses="ui-grid-col-3, ui-grid-col-6, ui-grid-col-3">
 
                 <pr:outputLabel value="${msg.title}" class="pf"/>
@@ -152,6 +154,7 @@
                 </ui:repeat>
 
 
+                
                 <pr:commandButton id="createPollButton"
                                   icon="pi pi-check-circle"
                                   value="${msg.createPoll}"

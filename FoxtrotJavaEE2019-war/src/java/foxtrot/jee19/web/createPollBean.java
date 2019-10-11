@@ -6,20 +6,12 @@
 package foxtrot.jee19.web;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
-import javax.faces.validator.ValidatorException;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,9 +21,10 @@ import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Person;
 import foxtrot.jee19.logic.dto.PollState;
-import foxtrot.jee19.web.utilities.errorMessageUtility;
-import org.jboss.weld.probe.Strings;
-import org.primefaces.PrimeFaces;
+import foxtrot.jee19.web.utilities.TimeUtility;
+import java.util.Map;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -78,9 +71,15 @@ public class createPollBean implements Serializable {
     
     private Item selectedItem;
     
+    private String timeOffest;
+        
     @Inject
     private LoginBean loginBean;
-
+    
+    @Inject
+    private TimeUtility timeUtility;
+    
+    
     public List<String> getTest() {
         return test;
     }
@@ -200,33 +199,21 @@ public class createPollBean implements Serializable {
         participants = new ArrayList<>();
         items = new ArrayList<>();
         organizers = new ArrayList<>();
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = externalContext.getSessionMap();
+        timeOffest = (String) sessionMap.get("timeOffest");
     }
 
     public String createPoll() {
         setNowAsCurrentDate();
         participants = definedPersonList.getPersons();
         organizers.add(loginBean.getUser());
-        polllogic.createPoll(title, description, endDate, createDateInstant, startDate, participants, organizers, items, participationTracking);
+        polllogic.createPoll(title, description, timeUtility.DateToInstant(endDate, timeOffest), createDateInstant, timeUtility.DateToInstant(startDate, timeOffest), participants, organizers, items, participationTracking);
         return "pollCreatedSuccessfully";
     }
 
     public void addItem(Item e) {
         items.add(e);
-    }
-
-    Instant DateToInstant(Date date) {
-        Instant t = null;
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateString = formatter.format(date);
-        formatter.setTimeZone(TimeZone.getDefault());
-        try {
-            Date d = formatter.parse(dateString);
-            t = d.toInstant();
-        } catch (ParseException e) {
-            System.err.println("Error parsing date to instant " + e.getMessage());
-        }
-
-        return t;
     }
 
     void setNowAsCurrentDate() {
@@ -251,5 +238,16 @@ public class createPollBean implements Serializable {
         polllogic.removeItem(item);   
     }
 
+    public String getTimeOffest() {
+        return timeOffest;
+    }
 
+    public void setTimeOffest(String timeOffest) {
+        System.out.println("timeOffest  b  "+timeOffest);
+        this.timeOffest = timeOffest;
+    }
+
+    
+
+    
 }

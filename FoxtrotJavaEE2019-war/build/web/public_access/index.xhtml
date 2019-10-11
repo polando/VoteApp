@@ -6,9 +6,18 @@
     xmlns:h="http://xmlns.jcp.org/jsf/html"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
     xmlns:f="http://xmlns.jcp.org/jsf/core"
-    xmlns:b="http://bootsfaces.net/ui">
+    xmlns:b="http://bootsfaces.net/ui"
+    xmlns:pr="http://primefaces.org/ui"
+    >
     <ui:param name="pagetitle" value="${msg.homePageTitle}"/>
     <ui:define name="content">
+                <script>     
+           window.onload = function codeAddress() {
+                   offset = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                   rc([{name:'timeOffest', value: offset}]);
+               }
+        </script>
         <p>${msg.homeMessage}</p>
+        <pr:remoteCommand name="rc" action="#{sessionVars.setVals}" />
     </ui:define>
 </ui:composition>
