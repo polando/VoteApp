@@ -85,8 +85,7 @@ public class PollLogicImpl implements PollLogic {
     @EJB
     private OptionAccess optionAccess;
     
-    @EJB
-    private Notification notification;
+
     
     @EJB
     private PersonListAccess personListAccess;
@@ -250,13 +249,15 @@ public class PollLogicImpl implements PollLogic {
         
         HashMap<String, String> emailInfo = new HashMap<String, String>();
         emailInfo = getPollInfo(pollEntity);
-               
+        long delay = 0;
+        long delayRate = 13;
         for (PersonEntity p: pollEntity.getParticipants()) {
+            delay += delayRate;
             Token token = createToken(p.getName() + pollEntity.getName(), p, pollEntity);
             tokenEntity.add(tokenAccess.getByUuid(token.getUuid()));
             emailInfo.put("token", token.getToken());
             emailInfo.put("email", p.getName());
-            notification.sendNotificationToParticioants(emailInfo);
+            backgroundJobManager.setDelayForSendingEmail(emailInfo,delay);
         }
         
         pollEntity.getItemEntities().forEach((i) -> {

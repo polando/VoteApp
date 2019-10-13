@@ -19,8 +19,15 @@ public class Notification {
     @EJB
     private MailBean mailBean;
 
-    public boolean sendNotificationToParticioants(HashMap emailInfo)
+    public boolean sendNotificationToParticioants(String title,String start_date,String end_date, String token,String email,String number_of_participants)
     {
+        HashMap emailInfo = new HashMap();
+        emailInfo.put("token", token);
+        emailInfo.put("email", email);
+        emailInfo.put("title", title);
+        emailInfo.put("start_date", start_date);
+        emailInfo.put("end_date", end_date);
+        emailInfo.put("number_of_participants",  number_of_participants);
         HashMap preparedMail = prepareEmailContent(emailInfo);
         mailBean.send(preparedMail);
         return true;

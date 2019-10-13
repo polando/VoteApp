@@ -34,6 +34,7 @@ public class MailBean {
             );
             message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parseHeader(emailInfo.get("email").toString(), true));
             Transport.send(message);
+            
         } catch (MessagingException e) {
             e.printStackTrace();
         }
