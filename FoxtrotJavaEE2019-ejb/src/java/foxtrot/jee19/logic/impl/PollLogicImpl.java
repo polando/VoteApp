@@ -388,6 +388,7 @@ public class PollLogicImpl implements PollLogic {
         poll.setStartDate(pollEntity.getStartDate());
         poll.setEndDate(pollEntity.getEndDate());
         poll.setResultPublished(pollEntity.isResultPublished());
+        poll.setPollState(pollEntity.getPollState());
         pollEntity.getParticipants().forEach((p) -> {
             Person person = new Person(p.getUuid(), p.getJpaVersion(), p.getName());
             participants.add(person);

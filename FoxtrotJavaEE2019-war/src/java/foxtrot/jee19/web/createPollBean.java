@@ -20,7 +20,7 @@ import foxtrot.jee19.logic.ItemType;
 import foxtrot.jee19.logic.dto.DefinedPersonList;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Person;
-import foxtrot.jee19.logic.dto.PollState;
+//import foxtrot.jee19.logic.dto.PollState;
 import foxtrot.jee19.web.utilities.TimeUtility;
 import java.util.Map;
 import javax.faces.context.ExternalContext;
@@ -41,7 +41,7 @@ public class createPollBean implements Serializable {
 
     private ItemType itemtype;
 
-    private PollState pollstate;
+//    private PollState pollstate;
 
     private List<Item> items;
 
@@ -160,13 +160,13 @@ public class createPollBean implements Serializable {
         this.items = items;
     }
 
-    public PollState getPollstate() {
+  /*  public PollState getPollstate() {
         return pollstate;
     }
 
     public void setPollstate(PollState pollstate) {
         this.pollstate = pollstate;
-    }
+    }*/
 
     public Item getCurrentEditItem() {
         return currentEditItem;

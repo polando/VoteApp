@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import foxtrot.jee19.logic.ItemType;
+import foxtrot.jee19.logic.PollState;
 
 
 
@@ -35,7 +36,9 @@ public class Poll extends Named{
    
     private Instant createDate;
     
-    private PollState pollStateEntity;
+   // private PollState pollStateEntity;
+    
+    private PollState pollState;
     
     private List<Item> items;
     
@@ -91,14 +94,23 @@ public class Poll extends Named{
         this.participants = participants;
     }
 
-    public PollState getPollStateEntity() {
+   /* public PollState getPollStateEntity() {
         return pollStateEntity;
     }
 
     public void setPollStateEntity(PollState pollStateEntity) {
         this.pollStateEntity = pollStateEntity;
+    }*/
+
+    public PollState getPollState() {
+        return pollState;
     }
 
+    public void setPollState(PollState pollState) {
+        this.pollState = pollState;
+    }
+    
+    
     public List<Item> getItems() {
         return items;
     }

@@ -14,6 +14,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import foxtrot.jee19.logic.PollLogic;
+import foxtrot.jee19.logic.PollState;
 import foxtrot.jee19.logic.dto.Item;
 import foxtrot.jee19.logic.dto.Person;
 import foxtrot.jee19.logic.dto.Poll;
@@ -57,6 +58,9 @@ public class tokenCheckBean implements Serializable {
         Poll poll = null;
         if(checkToken()){
              poll = polllogic.getPollByToken(token);
+             if(!poll.getPollState().equals(PollState.VOTING)){
+                 return null;
+             }
         }
         return poll;
     }
