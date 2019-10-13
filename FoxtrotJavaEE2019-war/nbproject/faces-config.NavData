@@ -2,8 +2,8 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
-        <Node id="logged_in/coursedetails.xhtml" x="400" y="300" zoom="true"/>
         <Node id="login.xhtml?faces-redirect=true" x="1150" y="150" zoom="true"/>
+        <Node id="logged_in/coursedetails.xhtml" x="400" y="300" zoom="true"/>
         <Node id="logged_in/createcourse.xhtml" x="900" y="150" zoom="true"/>
         <Node id="*" x="150" y="300" zoom="true"/>
         <Node id="admin/administration.xhtml?faces-redirect=true" x="400" y="450" zoom="true"/>

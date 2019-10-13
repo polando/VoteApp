@@ -16,7 +16,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import foxtrot.jee19.logic.PollLogic;
 import foxtrot.jee19.logic.dto.Poll;
+import foxtrot.jee19.web.utilities.TimeUtility;
 import foxtrot.jee19.web.utilities.errorMessageUtility;
+import java.time.Instant;
+import java.util.Map;
+import javax.faces.context.ExternalContext;
 
 /**
  *
@@ -32,9 +36,25 @@ public class extendPollBean implements Serializable {
     private PollLogic polllogic;
     
     @Inject
+    private TimeUtility timeUtility;
+    
+    @Inject
     private errorMessageUtility  errorMessageUtility;
 
     private Poll poll;
+    
+    private Date endDate;
+    
+    private String timeOffest;
+
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
     
 
     public Poll getPoll() {
@@ -48,7 +68,11 @@ public class extendPollBean implements Serializable {
     
     @PostConstruct
     public void init() {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        Map<String, Object> sessionMap = externalContext.getSessionMap();
+        timeOffest = (String) sessionMap.get("timeOffest");
         poll = readSelectedPollFromFlash();
+        endDate = timeUtility.InstantToDate(poll.getEndDate(),timeOffest);
     }
 
     
@@ -58,7 +82,7 @@ public class extendPollBean implements Serializable {
     }
     
     public String extendPoll(){
-        polllogic.extendPoll(poll.getUuid(), poll.getEndDate());
+        polllogic.extendPoll(poll.getUuid(), timeUtility.DateToInstant(endDate,timeOffest));
         return "pollExtendedSuccessfully";
     }
 

@@ -14,7 +14,7 @@
             <pr:panelGrid columns="3" layout="grid">
                 <pr:outputLabel value="${msg.endDate}"/>
 
-                <b:dateTimePicker id="endDateInput"  value="#{extendPollBean.poll.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
+                <b:dateTimePicker id="endDateInput"  value="#{extendPollBean.endDate}" mode="popup-icon" required="true" requiredMessage="This field cant be empty">
                     <f:ajax event="blur" render="endDateMessage" /> 
                 </b:dateTimePicker>
                 
