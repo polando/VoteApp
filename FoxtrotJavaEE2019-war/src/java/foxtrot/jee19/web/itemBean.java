@@ -74,7 +74,8 @@ public class itemBean implements Serializable {
     }
     
     public void resetOptions(){
-        options.clear();
+        if(options != null)
+            options.clear();
     }
     
     
