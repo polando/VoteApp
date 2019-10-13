@@ -62,7 +62,7 @@
                 <pr:outputLabel value="${msg.organizers}" />
 
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%">
-                    <pr:dataTable id="organizersTable" value="#{createPollBean.organizers}" var="person">
+                    <pr:dataTable id="organizersTable" value="#{createPollBean.organizers}" var="person" scrollable="true" scrollHeight="150">
                         <pr:column headerText="Email">
                             <h:outputText value="#{person.name}"/>
                         </pr:column>
@@ -83,7 +83,7 @@
                 <pr:outputLabel value="${msg.participantsList}"/>
 
                 <pr:panelGrid columns="1" layout="grid" style="width: 100%" >
-                    <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person">
+                    <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person" scrollable="true" scrollHeight="150">
                         <pr:column headerText="Email">
                             <h:outputText value="#{person.name}"/>
                         </pr:column>
@@ -189,7 +189,7 @@
                 <pr:panelGrid columns="1">
                     <pr:outputLabel value="${msg.participantsList}"/>
                     <pr:panelGrid columns="1" layout="grid">
-                        <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person">
+                        <pr:dataTable id="participantsTable" value="#{createPollBean.definedPersonList.persons}"  var="person" scrollable="true" scrollHeight="150">
                             <pr:column headerText="Email">
                                 <h:outputText value="#{person.name}"/>
                             </pr:column>
